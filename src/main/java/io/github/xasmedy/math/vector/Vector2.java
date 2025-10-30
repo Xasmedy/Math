@@ -87,33 +87,21 @@ public /*value*/ record Vector2(float x, float y) implements Vector<Vector2, Poi
         return vector2(x() / length, y() / length);
     }
 
-    public float dot(float x, float y) {
-        return x() * x + y() * y;
-    }
-
     @Override
     public float dot(Point2D vector) {
-        return dot(vector.x(), vector.y());
-    }
-
-    public float distance(float x, float y) {
-        return sqrt(distance2(x, y));
+        return x() * vector.x() + y() * vector.y();
     }
 
     @Override
     public float distance(Point2D vector) {
-        return distance(vector.x(), vector.y());
-    }
-
-    public float distance2(float x, float y) {
-        final float deltaX = x - x();
-        final float deltaY = y - y();
-        return deltaX * deltaX + deltaY * deltaY;
+        return sqrt(distance2(vector));
     }
 
     @Override
     public float distance2(Point2D vector) {
-        return distance2(vector.x(), vector.y());
+        final float deltaX = vector.x() - x();
+        final float deltaY = vector.y() - y();
+        return deltaX * deltaX + deltaY * deltaY;
     }
 
     @Override
@@ -184,15 +172,7 @@ public /*value*/ record Vector2(float x, float y) implements Vector<Vector2, Poi
         return !(Math.abs(vector.y() - y()) > epsilon);
     }
 
-    /** Calculates the 2D cross product between this and the given vector.
-     * @param x the x-coordinate of the other vector
-     * @param y the y-coordinate of the other vector
-     * @return the cross product */
-    public float cross(float x, float y) {
-        return x() * y - y() * x;
-    }
-
     public float cross(Point2D vector) {
-        return cross(vector.x(), vector.y());
+        return x() * vector.y() - y() * vector.x();
     }
 }
