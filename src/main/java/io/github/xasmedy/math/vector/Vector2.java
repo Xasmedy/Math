@@ -1,11 +1,12 @@
 package io.github.xasmedy.math.vector;
 
 import io.github.xasmedy.math.point.Point2D;
+import jdk.internal.vm.annotation.LooselyConsistentValue;
 import java.util.function.Function;
 import static io.github.xasmedy.math.vector.Vector.*;
 
-/*@LooselyConsistent*/
-public value record Vector2(float x, float y) implements Vector<Vector2, Point2D>, Point2D {
+@LooselyConsistentValue
+public record Vector2(float x, float y) implements Vector<Vector2, Point2D>, Point2D {
 
     private static float sqrt(float value) {
         return (float) Math.sqrt(value);
@@ -16,9 +17,17 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
         return vector2(x() + vector.x(), y() + vector.y());
     }
 
+    public Vector2 add(float x, float y) {
+        return add(vector2(x, y));
+    }
+
     @Override
     public Vector2 sub(Point2D vector) {
         return vector2(x() - vector.x(), y() - vector.y());
+    }
+
+    public Vector2 sub(float x, float y) {
+        return sub(vector2(x, y));
     }
 
     @Override
@@ -29,6 +38,10 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
     @Override
     public Vector2 scale(float scalar) {
         return scale(vector2(scalar, scalar));
+    }
+
+    public Vector2 scale(float scaleX, float scaleY) {
+        return scale(vector2(scaleX, scaleY));
     }
 
     @Override
@@ -42,12 +55,12 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
     }
 
     @Override
-    public Vector2 length(float length) {
-        return length2(length * length);
+    public Vector2 withLength(float length) {
+        return withLength2(length * length);
     }
 
     @Override
-    public Vector2 length2(float length2) {
+    public Vector2 withLength2(float length2) {
         final float current = length2();
         if (current == 0 || current == length2) return this; // No changes done.
         return scale(sqrt(length2 / current));
@@ -93,9 +106,17 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
         return x() * vector.x() + y() * vector.y();
     }
 
+    public float dot(float x, float y) {
+        return dot(vector2(x, y));
+    }
+
     @Override
     public float distance(Point2D vector) {
         return sqrt(distance2(vector));
+    }
+
+    public float distance(float x, float y) {
+        return distance(vector2(x, y));
     }
 
     @Override
@@ -105,6 +126,10 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
         return deltaX * deltaX + deltaY * deltaY;
     }
 
+    public float distance2(float x, float y) {
+        return distance2(vector2(x, y));
+    }
+
     @Override
     public Vector2 lerp(Point2D target, float alpha) {
         final float invAlpha = 1.0f - alpha;
@@ -112,9 +137,17 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
                   (y() * invAlpha) + (target.y() * alpha));
     }
 
+    public Vector2 lerp(float x, float y, float alpha) {
+        return lerp(vector2(x, y), alpha);
+    }
+
     @Override
     public Vector2 interpolate(Point2D target, float alpha, Function<Float, Float> interpolator) {
         return lerp(target, interpolator.apply(alpha));
+    }
+
+    public Vector2 interpolate(float x, float y, float alpha, Function<Float, Float> interpolator) {
+        return interpolate(vector2(x, y), alpha, interpolator);
     }
 
     @Override
@@ -133,7 +166,7 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
     }
 
     @Override
-    public boolean isLengthZero(float margin) {
+    public boolean isLength2Zero(float margin) {
         return length2() < margin;
     }
 
@@ -142,9 +175,17 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
         return Math.abs(cross(vector)) <= epsilon;
     }
 
+    public boolean isParallel(float x, float y, float epsilon) {
+        return isParallel(vector2(x, y), epsilon);
+    }
+
     @Override
     public boolean isCollinear(Point2D vector, float epsilon) {
         return isParallel(vector, epsilon) && hasSameDirection(vector);
+    }
+
+    public boolean isCollinear(float x, float y, float epsilon) {
+        return isCollinear(vector2(x, y), epsilon);
     }
 
     @Override
@@ -152,9 +193,17 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
         return isParallel(vector, epsilon) && hasOppositeDirection(vector);
     }
 
+    public boolean isCollinearOpposite(float x, float y, float epsilon) {
+        return isCollinearOpposite(vector2(x, y), epsilon);
+    }
+
     @Override
     public boolean isPerpendicular(Point2D vector, float epsilon) {
         return Math.abs(dot(vector)) <= epsilon;
+    }
+
+    public boolean isPerpendicular(float x, float y, float epsilon) {
+        return isPerpendicular(vector2(x, y), epsilon);
     }
 
     @Override
@@ -162,9 +211,17 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
         return dot(vector) > 0;
     }
 
+    public boolean hasSameDirection(float x, float y) {
+        return hasSameDirection(vector2(x, y));
+    }
+
     @Override
     public boolean hasOppositeDirection(Point2D vector) {
         return dot(vector) < 0;
+    }
+
+    public boolean hasOppositeDirection(float x, float y) {
+        return hasOppositeDirection(vector2(x, y));
     }
 
     @Override
@@ -173,7 +230,15 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
         return !(Math.abs(vector.y() - y()) > epsilon);
     }
 
+    public boolean epsilonEquals(float x, float y, float epsilon) {
+        return epsilonEquals(vector2(x, y), epsilon);
+    }
+
     public float cross(Point2D vector) {
         return x() * vector.y() - y() * vector.x();
+    }
+
+    public float cross(float x, float y) {
+        return cross(vector2(x, y));
     }
 }

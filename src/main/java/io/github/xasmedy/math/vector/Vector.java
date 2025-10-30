@@ -63,7 +63,7 @@ public interface Vector<T extends Vector<T, P>, P> {
      * @param length desired length for this vector
      * @return this vector for chaining
      */
-    T length(float length);
+    T withLength(float length);
 
     /**
      * Sets the length of this vector, based on the square of the desired length. Does nothing if this vector is zero.
@@ -74,7 +74,7 @@ public interface Vector<T extends Vector<T, P>, P> {
      * @return this vector for chaining
      * @see #length2()
      */
-    T length2(float length2);
+    T withLength2(float length2);
     
     /**
      * Limits the length of this vector, based on the desired maximum length.
@@ -171,7 +171,7 @@ public interface Vector<T extends Vector<T, P>, P> {
     /**
      * @return Whether the length of this vector is smaller than the given margin
      */
-    boolean isLengthZero(float margin);
+    boolean isLength2Zero(float margin);
 
     /**
      * @return true if this vector is in line with the other vector (either in the same or the opposite direction)
