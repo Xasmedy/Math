@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="bld-wrapper">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/bld/bld-wrapper.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

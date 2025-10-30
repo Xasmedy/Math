@@ -1,0 +1,26 @@
+<component name="libraryTable">
+  <library name="test">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/test/apiguardian-api-1.1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/test/junit-platform-engine-1.11.4-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/test/junit-platform-commons-1.11.4-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/test/junit-jupiter-api-5.11.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/test/junit-jupiter-engine-5.11.4-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/test/junit-platform-engine-1.11.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/test/junit-platform-console-standalone-1.11.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/test/junit-jupiter-5.11.4-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/test/opentest4j-1.3.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/test/junit-jupiter-engine-5.11.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/test/apiguardian-api-1.1.2-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/test/junit-platform-console-standalone-1.11.4-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/test/junit-platform-commons-1.11.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/test/junit-jupiter-params-5.11.4-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/test/junit-jupiter-params-5.11.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/test/opentest4j-1.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/test/junit-jupiter-api-5.11.4-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/test/junit-jupiter-5.11.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
