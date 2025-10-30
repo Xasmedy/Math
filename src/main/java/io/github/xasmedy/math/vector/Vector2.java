@@ -5,7 +5,7 @@ import java.util.function.Function;
 import static io.github.xasmedy.math.vector.Vector.*;
 
 /*@LooselyConsistent*/
-public /*value*/ record Vector2(float x, float y) implements Vector<Vector2, Point2D>, Point2D {
+public value record Vector2(float x, float y) implements Vector<Vector2, Point2D>, Point2D {
 
     private static float sqrt(float value) {
         return (float) Math.sqrt(value);

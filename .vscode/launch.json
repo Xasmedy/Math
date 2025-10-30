@@ -5,7 +5,7 @@
             "type": "java",
             "name": "Run Tests",
             "request": "launch",
-            "mainClass": "io.github.xasmedy.math.MathUtilTest"
+            "mainClass": "io.github.xasmedy.math.MathTest"
         }
     ]
 }
