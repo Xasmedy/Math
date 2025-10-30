@@ -2,6 +2,7 @@ package io.github.xasmedy.math.vector;
 
 import io.github.xasmedy.math.point.Point2D;
 import java.util.function.Function;
+import static io.github.xasmedy.math.util.MathUtil.sqrt;
 
 public interface Vector<T extends Vector<T, P>, P> {
 
@@ -47,7 +48,9 @@ public interface Vector<T extends Vector<T, P>, P> {
     /**
      * @return The Euclidean length
      */
-    float length();
+    default float length() {
+        return sqrt(length2());
+    }
 
     /**
      * This method is faster than {@link Vector#length()} because it avoids calculating a square root. It is useful for comparisons,
@@ -63,7 +66,9 @@ public interface Vector<T extends Vector<T, P>, P> {
      * @param length desired length for this vector
      * @return this vector for chaining
      */
-    T withLength(float length);
+    default T withLength(float length) {
+        return withLength2(length * length);
+    }
 
     /**
      * Sets the length of this vector, based on the square of the desired length. Does nothing if this vector is zero.
@@ -82,7 +87,9 @@ public interface Vector<T extends Vector<T, P>, P> {
      * @param limit desired maximum length for this vector
      * @return this vector for chaining
      */
-    T limit(float limit);
+    default T limit(float limit) {
+        return limit2(limit * limit);
+    }
 
     /**
      * Limits the length of this vector, based on the desired maximum length squared.
@@ -121,7 +128,9 @@ public interface Vector<T extends Vector<T, P>, P> {
      * @param vector The other vector
      * @return the distance between this and the other vector
      */
-    float distance(P vector);
+    default float distance(P vector) {
+        return sqrt(distance2(vector));
+    }
 
     /**
      * This method is faster than {@link Vector#distance(Vector)} because it avoids calculating a square root. It is useful for
@@ -171,7 +180,7 @@ public interface Vector<T extends Vector<T, P>, P> {
     /**
      * @return Whether the length of this vector is smaller than the given margin
      */
-    boolean isLength2Zero(float margin);
+    boolean isLengthZero(float margin);
 
     /**
      * @return true if this vector is in line with the other vector (either in the same or the opposite direction)
@@ -182,13 +191,17 @@ public interface Vector<T extends Vector<T, P>, P> {
      * @return true if this vector is collinear with the other vector ({@link #isParallelTo(Vector, float)} &&
      * {@link #hasSameDirection(Vector)}).
      */
-    boolean isCollinear(P vector, float epsilon);
+    default boolean isCollinear(P vector, float epsilon) {
+        return isParallel(vector, epsilon) && hasSameDirection(vector);
+    }
 
     /**
      * @return true if this vector is opposite collinear with the other vector ({@link #isParallelTo(Vector, float)} &&
      * {@link #hasOppositeDirection(Vector)}).
      */
-    boolean isCollinearOpposite(P vector, float epsilon);
+    default boolean isCollinearOpposite(P vector, float epsilon) {
+        return isParallel(vector, epsilon) && hasOppositeDirection(vector);
+    }
 
     /**
      * @param epsilon a positive small number close to zero

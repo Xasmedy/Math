@@ -4,13 +4,10 @@ import io.github.xasmedy.math.point.Point2D;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
 import java.util.function.Function;
 import static io.github.xasmedy.math.vector.Vector.*;
+import static io.github.xasmedy.math.util.MathUtil.*;
 
 @LooselyConsistentValue
 public record Vector2(float x, float y) implements Vector<Vector2, Point2D>, Point2D {
-
-    private static float sqrt(float value) {
-        return (float) Math.sqrt(value);
-    }
 
     @Override
     public Vector2 add(Point2D vector) {
@@ -45,18 +42,8 @@ public record Vector2(float x, float y) implements Vector<Vector2, Point2D>, Poi
     }
 
     @Override
-    public float length() {
-        return sqrt(length2());
-    }
-
-    @Override
     public float length2() {
         return x() * x() + y() * y();
-    }
-
-    @Override
-    public Vector2 withLength(float length) {
-        return withLength2(length * length);
     }
 
     @Override
@@ -64,11 +51,6 @@ public record Vector2(float x, float y) implements Vector<Vector2, Point2D>, Poi
         final float current = length2();
         if (current == 0 || current == length2) return this; // No changes done.
         return scale(sqrt(length2 / current));
-    }
-
-    @Override
-    public Vector2 limit(float limit) {
-        return limit2(limit * limit);
     }
 
     @Override
@@ -108,11 +90,6 @@ public record Vector2(float x, float y) implements Vector<Vector2, Point2D>, Poi
 
     public float dot(float x, float y) {
         return dot(vector2(x, y));
-    }
-
-    @Override
-    public float distance(Point2D vector) {
-        return sqrt(distance2(vector));
     }
 
     public float distance(float x, float y) {
@@ -166,7 +143,7 @@ public record Vector2(float x, float y) implements Vector<Vector2, Point2D>, Poi
     }
 
     @Override
-    public boolean isLength2Zero(float margin) {
+    public boolean isLengthZero(float margin) {
         return length2() < margin;
     }
 
@@ -179,18 +156,8 @@ public record Vector2(float x, float y) implements Vector<Vector2, Point2D>, Poi
         return isParallel(vector2(x, y), epsilon);
     }
 
-    @Override
-    public boolean isCollinear(Point2D vector, float epsilon) {
-        return isParallel(vector, epsilon) && hasSameDirection(vector);
-    }
-
     public boolean isCollinear(float x, float y, float epsilon) {
         return isCollinear(vector2(x, y), epsilon);
-    }
-
-    @Override
-    public boolean isCollinearOpposite(Point2D vector, float epsilon) {
-        return isParallel(vector, epsilon) && hasOppositeDirection(vector);
     }
 
     public boolean isCollinearOpposite(float x, float y, float epsilon) {
