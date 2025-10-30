@@ -4,6 +4,7 @@ import io.github.xasmedy.math.point.Point2D;
 import java.util.function.Function;
 import static io.github.xasmedy.math.vector.Vector.*;
 
+/*@LooselyConsistent*/
 public /*value*/ record Vector2(float x, float y) implements Vector<Vector2, Point2D>, Point2D {
 
     private static float sqrt(float value) {
@@ -137,18 +138,18 @@ public /*value*/ record Vector2(float x, float y) implements Vector<Vector2, Poi
     }
 
     @Override
-    public boolean isParallelTo(Point2D vector, float epsilon) {
+    public boolean isParallel(Point2D vector, float epsilon) {
         return Math.abs(cross(vector)) <= epsilon;
     }
 
     @Override
     public boolean isCollinear(Point2D vector, float epsilon) {
-        return isParallelTo(vector, epsilon) && hasSameDirection(vector);
+        return isParallel(vector, epsilon) && hasSameDirection(vector);
     }
 
     @Override
     public boolean isCollinearOpposite(Point2D vector, float epsilon) {
-        return isParallelTo(vector, epsilon) && hasOppositeDirection(vector);
+        return isParallel(vector, epsilon) && hasOppositeDirection(vector);
     }
 
     @Override

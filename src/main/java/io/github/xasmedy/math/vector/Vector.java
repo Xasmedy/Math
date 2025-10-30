@@ -176,7 +176,7 @@ public interface Vector<T extends Vector<T, P>, P> {
     /**
      * @return true if this vector is in line with the other vector (either in the same or the opposite direction)
      */
-    boolean isParallelTo(P vector, float epsilon);
+    boolean isParallel(P vector, float epsilon);
 
     /**
      * @return true if this vector is collinear with the other vector ({@link #isParallelTo(Vector, float)} &&
