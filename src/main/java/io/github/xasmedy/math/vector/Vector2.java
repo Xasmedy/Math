@@ -208,4 +208,8 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
     public float cross(float x, float y) {
         return cross(vector2(x, y));
     }
+
+    public Vector3 withZ(float z) {
+        return vector3(x(), y(), z);
+    }
 }

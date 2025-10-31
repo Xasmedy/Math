@@ -1,6 +1,7 @@
 package io.github.xasmedy.math.vector;
 
 import io.github.xasmedy.math.point.Point2D;
+import io.github.xasmedy.math.point.Point3D;
 import java.util.function.Function;
 import static io.github.xasmedy.math.util.MathUtil.sqrt;
 
@@ -12,6 +13,14 @@ public interface Vector<T extends Vector<T, P>, P> {
 
     static Vector2 vector2(Point2D point) {
         return vector2(point.x(), point.y());
+    }
+
+    static Vector3 vector3(float x, float y, float z) {
+        return new Vector3(x, y, z);
+    }
+
+    static Vector3 vector3(Point3D point) {
+        return vector3(point.x(), point.y(), point.z());
     }
 
     /**
