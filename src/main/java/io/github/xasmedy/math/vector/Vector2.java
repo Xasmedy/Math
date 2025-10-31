@@ -7,7 +7,7 @@ import java.util.function.Function;
 import static io.github.xasmedy.math.vector.Vector.*;
 
 @LooselyConsistentValue
-public value record Vector2(float x, float y) implements Vector<Vector2, Point2D>, Point2D {
+public value record Vector2(float x, float y) implements Vector<Vector2>, Point2D {
 
     @Override
     public float sum() {
@@ -15,7 +15,7 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
     }
 
     @Override
-    public Vector2 sum(Point2D vector) {
+    public Vector2 sum(Vector2 vector) {
         return vector2(x() + vector.x(), y() + vector.y());
     }
 
@@ -24,7 +24,7 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
     }
 
     @Override
-    public Vector2 sub(Point2D vector) {
+    public Vector2 sub(Vector2 vector) {
         return vector2(x() - vector.x(), y() - vector.y());
     }
 
@@ -33,13 +33,23 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
     }
 
     @Override
-    public Vector2 mul(Point2D vector) {
+    public Vector2 mul(Vector2 vector) {
         return vector2(x() * vector.x(), y() * vector.y());
     }
 
     @Override
-    public Vector2 div(Point2D vector) {
+    public Vector2 div(Vector2 vector) {
         return vector2(x() / vector.x(), y() / vector.y());
+    }
+
+    @Override
+    public Vector2 with(float value) {
+        return vector2(value, value);
+    }
+
+    @Override
+    public Vector2 this_() {
+        return this;
     }
 
     public float dot(float x, float y) {
@@ -63,7 +73,7 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
     }
 
     @Override
-    public boolean isParallel(Point2D vector, float epsilon) {
+    public boolean isParallel(Vector2 vector, float epsilon) {
         return Math.abs(cross(vector)) <= epsilon;
     }
 
@@ -92,7 +102,7 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
     }
 
     @Override
-    public boolean epsilonEquals(Point2D vector, float epsilon) {
+    public boolean epsilonEquals(Vector2 vector, float epsilon) {
         if (Math.abs(vector.x() - x()) > epsilon) return false;
         return !(Math.abs(vector.y() - y()) > epsilon);
     }
@@ -101,27 +111,7 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
         return epsilonEquals(vector2(x, y), epsilon);
     }
 
-    @Override
-    public Vector2 this_() {
-        return this;
-    }
-
-    @Override
-    public Vector2 fromPoint(Point2D point) {
-        return vector2(point.x(), point.y());
-    }
-
-    @Override
-    public Point2D toPoint() {
-        return this;
-    }
-
-    @Override
-    public Vector2 with(float value) {
-        return vector2(value, value);
-    }
-
-    public float cross(Point2D vector) {
+    public float cross(Vector2 vector) {
         return x() * vector.y() - y() * vector.x();
     }
 

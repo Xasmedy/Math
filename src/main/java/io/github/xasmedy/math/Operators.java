@@ -2,13 +2,13 @@ package io.github.xasmedy.math;
 
 /// Defines a generic interface for math operators.\
 /// This will likely be replaced by Java operator overloading once it comes out.
-public interface Operators<I, O> {
+public interface Operators<T> {
 
-    O sum(I input);
+    T sum(T input);
 
-    O sub(I input);
+    T sub(T input);
 
-    O mul(I input);
+    T mul(T input);
 
-    O div(I input);
+    T div(T input);
 }

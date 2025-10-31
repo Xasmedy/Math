@@ -7,7 +7,7 @@ import java.util.function.Function;
 import static io.github.xasmedy.math.util.MathUtil.sqrt;
 
 /// @implSpec T must extends P.
-public interface Vector<T extends Vector<T, P>, P> extends Operators<P, T> {
+public interface Vector<T extends Vector<T>> extends Operators<T> {
 
     static Vector2 vector2(float x, float y) {
         return new Vector2(x, y);
@@ -25,9 +25,17 @@ public interface Vector<T extends Vector<T, P>, P> extends Operators<P, T> {
         return vector3(point.x(), point.y(), point.z());
     }
 
+    float sum();
+
+    /// Utility method to create a new vector with the components set as the provided value.
+    T with(float value);
+
+    /// Utility method to convert {@link Vector} to {@link T}.\
+    /// This allows the Vector interface to generalize some code.
+    T this_();
+
     default T mul(float scalar) {
-        final var point = with(scalar).toPoint();
-        return mul(point);
+        return mul(with(scalar));
     }
 
     default float length() {
@@ -35,7 +43,7 @@ public interface Vector<T extends Vector<T, P>, P> extends Operators<P, T> {
     }
 
     default float length2() {
-        return mul(toPoint()).sum();
+        return mul(this_()).sum();
     }
 
     default T withLength(float length) {
@@ -77,29 +85,25 @@ public interface Vector<T extends Vector<T, P>, P> extends Operators<P, T> {
         return mul(1 / sqrt(current));
     }
 
-    default float dot(P vector) {
+    default float dot(T vector) {
         return mul(vector).sum();
     }
 
-    default float distance(P vector) {
+    default float distance(T vector) {
         return sqrt(distance2(vector));
     }
 
-    default float distance2(P vector) {
-
-        // I declare different views for the vectors.
-        final var vec = fromPoint(vector);
-
-        final var delta = vec.sub(toPoint());
-        return delta.mul(delta.toPoint()).sum();
+    default float distance2(T vector) {
+        final var delta = vector.sub(this_());
+        return delta.mul(delta).sum();
     }
 
-    default T lerp(P target, float alpha) {
+    default T lerp(T target, float alpha) {
         final float invAlpha = 1.0f - alpha;
-        return mul(invAlpha).sum(mul(alpha).toPoint());
+        return mul(invAlpha).sum(mul(alpha));
     }
 
-    default T interpolate(P target, float alpha, Function<Float, Float> interpolator) {
+    default T interpolate(T target, float alpha, Function<Float, Float> interpolator) {
         return lerp(target, interpolator.apply(alpha));
     }
 
@@ -119,41 +123,27 @@ public interface Vector<T extends Vector<T, P>, P> extends Operators<P, T> {
         return length2() < margin;
     }
 
-    boolean isParallel(P vector, float epsilon);
+    boolean isParallel(T vector, float epsilon);
 
-    default boolean isCollinear(P vector, float epsilon) {
+    default boolean isCollinear(T vector, float epsilon) {
         return isParallel(vector, epsilon) && hasSameDirection(vector);
     }
 
-    default boolean isCollinearOpposite(P vector, float epsilon) {
+    default boolean isCollinearOpposite(T vector, float epsilon) {
         return isParallel(vector, epsilon) && hasOppositeDirection(vector);
     }
 
-    default boolean isPerpendicular(P vector, float epsilon) {
+    default boolean isPerpendicular(T vector, float epsilon) {
         return Math.abs(dot(vector)) <= epsilon;
     }
 
-    default boolean hasSameDirection(P vector) {
+    default boolean hasSameDirection(T vector) {
         return dot(vector) > 0;
     }
 
-    default boolean hasOppositeDirection(P vector) {
+    default boolean hasOppositeDirection(T vector) {
         return dot(vector) < 0;
     }
 
-    boolean epsilonEquals(P vector, float epsilon);
-
-    float sum();
-
-    /// Utility method to create a new vector with the components set as the provided value.
-    T with(float value);
-
-    /// Utility method to convert {@link Vector} to {@link T}.\
-    /// This allows the Vector interface to generalize some code.
-    T this_();
-
-    /// Utility method to convert {@link T} to {@link P}.
-    P toPoint();
-
-    T fromPoint(P point);
+    boolean epsilonEquals(T vector, float epsilon);
 }
