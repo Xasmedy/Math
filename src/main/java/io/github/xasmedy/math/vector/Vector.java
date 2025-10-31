@@ -88,8 +88,12 @@ public interface Vector<T extends Vector<T, P>, P> {
      * @return this vector for chaining
      * @see #length2()
      */
-    T withLength2(float length2);
-    
+    default T withLength2(float length2) {
+        final float current = length2();
+        if (current == 0 || current == length2) return this_(); // No changes done.
+        return scale(sqrt(length2 / current));
+    }
+
     /**
      * Limits the length of this vector, based on the desired maximum length.
      *
@@ -109,7 +113,11 @@ public interface Vector<T extends Vector<T, P>, P> {
      * @return this vector for chaining
      * @see #length2()
      */
-    T limit2(float limit2);
+    default T limit2(float limit2) {
+        final float current = length2();
+        if (limit2 <= current) return this_(); // No changes done.
+        return scale(sqrt(limit2 / current));
+    }
 
     /**
      * Clamps this vector's length to given min and max values
@@ -118,7 +126,18 @@ public interface Vector<T extends Vector<T, P>, P> {
      * @param max Max length
      * @return This vector for chaining
      */
-    T clamp(float min, float max);
+    default T clamp(float min, float max) {
+
+        final float len2 = length2();
+        if (len2 == 0) return this_();
+
+        final float max2 = max * max;
+        if (len2 > max2) return scale(sqrt(max2 / len2));
+
+        final float min2 = min * min;
+        if (len2 < min2) return scale(sqrt(min2 / len2));
+        return this_();
+    }
 
     /**
      * Normalizes this vector. Does nothing if it is zero.
@@ -169,17 +188,23 @@ public interface Vector<T extends Vector<T, P>, P> {
      * @param interpolator An Interpolation object describing the used interpolation method
      * @return This vector for chaining.
      */
-    T interpolate(P target, float alpha, Function<Float, Float> interpolator);
+    default T interpolate(P target, float alpha, Function<Float, Float> interpolator) {
+        return lerp(target, interpolator.apply(alpha));
+    }
 
     /**
      * @return Whether this vector is a unit length vector within the given margin.
      */
-    boolean isUnit(float margin);
+    default boolean isUnit(float margin) {
+        return Math.abs(length2() - 1f) < margin;
+    }
 
     /**
      * @return Whether this vector is a unit length vector
      */
-    boolean isUnit();
+    default boolean isUnit() {
+        return isUnit(0.000000001f);
+    }
 
     /**
      * @return Whether this vector is a zero vector
@@ -189,7 +214,9 @@ public interface Vector<T extends Vector<T, P>, P> {
     /**
      * @return Whether the length of this vector is smaller than the given margin
      */
-    boolean isLengthZero(float margin);
+    default boolean isLengthZero(float margin) {
+        return length2() < margin;
+    }
 
     /**
      * @return true if this vector is in line with the other vector (either in the same or the opposite direction)
@@ -216,19 +243,25 @@ public interface Vector<T extends Vector<T, P>, P> {
      * @param epsilon a positive small number close to zero
      * @return Whether this vector is perpendicular with the other vector. True if the dot product is 0.
      */
-    boolean isPerpendicular(P vector, float epsilon);
+    default boolean isPerpendicular(P vector, float epsilon) {
+        return Math.abs(dot(vector)) <= epsilon;
+    }
 
     /**
      * @return Whether this vector has similar direction compared to the other vector. True if the normalized dot product is >
      * 0.
      */
-    boolean hasSameDirection(P vector);
+    default boolean hasSameDirection(P vector) {
+        return dot(vector) > 0;
+    }
 
     /**
      * @return Whether this vector has opposite direction compared to the other vector. True if the normalized dot product is <
      * 0.
      */
-    boolean hasOppositeDirection(P vector);
+    default boolean hasOppositeDirection(P vector) {
+        return dot(vector) < 0;
+    }
 
     /**
      * Compares this vector with the other vector, using the supplied epsilon for fuzzy equality testing.
@@ -238,4 +271,8 @@ public interface Vector<T extends Vector<T, P>, P> {
      * @return whether the vectors have fuzzy equality.
      */
     boolean epsilonEquals(P vector, float epsilon);
+
+    /// Utility method to convert {@link Vector} to {@link T}.\
+    /// This allows the Vector interface to generalize some code.
+    T this_();
 }

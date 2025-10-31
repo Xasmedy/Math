@@ -5,7 +5,6 @@ import io.github.xasmedy.math.unit.Radians;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
 import java.util.function.Function;
 import static io.github.xasmedy.math.vector.Vector.*;
-import static io.github.xasmedy.math.util.MathUtil.*;
 
 @LooselyConsistentValue
 public value record Vector2(float x, float y) implements Vector<Vector2, Point2D>, Point2D {
@@ -48,34 +47,6 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
     }
 
     @Override
-    public Vector2 withLength2(float length2) {
-        final float current = length2();
-        if (current == 0 || current == length2) return this; // No changes done.
-        return scale(sqrt(length2 / current));
-    }
-
-    @Override
-    public Vector2 limit2(float limit2) {
-        final float length2 = length2();
-        if (limit2 <= length2) return this; // No changes done.
-        return scale(sqrt(limit2 / length2));
-    }
-
-    @Override
-    public Vector2 clamp(float min, float max) {
-
-        final float len2 = length2();
-        if (len2 == 0f) return this;
-
-        final float max2 = max * max;
-        if (len2 > max2) return scale(sqrt(max2 / len2));
-
-        final float min2 = min * min;
-        if (len2 < min2) return scale(sqrt(min2 / len2));
-        return this;
-    }
-
-    @Override
     public Vector2 normalize() {
 
         final float length = length();
@@ -111,17 +82,13 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
     @Override
     public Vector2 lerp(Point2D target, float alpha) {
         final float invAlpha = 1.0f - alpha;
-        return vector2((x() * invAlpha) + (target.x() * alpha),
-                  (y() * invAlpha) + (target.y() * alpha));
+        final float newX = (x() * invAlpha) + (target.x() * alpha);
+        final float newY = (y() * invAlpha) + (target.y() * alpha);
+        return vector2(newX, newY);
     }
 
     public Vector2 lerp(float x, float y, float alpha) {
         return lerp(vector2(x, y), alpha);
-    }
-
-    @Override
-    public Vector2 interpolate(Point2D target, float alpha, Function<Float, Float> interpolator) {
-        return lerp(target, interpolator.apply(alpha));
     }
 
     public Vector2 interpolate(float x, float y, float alpha, Function<Float, Float> interpolator) {
@@ -129,23 +96,8 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
     }
 
     @Override
-    public boolean isUnit(float margin) {
-        return Math.abs(length2() - 1f) < margin;
-    }
-
-    @Override
-    public boolean isUnit() {
-        return isUnit(0.000000001f);
-    }
-
-    @Override
     public boolean isZero() {
         return x() == 0 && y() == 0;
-    }
-
-    @Override
-    public boolean isLengthZero(float margin) {
-        return length2() < margin;
     }
 
     @Override
@@ -165,27 +117,12 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
         return isCollinearOpposite(vector2(x, y), epsilon);
     }
 
-    @Override
-    public boolean isPerpendicular(Point2D vector, float epsilon) {
-        return Math.abs(dot(vector)) <= epsilon;
-    }
-
     public boolean isPerpendicular(float x, float y, float epsilon) {
         return isPerpendicular(vector2(x, y), epsilon);
     }
 
-    @Override
-    public boolean hasSameDirection(Point2D vector) {
-        return dot(vector) > 0;
-    }
-
     public boolean hasSameDirection(float x, float y) {
         return hasSameDirection(vector2(x, y));
-    }
-
-    @Override
-    public boolean hasOppositeDirection(Point2D vector) {
-        return dot(vector) < 0;
     }
 
     public boolean hasOppositeDirection(float x, float y) {
@@ -196,6 +133,11 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
     public boolean epsilonEquals(Point2D vector, float epsilon) {
         if (Math.abs(vector.x() - x()) > epsilon) return false;
         return !(Math.abs(vector.y() - y()) > epsilon);
+    }
+
+    @Override
+    public Vector2 this_() {
+        return this;
     }
 
     public boolean epsilonEquals(float x, float y, float epsilon) {
