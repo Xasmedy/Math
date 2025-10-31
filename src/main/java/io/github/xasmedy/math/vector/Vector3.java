@@ -6,12 +6,12 @@ import static io.github.xasmedy.math.vector.Vector.*;
 public value record Vector3(float x, float y, float z) implements Vector<Vector3, Point3D>, Point3D {
 
     @Override
-    public Vector3 add(Point3D vector) {
+    public Vector3 sum(Point3D vector) {
         return vector3(x() + vector.x(), y() + vector.y(), z() + vector.z());
     }
 
     public Vector3 add(float x, float y, float z) {
-        return add(vector3(x, y, z));
+        return sum(vector3(x, y, z));
     }
 
     @Override
@@ -29,7 +29,7 @@ public value record Vector3(float x, float y, float z) implements Vector<Vector3
     }
 
     @Override
-    public Vector3 scale(float scalar) {
+    public Vector3 mul(float scalar) {
         return scale(vector3(scalar, scalar, scalar));
     }
 
@@ -40,7 +40,6 @@ public value record Vector3(float x, float y, float z) implements Vector<Vector3
 
     @Override
     public Vector3 normalize() {
-        return null;
     }
 
     @Override

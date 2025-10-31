@@ -3,6 +3,7 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked // Makes the whole codebase non-null by default.
 module xasmedy.math {
     requires org.jspecify;
+    exports io.github.xasmedy.math;
     exports io.github.xasmedy.math.vector;
     exports io.github.xasmedy.math.point;
     exports io.github.xasmedy.math.shape;
