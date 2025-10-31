@@ -1,6 +1,7 @@
 package io.github.xasmedy.math.vector;
 
 import io.github.xasmedy.math.point.Point2D;
+import io.github.xasmedy.math.unit.Radians;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
 import java.util.function.Function;
 import static io.github.xasmedy.math.vector.Vector.*;
@@ -211,5 +212,20 @@ public value record Vector2(float x, float y) implements Vector<Vector2, Point2D
 
     public Vector3 withZ(float z) {
         return vector3(x(), y(), z);
+    }
+
+    public Vector2 rotate(Radians radians) {
+
+        final float cos = (float) Math.cos(radians.value());
+        final float sin = (float) Math.sin(radians.value());
+
+        final float newX = x() * cos - y() * sin;
+        final float newY = x() * sin + y() * cos;
+
+        return vector2(newX, newY);
+    }
+
+    public Radians angle() {
+        return Radians.radians(((float) Math.atan2(y, x)));
     }
 }
