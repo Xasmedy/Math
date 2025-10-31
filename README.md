@@ -1,7 +1,7 @@
 # Xasmedy Math Library
 Welcome!\
 This is a math library made with one of the latest you can get Java, to be more specific, the Valhalla Early Access 2 based on Java 26.\
-If you are thinking "Valhalla?!" Yes, I understand, weirdly enough for many, valhalla is coming soon!
+If you are thinking "Valhalla?!" Yes, I understand, weirdly enough for many, Valhalla is coming soon!
 
 # Features
 - Point interfaces from 1D to 4D
@@ -13,7 +13,7 @@ If you are thinking "Valhalla?!" Yes, I understand, weirdly enough for many, val
 
 # How to Use
 I'll try to make a maven release when the library is in a better shape, fow now you need to build from scratch, or use one of the versions I provide.\
-You'll need to provide a few runtime flags, since I'm using internal valhalla APIs to provide better performance:
+You'll need to provide a few runtime flags, since I'm using internal Valhalla APIs to provide better performance:
 - `--enable-preview`
 - `--add-exports=java.base/jdk.internal.value=xasmedy.math`
 - `--add-exports=java.base/jdk.internal.vm.annotation=xasmedy.math`
@@ -22,7 +22,7 @@ You'll need to provide a few runtime flags, since I'm using internal valhalla AP
 I was not satisfied with LibGDX APIs, since outdated; they used Java 6, I was 3 years old when this version was released!\
 Either way, I had to abuse primitives to not kill the GC, making both of these things a sh*tty coding experience.
 
-This is why I'm remaking some of the math classes by following modern standards, like immutability, and throwing in the trash inheritance. My objective is to have these math classes be used in a hot-path without any worry, hence why I'm using valhalla.
+This is why I'm remaking some of the math classes by following modern standards, like immutability, and throwing in the trash inheritance. My objective is to have these math classes be used in hot-paths without any worry, hence why I'm using Valhalla.
 
 ## Backwards compatibility?
 No guarantees. I'm using an Early Access what do you expect?!\
