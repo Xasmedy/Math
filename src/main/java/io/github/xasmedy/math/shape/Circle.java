@@ -4,4 +4,4 @@ import io.github.xasmedy.math.point.Point2D;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
 
 @LooselyConsistentValue
-public value record Line(Point2D start, Point2D end) {}
+public value record Circle(Point2D position, float radius) {}
