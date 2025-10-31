@@ -19,7 +19,8 @@ You'll need to provide a few runtime flags, since I'm using internal Valhalla AP
 - `--add-exports=java.base/jdk.internal.vm.annotation=xasmedy.math`
 
 ## Why?
-I was not satisfied with LibGDX APIs, since outdated; they used Java 6, I was 3 years old when this version was released!\
+I was not satisfied with LibGDX APIs, since outdated; they used Java 6,
+it has almost been 2 decades since this version was released!\
 Either way, I had to abuse primitives to not kill the GC, making both of these things a sh*tty coding experience.
 
 This is why I'm remaking some of the math classes by following modern standards, like immutability, and throwing in the trash inheritance. My objective is to have these math classes be used in hot-paths without any worry, hence why I'm using Valhalla.
