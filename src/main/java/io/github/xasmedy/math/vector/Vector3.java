@@ -10,7 +10,7 @@ public value record Vector3(float x, float y, float z) implements Vector<Vector3
         return vector3(x() + vector.x(), y() + vector.y(), z() + vector.z());
     }
 
-    public Vector3 add(float x, float y, float z) {
+    public Vector3 sum(float x, float y, float z) {
         return sum(vector3(x, y, z));
     }
 
@@ -50,11 +50,16 @@ public value record Vector3(float x, float y, float z) implements Vector<Vector3
 
     @Override
     public boolean isParallel(Vector3 vector, float epsilon) {
-        return false;
+        final float newX = y() * vector.z() - z() * vector.y();
+        final float newY = z() * vector.x() - x() * vector.z();
+        final float newZ = x() * vector.y() - y() * vector.x();
+        return vector3(newX, newY, newZ).length2() <= epsilon;
     }
 
     @Override
     public boolean epsilonEquals(Vector3 vector, float epsilon) {
-        return false;
+        if (Math.abs(vector.x() - x()) > epsilon) return false;
+        if (Math.abs(vector.y() - y()) > epsilon) return false;
+        return !(Math.abs(vector.z() - z()) > epsilon);
     }
 }

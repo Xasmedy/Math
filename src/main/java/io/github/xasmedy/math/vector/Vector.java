@@ -27,6 +27,10 @@ public interface Vector<T extends Vector<T>> extends Operators<T> {
 
     float sum();
 
+    default T mul(float scalar) {
+        return mul(with(scalar));
+    }
+
     /// Utility method to create a new vector with the components set as the provided value.
     T with(float value);
 
@@ -34,9 +38,10 @@ public interface Vector<T extends Vector<T>> extends Operators<T> {
     /// This allows the Vector interface to generalize some code.
     T this_();
 
-    default T mul(float scalar) {
-        return mul(with(scalar));
-    }
+
+    boolean isParallel(T vector, float epsilon);
+
+    boolean epsilonEquals(T vector, float epsilon);
 
     default float length() {
         return sqrt(length2());
@@ -123,8 +128,6 @@ public interface Vector<T extends Vector<T>> extends Operators<T> {
         return length2() < margin;
     }
 
-    boolean isParallel(T vector, float epsilon);
-
     default boolean isCollinear(T vector, float epsilon) {
         return isParallel(vector, epsilon) && hasSameDirection(vector);
     }
@@ -144,6 +147,4 @@ public interface Vector<T extends Vector<T>> extends Operators<T> {
     default boolean hasOppositeDirection(T vector) {
         return dot(vector) < 0;
     }
-
-    boolean epsilonEquals(T vector, float epsilon);
 }

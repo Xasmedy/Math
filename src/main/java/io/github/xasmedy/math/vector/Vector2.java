@@ -52,6 +52,17 @@ public value record Vector2(float x, float y) implements Vector<Vector2>, Point2
         return this;
     }
 
+    @Override
+    public boolean isParallel(Vector2 vector, float epsilon) {
+        return Math.abs(cross(vector)) <= epsilon;
+    }
+
+    @Override
+    public boolean epsilonEquals(Vector2 vector, float epsilon) {
+        if (Math.abs(vector.x() - x()) > epsilon) return false;
+        return !(Math.abs(vector.y() - y()) > epsilon);
+    }
+
     public float dot(float x, float y) {
         return dot(vector2(x, y));
     }
@@ -70,11 +81,6 @@ public value record Vector2(float x, float y) implements Vector<Vector2>, Point2
 
     public Vector2 interpolate(float x, float y, float alpha, Function<Float, Float> interpolator) {
         return interpolate(vector2(x, y), alpha, interpolator);
-    }
-
-    @Override
-    public boolean isParallel(Vector2 vector, float epsilon) {
-        return Math.abs(cross(vector)) <= epsilon;
     }
 
     public boolean isParallel(float x, float y, float epsilon) {
@@ -99,12 +105,6 @@ public value record Vector2(float x, float y) implements Vector<Vector2>, Point2
 
     public boolean hasOppositeDirection(float x, float y) {
         return hasOppositeDirection(vector2(x, y));
-    }
-
-    @Override
-    public boolean epsilonEquals(Vector2 vector, float epsilon) {
-        if (Math.abs(vector.x() - x()) > epsilon) return false;
-        return !(Math.abs(vector.y() - y()) > epsilon);
     }
 
     public boolean epsilonEquals(float x, float y, float epsilon) {
