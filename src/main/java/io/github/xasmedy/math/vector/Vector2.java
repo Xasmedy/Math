@@ -7,7 +7,7 @@ import static io.github.xasmedy.math.vector.Vector.*;
 import static io.github.xasmedy.math.util.MathUtil.*;
 
 @LooselyConsistentValue
-public record Vector2(float x, float y) implements Vector<Vector2, Point2D>, Point2D {
+public value record Vector2(float x, float y) implements Vector<Vector2, Point2D>, Point2D {
 
     @Override
     public Vector2 add(Point2D vector) {

@@ -1,4 +1,4 @@
 package io.github.xasmedy.math.unit;
 
-public /*value*/ record Radians(float value) {
+public value record Radians(float value) {
 }
