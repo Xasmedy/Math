@@ -4,6 +4,7 @@ import io.github.xasmedy.math.Operators;
 import io.github.xasmedy.math.point.Point1D;
 import io.github.xasmedy.math.point.Point2D;
 import io.github.xasmedy.math.point.Point3D;
+import io.github.xasmedy.math.point.Point4D;
 import java.util.function.Function;
 import static io.github.xasmedy.math.util.MathUtil.sqrt;
 
@@ -32,6 +33,14 @@ public interface Vector<T extends Vector<T>> extends Operators<T> {
 
     static Vector3 v3(Point3D point) {
         return v3(point.x(), point.y(), point.z());
+    }
+
+    static Vector4 v4(float x, float y, float z, float w) {
+        return new Vector4(x, y, z, w);
+    }
+
+    static Vector4 v4(Point4D point) {
+        return v4(point.x(), point.y(), point.z(), point.w());
     }
 
     /// Sums the vector components together.\
