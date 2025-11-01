@@ -51,7 +51,7 @@ public interface Vector<T extends Vector<T>> extends Operators<T> {
     /// @see Math#abs(float)
     T abs();
 
-    /// Generic operation that uses a pure function to mutate all the components of the vector.\
+    /// Generic operation that uses a [pure function](https://en.wikipedia.org/wiki/Pure_function) to mutate all the components of the vector.\
     /// For example, we can implement an abs operation thanks to the function `comp -> Math.abs(comp)`.
     /// @apiNote There's no guarantee on the order of components passed to the function.
     T operation(Function<Float, Float> operation);

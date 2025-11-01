@@ -1,6 +1,6 @@
 package io.github.xasmedy.math;
 
-/// Defines a generic interface for math operators.\
+/// Defines a generic interface for Java numeric operators.\
 /// This will likely be replaced by Java operator overloading once it comes out.
 public interface Operators<T> {
 
