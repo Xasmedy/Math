@@ -81,9 +81,4 @@ public value record Vector1(float x) implements Vector<Vector1>, Point1D {
         if (x() == 0 || vector.x() == 0) return x() == vector.x();
         return true;
     }
-
-    @Override
-    public boolean epsilonEquals(Vector1 vector, float epsilon) {
-        return !(Math.abs(vector.x() - x()) > epsilon);
-    }
 }
