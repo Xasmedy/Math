@@ -76,9 +76,9 @@ public interface Vector<T extends Vector<T>> extends Operators<T> {
     }
 
     default T withLength2(float length2) {
-        final float current = length2();
-        if (current == 0 || current == length2) return this_(); // No changes done.
-        return mul(sqrt(length2 / current));
+        final float len2 = length2();
+        if (len2 == 0 || len2 == length2) return this_(); // No changes done.
+        return mul(sqrt(length2 / len2));
     }
 
     default T limit(float limit) {
@@ -86,9 +86,9 @@ public interface Vector<T extends Vector<T>> extends Operators<T> {
     }
 
     default T limit2(float limit2) {
-        final float current = length2();
-        if (limit2 <= current) return this_(); // No changes done.
-        return mul(sqrt(limit2 / current));
+        final float len2 = length2();
+        if (limit2 <= len2) return this_(); // No changes done.
+        return mul(sqrt(limit2 / len2));
     }
 
     default T clamp(float min, float max) {
@@ -105,9 +105,9 @@ public interface Vector<T extends Vector<T>> extends Operators<T> {
     }
 
     default T normalize() {
-        final float current = length2();
-        if (current == 0 || current == 1) return this_();
-        return mul(1 / sqrt(current));
+        final float len2 = length2();
+        if (len2 == 0 || len2 == 1) return this_();
+        return mul(1 / sqrt(len2));
     }
 
     default float dot(T vector) {
