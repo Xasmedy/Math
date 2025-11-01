@@ -5,11 +5,13 @@ If you are thinking "Valhalla?!" Yes, I understand, weirdly enough for many, Val
 
 # Features
 - Point interfaces from 1D to 4D
-- Vector interface
-- Vector2
+- Generic Vector interface
+- Vector implementations from 1D to 4D
 - Radians unit class
 - Safe nullability API thanks to [JSpecify](https://jspecify.dev/)
 - Modularity as a top priority.
+- Line, Rectangle, Circle shapes.
+- A generic Operators interface to define common operators.
 
 # How to Use
 I'll try to make a maven release when the library is in a better shape, fow now you need to build from scratch, or use one of the versions I provide.\
