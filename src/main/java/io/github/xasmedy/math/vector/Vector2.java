@@ -94,10 +94,6 @@ public value record Vector2(float x, float y) implements Vector<Vector2>, Point2
         return x() * vector.y() - y() * vector.x();
     }
 
-    public Vector3 withZ(float z) {
-        return v3(x(), y(), z);
-    }
-
     public Vector2 rotate(Radians radians) {
 
         final float cos = (float) Math.cos(radians.value());
@@ -111,5 +107,13 @@ public value record Vector2(float x, float y) implements Vector<Vector2>, Point2
 
     public Radians angle() {
         return Radians.radians(((float) Math.atan2(y, x)));
+    }
+
+    public Vector1 withoutY() {
+        return v1(x());
+    }
+
+    public Vector3 withZ(float z) {
+        return v3(x(), y(), z);
     }
 }

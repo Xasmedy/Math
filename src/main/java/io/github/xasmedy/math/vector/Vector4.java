@@ -1,9 +1,11 @@
 package io.github.xasmedy.math.vector;
 
 import io.github.xasmedy.math.point.Point4D;
+import jdk.internal.vm.annotation.LooselyConsistentValue;
 import java.util.function.Function;
 import static io.github.xasmedy.math.vector.Vector.*;
 
+@LooselyConsistentValue
 public value record Vector4(float x, float y, float z, float w) implements Vector<Vector4>, Point4D {
 
     @Override
@@ -105,5 +107,9 @@ public value record Vector4(float x, float y, float z, float w) implements Vecto
     @Override
     public Vector4 this_() {
         return this;
+    }
+
+    public Vector3 withoutW() {
+        return v3(x(), y(), z());
     }
 }

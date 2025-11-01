@@ -4,6 +4,7 @@ import io.github.xasmedy.math.point.Point1D;
 import java.util.function.Function;
 import static io.github.xasmedy.math.vector.Vector.*;
 
+// No need for @LooselyConsistentValue, the class is 64 bit big, meaning the CPU supports atomic operations.
 public value record Vector1(float x) implements Vector<Vector1>, Point1D {
 
     @Override
@@ -80,5 +81,9 @@ public value record Vector1(float x) implements Vector<Vector1>, Point1D {
     public boolean isParallel(Vector1 vector, float epsilon) {
         if (x() == 0 || vector.x() == 0) return x() == vector.x();
         return true;
+    }
+
+    public Vector2 withY(float y) {
+        return v2(x(), y);
     }
 }

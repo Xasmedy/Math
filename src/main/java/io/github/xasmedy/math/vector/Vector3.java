@@ -1,9 +1,11 @@
 package io.github.xasmedy.math.vector;
 
 import io.github.xasmedy.math.point.Point3D;
+import jdk.internal.vm.annotation.LooselyConsistentValue;
 import java.util.function.Function;
 import static io.github.xasmedy.math.vector.Vector.*;
 
+@LooselyConsistentValue
 public value record Vector3(float x, float y, float z) implements Vector<Vector3>, Point3D {
 
     @Override
@@ -97,9 +99,23 @@ public value record Vector3(float x, float y, float z) implements Vector<Vector3
 
     @Override
     public boolean isParallel(Vector3 vector, float epsilon) {
+        return v3(cross(vector)).length2() <= epsilon;
+    }
+
+    public Vector3 cross(Vector3 vector) {
         final float newX = y() * vector.z() - z() * vector.y();
         final float newY = z() * vector.x() - x() * vector.z();
         final float newZ = x() * vector.y() - y() * vector.x();
-        return v3(newX, newY, newZ).length2() <= epsilon;
+        return v3(newX, newY, newZ);
     }
+
+    public Vector2 withoutZ() {
+        return v2(x(), y());
+    }
+
+    public Vector4 withW(float w) {
+        return v4(x(), y(), z(), w);
+    }
+
+    // TODO I need to implement Quaternion for rotation..
 }
