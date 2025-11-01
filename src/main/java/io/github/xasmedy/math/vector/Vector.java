@@ -157,11 +157,7 @@ public interface Vector<T extends Vector<T>> extends Operators<T> {
     }
 
     default boolean isCollinear(T vector, float epsilon) {
-        return isParallel(vector, epsilon) && hasSameDirection(vector);
-    }
-
-    default boolean isCollinearOpposite(T vector, float epsilon) {
-        return isParallel(vector, epsilon) && hasOppositeDirection(vector);
+        return isParallel(vector, epsilon);
     }
 
     default boolean isPerpendicular(T vector, float epsilon) {
