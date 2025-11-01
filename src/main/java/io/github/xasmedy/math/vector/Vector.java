@@ -57,8 +57,6 @@ public interface Vector<T extends Vector<T>> extends Operators<T> {
     /// This allows the Vector interface to generalize some code.
     T this_();
 
-    boolean isParallel(T vector, float epsilon);
-
     default T mul(float scalar) {
         return mul(with(scalar));
     }
@@ -146,6 +144,16 @@ public interface Vector<T extends Vector<T>> extends Operators<T> {
 
     default boolean isLengthZero(float margin) {
         return length2() < margin;
+    }
+
+    default boolean isParallel(T vector, float epsilon) {
+
+        final float len = length();
+        final float vLen = vector.length();
+        if (len == 0 || vLen == 0) return false;
+
+        final float cosTheta = dot(vector) / (len * vLen);
+        return Math.abs(Math.abs(cosTheta) - 1f) <= epsilon;
     }
 
     default boolean isCollinear(T vector, float epsilon) {
