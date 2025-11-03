@@ -1,5 +1,6 @@
 package io.github.xasmedy.math.point;
 
+/// A class to import statically to have a short way to initialize all the library points.
 public value class Points {
 
     private Points() {}

@@ -6,6 +6,8 @@ public interface Point1<T extends Number> {
 
     T x();
 
+    /* These classes do not required @LooselyConsistentValue since all are 64 bits or fewer. */
+
     value record I32(@NullRestricted Integer x) implements Point1<Integer> {}
 
     value record I64(@NullRestricted Long x   ) implements Point1<Long> {}
