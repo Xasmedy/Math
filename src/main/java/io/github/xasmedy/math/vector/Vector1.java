@@ -1,11 +1,12 @@
 package io.github.xasmedy.math.vector;
 
-import io.github.xasmedy.math.point.Point1D;
+import io.github.xasmedy.math.point.Point1;
+import jdk.internal.vm.annotation.NullRestricted;
 import java.util.function.Function;
-import static io.github.xasmedy.math.vector.Vector.*;
+import static io.github.xasmedy.math.vector.Vectors.*;
 
 // No need for @LooselyConsistentValue, the class is 64 bit big, meaning the CPU supports atomic operations.
-public value record Vector1(float x) implements Vector<Vector1>, Point1D {
+public value record Vector1(@NullRestricted Float x) implements Vector<Vector1>, Point1<Float> {
 
     @Override
     public Vector1 sum(Vector1 value) {

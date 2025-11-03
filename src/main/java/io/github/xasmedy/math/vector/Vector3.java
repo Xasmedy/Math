@@ -1,12 +1,15 @@
 package io.github.xasmedy.math.vector;
 
-import io.github.xasmedy.math.point.Point3D;
+import io.github.xasmedy.math.point.Point3;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
+import jdk.internal.vm.annotation.NullRestricted;
 import java.util.function.Function;
-import static io.github.xasmedy.math.vector.Vector.*;
+import static io.github.xasmedy.math.vector.Vectors.*;
 
 @LooselyConsistentValue
-public value record Vector3(float x, float y, float z) implements Vector<Vector3>, Point3D {
+public value record Vector3(@NullRestricted Float x,
+                            @NullRestricted Float y,
+                            @NullRestricted Float z) implements Vector<Vector3>, Point3<Float> {
 
     @Override
     public Vector3 sum(Vector3 value) {

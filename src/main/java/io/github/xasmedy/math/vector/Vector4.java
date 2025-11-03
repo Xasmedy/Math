@@ -1,12 +1,16 @@
 package io.github.xasmedy.math.vector;
 
-import io.github.xasmedy.math.point.Point4D;
+import io.github.xasmedy.math.point.Point4;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
+import jdk.internal.vm.annotation.NullRestricted;
 import java.util.function.Function;
-import static io.github.xasmedy.math.vector.Vector.*;
+import static io.github.xasmedy.math.vector.Vectors.*;
 
 @LooselyConsistentValue
-public value record Vector4(float x, float y, float z, float w) implements Vector<Vector4>, Point4D {
+public value record Vector4(@NullRestricted Float x,
+                            @NullRestricted Float y,
+                            @NullRestricted Float z,
+                            @NullRestricted Float w) implements Vector<Vector4>, Point4<Float> {
 
     @Override
     public Vector4 sum(Vector4 value) {

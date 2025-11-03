@@ -1,13 +1,14 @@
 package io.github.xasmedy.math.vector;
 
-import io.github.xasmedy.math.point.Point2D;
+import io.github.xasmedy.math.point.Point2;
 import io.github.xasmedy.math.unit.Radians;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
+import jdk.internal.vm.annotation.NullRestricted;
 import java.util.function.Function;
-import static io.github.xasmedy.math.vector.Vector.*;
+import static io.github.xasmedy.math.vector.Vectors.*;
 
 @LooselyConsistentValue
-public value record Vector2(float x, float y) implements Vector<Vector2>, Point2D {
+public value record Vector2(@NullRestricted Float x, @NullRestricted Float y) implements Vector<Vector2>, Point2<Float> {
 
     @Override
     public Vector2 sum(Vector2 value) {
