@@ -4,12 +4,15 @@ import io.github.xasmedy.math.point.Point2;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
 import jdk.internal.vm.annotation.NullRestricted;
 
+// TODO Generalize to all dimensions, and call this a Sphere, if worth it
 public interface Circle<T extends Number, P extends Point2<T>> {
 
     P center();
 
     T radius();
 
+    // TODO If I want to generalise the dimension,
+    //  I need to make a lot of marker interfaces for point; PointI32, PointF32.
     @LooselyConsistentValue
     value record I32(@NullRestricted Point2.I32 center,
                      @NullRestricted Integer radius    ) implements Circle<Integer, Point2.I32> {}

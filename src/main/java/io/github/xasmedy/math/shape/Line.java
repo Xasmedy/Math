@@ -4,6 +4,7 @@ import io.github.xasmedy.math.point.Point2;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
 import jdk.internal.vm.annotation.NullRestricted;
 
+// TODO Generalize to all dimensions if worth it
 public interface Line<P extends Point2<?>> {
 
     P start();
