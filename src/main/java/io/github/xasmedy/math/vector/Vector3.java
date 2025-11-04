@@ -9,7 +9,7 @@ import static io.github.xasmedy.math.vector.Vectors.*;
 @LooselyConsistentValue
 public value record Vector3(@NullRestricted Float x,
                             @NullRestricted Float y,
-                            @NullRestricted Float z) implements Vector<Vector3>, Point3<Float> {
+                            @NullRestricted Float z) implements BaseVector<Vector3>, Point3<Float> {
 
     @Override
     public Vector3 add(Vector3 value) {
@@ -112,7 +112,7 @@ public value record Vector3(@NullRestricted Float x,
         return v3(newX, newY, newZ);
     }
 
-    public Vector2 withoutZ() {
+    public Vector2F32 withoutZ() {
         return v2(x(), y());
     }
 

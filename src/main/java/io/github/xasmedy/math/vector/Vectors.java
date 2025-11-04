@@ -9,19 +9,35 @@ public value class Vectors {
 
     private Vectors() {}
 
-    public static Vector1 v1(float x) {
-        return new Vector1(x);
+    public static Vector1F32 v1(float x) {
+        return new Vector1F32(x);
     }
 
-    public static Vector1 v1(Point1<Float> point) {
+    public static Vector1F32 v1F32(Point1<Float> point) {
         return v1(point.x());
     }
 
-    public static Vector2 v2(float x, float y) {
-        return new Vector2(x, y);
+    public static Vector1F64 v1(double x) {
+        return new Vector1F64(x);
     }
 
-    public static Vector2 v2(Point2<Float> point) {
+    public static Vector1F64 v1F64(Point1<Double> point) {
+        return v1(point.x());
+    }
+
+    public static Vector2F32 v2(float x, float y) {
+        return new Vector2F32(x, y);
+    }
+
+    public static Vector2F32 v2F32(Point2<Float> point) {
+        return v2(point.x(), point.y());
+    }
+
+    public static Vector2F64 v2(double x, double y) {
+        return new Vector2F64(x, y);
+    }
+
+    public static Vector2F64 v2F64(Point2<Double> point) {
         return v2(point.x(), point.y());
     }
 

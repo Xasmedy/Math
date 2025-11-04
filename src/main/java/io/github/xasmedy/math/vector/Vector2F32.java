@@ -8,48 +8,48 @@ import java.util.function.Function;
 import static io.github.xasmedy.math.vector.Vectors.*;
 
 @LooselyConsistentValue
-public value record Vector2(@NullRestricted Float x, @NullRestricted Float y) implements Vector<Vector2>, Point2<Float> {
+public value record Vector2F32(@NullRestricted Float x, @NullRestricted Float y) implements VectorF32<Vector2F32>, Point2<Float> {
 
     @Override
-    public Vector2 add(Vector2 value) {
+    public Vector2F32 add(Vector2F32 value) {
         return v2(x() + value.x(), y() + value.y());
     }
 
     @Override
-    public Vector2 sub(Vector2 value) {
+    public Vector2F32 sub(Vector2F32 value) {
         return v2(x() - value.x(), y() - value.y());
     }
 
     @Override
-    public Vector2 mul(Vector2 value) {
+    public Vector2F32 mul(Vector2F32 value) {
         return v2(x() * value.x(), y() * value.y());
     }
 
     @Override
-    public Vector2 div(Vector2 value) {
+    public Vector2F32 div(Vector2F32 value) {
         return v2(x() / value.x(), y() / value.y());
     }
 
     @Override
-    public boolean lt(Vector2 value) {
+    public boolean lt(Vector2F32 value) {
         return x() < value.x() &&
                y() < value.y();
     }
 
     @Override
-    public boolean ltEq(Vector2 value) {
+    public boolean ltEq(Vector2F32 value) {
         return x() <= value.x() &&
                y() <= value.y();
     }
 
     @Override
-    public boolean gt(Vector2 value) {
+    public boolean gt(Vector2F32 value) {
         return x() > value.x() &&
                y() > value.y();
     }
 
     @Override
-    public boolean gtEq(Vector2 value) {
+    public boolean gtEq(Vector2F32 value) {
         return x() >= value.x() &&
                y() >= value.y();
     }
@@ -60,12 +60,12 @@ public value record Vector2(@NullRestricted Float x, @NullRestricted Float y) im
     }
 
     @Override
-    public Vector2 abs() {
+    public Vector2F32 abs() {
         return v2(Math.abs(x()), Math.abs(y()));
     }
 
     @Override
-    public Vector2 operation(Function<Float, Float> operation) {
+    public Vector2F32 operation(Function<Float, Float> operation) {
         final float x = operation.apply(x());
         final float y = operation.apply(y());
         return v2(x, y);
@@ -77,25 +77,25 @@ public value record Vector2(@NullRestricted Float x, @NullRestricted Float y) im
     }
 
     @Override
-    public Vector2 with(float value) {
+    public Vector2F32 with(float value) {
         return v2(value, value);
     }
 
     @Override
-    public Vector2 this_() {
+    public Vector2F32 this_() {
         return this;
     }
 
     @Override
-    public boolean isCollinear(Vector2 vector, float epsilon) {
+    public boolean isCollinear(Vector2F32 vector, float epsilon) {
         return Math.abs(cross(vector)) <= epsilon;
     }
 
-    public float cross(Vector2 vector) {
+    public float cross(Vector2F32 vector) {
         return x() * vector.y() - y() * vector.x();
     }
 
-    public Vector2 rotate(Radians radians) {
+    public Vector2F32 rotate(Radians radians) {
 
         final float cos = (float) Math.cos(radians.value());
         final float sin = (float) Math.sin(radians.value());
@@ -110,7 +110,7 @@ public value record Vector2(@NullRestricted Float x, @NullRestricted Float y) im
         return Radians.radians(((float) Math.atan2(y, x)));
     }
 
-    public Vector1 withoutY() {
+    public Vector1F32 withoutY() {
         return v1(x());
     }
 

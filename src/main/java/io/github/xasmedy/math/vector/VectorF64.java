@@ -1,0 +1,114 @@
+package io.github.xasmedy.math.vector;
+
+import java.util.function.Function;
+import static io.github.xasmedy.math.util.MathUtil.sqrt;
+
+public interface VectorF64<T extends VectorF64<T>> extends BaseVector<T> {
+
+    /// Sums the vector components together.\
+    /// In the case of a {@link Vector2F32}, the result would be `x + y`.
+    double sum();
+
+    /// Utility method to create a new vector with all the components set as the provided value.
+    T with(double value);
+
+    /// Generic operation that uses a [pure function](https://en.wikipedia.org/wiki/Pure_function) to mutate all the components of the vector.\
+    /// For example, we can implement an abs operation thanks to the function `comp -> Math.abs(comp)`.
+    /// @apiNote There's no guarantee on the order of components passed to the function.
+    T operation(Function<Double, Double> operation);
+
+    default T mul(double scalar) {
+        return mul(with(scalar));
+    }
+
+    default double length() {
+        return sqrt(length2());
+    }
+
+    default double length2() {
+        return mul(this_()).sum();
+    }
+
+    default T withLength(double length) {
+        return withLength2(length * length);
+    }
+
+    default T withLength2(double length2) {
+        final double len2 = length2();
+        if (len2 == 0 || len2 == length2) return this_(); // No changes done.
+        return mul(sqrt(length2 / len2));
+    }
+
+    default T limit(double limit) {
+        return limit2(limit * limit);
+    }
+
+    default T limit2(double limit2) {
+        final double len2 = length2();
+        if (limit2 <= len2) return this_(); // No changes done.
+        return mul(sqrt(limit2 / len2));
+    }
+
+    default T clamp(double min, double max) {
+
+        final double len2 = length2();
+        if (len2 == 0) return this_();
+
+        final double max2 = max * max;
+        if (len2 > max2) return mul(sqrt(max2 / len2));
+
+        final double min2 = min * min;
+        if (len2 < min2) return mul(sqrt(min2 / len2));
+        return this_();
+    }
+
+    default T normalize() {
+        final double len2 = length2();
+        if (len2 == 0 || len2 == 1) return this_();
+        return mul(1 / sqrt(len2));
+    }
+
+    default double dot(T vector) {
+        return mul(vector).sum();
+    }
+
+    default double distance(T vector) {
+        return sqrt(distance2(vector));
+    }
+
+    default double distance2(T vector) {
+        final var delta = vector.sub(this_());
+        return delta.mul(delta).sum();
+    }
+
+    default T lerp(T target, double alpha) {
+        final double invAlpha = 1.0f - alpha;
+        return mul(invAlpha).add(mul(alpha));
+    }
+
+    default T interpolate(T target, double alpha, Function<Double, Double> interpolator) {
+        return lerp(target, interpolator.apply(alpha));
+    }
+
+    default boolean isCollinear(T vector, double epsilon) {
+
+        final double len = length();
+        final double vLen = vector.length();
+        if (len == 0 || vLen == 0) return false;
+
+        final double cosTheta = dot(vector) / (len * vLen);
+        return Math.abs(Math.abs(cosTheta) - 1f) <= epsilon;
+    }
+
+    default boolean isPerpendicular(T vector, double epsilon) {
+        return Math.abs(dot(vector)) <= epsilon;
+    }
+
+    default boolean hasSameDirection(T vector) {
+        return dot(vector) > 0;
+    }
+
+    default boolean hasOppositeDirection(T vector) {
+        return dot(vector) < 0;
+    }
+}

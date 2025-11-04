@@ -6,4 +6,8 @@ public value class MathUtil {
     public static float sqrt(float value) {
         return (float) Math.sqrt(value);
     }
+
+    public static double sqrt(double value) {
+        return Math.sqrt(value);
+    }
 }

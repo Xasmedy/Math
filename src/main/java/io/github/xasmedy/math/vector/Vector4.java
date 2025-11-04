@@ -10,7 +10,7 @@ import static io.github.xasmedy.math.vector.Vectors.*;
 public value record Vector4(@NullRestricted Float x,
                             @NullRestricted Float y,
                             @NullRestricted Float z,
-                            @NullRestricted Float w) implements Vector<Vector4>, Point4<Float> {
+                            @NullRestricted Float w) implements BaseVector<Vector4>, Point4<Float> {
 
     @Override
     public Vector4 add(Vector4 value) {

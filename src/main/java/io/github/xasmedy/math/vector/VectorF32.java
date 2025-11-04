@@ -1,34 +1,21 @@
 package io.github.xasmedy.math.vector;
 
-import io.github.xasmedy.math.Operators;
 import java.util.function.Function;
 import static io.github.xasmedy.math.util.MathUtil.sqrt;
 
-/// @implSpec T must extends P.
-public interface Vector<T extends Vector<T>> extends Operators<T> {
+public interface VectorF32<T extends VectorF32<T>> extends BaseVector<T> {
 
     /// Sums the vector components together.\
-    /// In the case of a {@link Vector2}, the result would be `x + y`.
+    /// In the case of a {@link Vector2F32}, the result would be `x + y`.
     float sum();
 
-    /// @return the absolute value of all the vector components.
-    /// @see Math#abs(float)
-    T abs();
+    /// Utility method to create a new vector with all the components set as the provided value.
+    T with(float value);
 
     /// Generic operation that uses a [pure function](https://en.wikipedia.org/wiki/Pure_function) to mutate all the components of the vector.\
     /// For example, we can implement an abs operation thanks to the function `comp -> Math.abs(comp)`.
     /// @apiNote There's no guarantee on the order of components passed to the function.
     T operation(Function<Float, Float> operation);
-
-    /// @return The dimension of this vector.
-    int dimension();
-
-    /// Utility method to create a new vector with all the components set as the provided value.
-    T with(float value);
-
-    /// Utility method to convert {@link Vector} to {@link T}.\
-    /// This allows the Vector interface to generalize some code.
-    T this_();
 
     default T mul(float scalar) {
         return mul(with(scalar));
@@ -103,23 +90,8 @@ public interface Vector<T extends Vector<T>> extends Operators<T> {
         return lerp(target, interpolator.apply(alpha));
     }
 
-    default boolean isUnit(float margin) {
-        return Math.abs(length2() - 1f) < margin;
-    }
-
-    default boolean isUnit() {
-        return isUnit(0.000000001f);
-    }
-
-    default boolean isZero() {
-        return equals(with(0));
-    }
-
-    default boolean isLengthZero(float margin) {
-        return length2() < margin;
-    }
-
     default boolean isCollinear(T vector, float epsilon) {
+
         final float len = length();
         final float vLen = vector.length();
         if (len == 0 || vLen == 0) return false;
@@ -138,11 +110,5 @@ public interface Vector<T extends Vector<T>> extends Operators<T> {
 
     default boolean hasOppositeDirection(T vector) {
         return dot(vector) < 0;
-    }
-
-    default boolean epsilonEquals(T vector, float epsilon) {
-        return vector.sub(this_())
-                .abs()
-                .ltEq(with(epsilon));
     }
 }
