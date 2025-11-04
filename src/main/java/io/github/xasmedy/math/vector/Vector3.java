@@ -12,12 +12,12 @@ public value record Vector3(@NullRestricted Float x,
                             @NullRestricted Float z) implements Vector<Vector3>, Point3<Float> {
 
     @Override
-    public Vector3 sum(Vector3 value) {
+    public Vector3 add(Vector3 value) {
         return v3(x() + value.x(), y() + value.y(), z() + value.z());
     }
 
     public Vector3 sum(float x, float y, float z) {
-        return sum(v3(x, y, z));
+        return add(v3(x, y, z));
     }
 
     @Override
@@ -101,7 +101,7 @@ public value record Vector3(@NullRestricted Float x,
     }
 
     @Override
-    public boolean isParallel(Vector3 vector, float epsilon) {
+    public boolean isCollinear(Vector3 vector, float epsilon) {
         return v3(cross(vector)).length2() <= epsilon;
     }
 

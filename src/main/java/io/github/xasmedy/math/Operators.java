@@ -4,7 +4,7 @@ package io.github.xasmedy.math;
 /// This will likely be replaced by Java operator overloading once it comes out.
 public interface Operators<T> {
 
-    T sum(T value);
+    T add(T value);
 
     T sub(T value);
 

@@ -11,7 +11,7 @@ import static io.github.xasmedy.math.vector.Vectors.*;
 public value record Vector2(@NullRestricted Float x, @NullRestricted Float y) implements Vector<Vector2>, Point2<Float> {
 
     @Override
-    public Vector2 sum(Vector2 value) {
+    public Vector2 add(Vector2 value) {
         return v2(x() + value.x(), y() + value.y());
     }
 
@@ -87,7 +87,7 @@ public value record Vector2(@NullRestricted Float x, @NullRestricted Float y) im
     }
 
     @Override
-    public boolean isParallel(Vector2 vector, float epsilon) {
+    public boolean isCollinear(Vector2 vector, float epsilon) {
         return Math.abs(cross(vector)) <= epsilon;
     }
 

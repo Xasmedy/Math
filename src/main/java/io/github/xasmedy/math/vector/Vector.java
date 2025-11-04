@@ -96,7 +96,7 @@ public interface Vector<T extends Vector<T>> extends Operators<T> {
 
     default T lerp(T target, float alpha) {
         final float invAlpha = 1.0f - alpha;
-        return mul(invAlpha).sum(mul(alpha));
+        return mul(invAlpha).add(mul(alpha));
     }
 
     default T interpolate(T target, float alpha, Function<Float, Float> interpolator) {
@@ -119,18 +119,13 @@ public interface Vector<T extends Vector<T>> extends Operators<T> {
         return length2() < margin;
     }
 
-    default boolean isParallel(T vector, float epsilon) {
-
+    default boolean isCollinear(T vector, float epsilon) {
         final float len = length();
         final float vLen = vector.length();
         if (len == 0 || vLen == 0) return false;
 
         final float cosTheta = dot(vector) / (len * vLen);
         return Math.abs(Math.abs(cosTheta) - 1f) <= epsilon;
-    }
-
-    default boolean isCollinear(T vector, float epsilon) {
-        return isParallel(vector, epsilon);
     }
 
     default boolean isPerpendicular(T vector, float epsilon) {

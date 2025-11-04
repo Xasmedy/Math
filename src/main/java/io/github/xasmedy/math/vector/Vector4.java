@@ -13,7 +13,7 @@ public value record Vector4(@NullRestricted Float x,
                             @NullRestricted Float w) implements Vector<Vector4>, Point4<Float> {
 
     @Override
-    public Vector4 sum(Vector4 value) {
+    public Vector4 add(Vector4 value) {
         return v4(x() + value.x(),
                   y() + value.y(),
                   z() + value.z(),

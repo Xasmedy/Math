@@ -9,7 +9,7 @@ import static io.github.xasmedy.math.vector.Vectors.*;
 public value record Vector1(@NullRestricted Float x) implements Vector<Vector1>, Point1<Float> {
 
     @Override
-    public Vector1 sum(Vector1 value) {
+    public Vector1 add(Vector1 value) {
         return v1(x() + value.x());
     }
 
@@ -79,8 +79,8 @@ public value record Vector1(@NullRestricted Float x) implements Vector<Vector1>,
     }
 
     @Override
-    public boolean isParallel(Vector1 vector, float epsilon) {
-        if (x() == 0 || vector.x() == 0) return x() == vector.x();
+    public boolean isCollinear(Vector1 vector, float epsilon) {
+        if (x() == 0 || vector.x() == 0) return x().equals(vector.x());
         return true;
     }
 
