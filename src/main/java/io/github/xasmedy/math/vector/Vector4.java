@@ -44,20 +44,20 @@ public interface Vector4<T extends Vector4<T, N>, N extends Number> extends Vect
 
     @Override
     default T operation(T other, Operation<N> operation) {
-        final N x = operation.calculate(arithmetic(), x(), other.x());
-        final N y = operation.calculate(arithmetic(), y(), other.y());
-        final N z = operation.calculate(arithmetic(), z(), other.z());
-        final N w = operation.calculate(arithmetic(), w(), other.w());
-        return new_(x, y, z, w);
+        final N newX = operation.calculate(arithmetic(), x(), other.x());
+        final N newY = operation.calculate(arithmetic(), y(), other.y());
+        final N newZ = operation.calculate(arithmetic(), z(), other.z());
+        final N newW = operation.calculate(arithmetic(), w(), other.w());
+        return new_(newX, newY, newZ, newW);
     }
 
     @Override
     default T operation(Transformation<N> operation) {
-        final N x = operation.calculate(arithmetic(), x());
-        final N y = operation.calculate(arithmetic(), y());
-        final N z = operation.calculate(arithmetic(), z());
-        final N w = operation.calculate(arithmetic(), w());
-        return new_(x, y, z, w);
+        final N newX = operation.calculate(arithmetic(), x());
+        final N newY = operation.calculate(arithmetic(), y());
+        final N newZ = operation.calculate(arithmetic(), z());
+        final N newW = operation.calculate(arithmetic(), w());
+        return new_(newX, newY, newZ, newW);
     }
 
     @Override
@@ -199,12 +199,15 @@ public interface Vector4<T extends Vector4<T, N>, N extends Number> extends Vect
 
         @Override
         public Vector3.I64 withoutY() {
-            return v3(x, y, z);
+            return v3(x(), y(), z());
         }
 
         @Override
         public Vector4.F64 asReal() {
-            return v4((double) x(), (double) y(), (double) z(), (double) w());
+            return v4((double) x(),
+                      (double) y(),
+                      (double) z(),
+                      (double) w());
         }
 
         @Override

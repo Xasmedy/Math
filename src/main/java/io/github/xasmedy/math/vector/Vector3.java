@@ -35,7 +35,8 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
     @Override
     default N sum() {
         final var ath = arithmetic();
-        return ath.add(x(), ath.add(y(), z()));
+        final N p1 = ath.add(x(), y());
+        return ath.add(p1, z());
     }
 
     @Override
@@ -45,18 +46,18 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
 
     @Override
     default T operation(T other, Operation<N> operation) {
-        final N x = operation.calculate(arithmetic(), x(), other.x());
-        final N y = operation.calculate(arithmetic(), y(), other.y());
-        final N z = operation.calculate(arithmetic(), z(), other.z());
-        return new_(x, y, z);
+        final N newX = operation.calculate(arithmetic(), x(), other.x());
+        final N newY = operation.calculate(arithmetic(), y(), other.y());
+        final N newZ = operation.calculate(arithmetic(), z(), other.z());
+        return new_(newX, newY, newZ);
     }
 
     @Override
     default T operation(Transformation<N> operation) {
-        final N x = operation.calculate(arithmetic(), x());
-        final N y = operation.calculate(arithmetic(), y());
-        final N z = operation.calculate(arithmetic(), z());
-        return new_(x, y, z);
+        final N newX = operation.calculate(arithmetic(), x());
+        final N newY = operation.calculate(arithmetic(), y());
+        final N newZ = operation.calculate(arithmetic(), z());
+        return new_(newX, newY, newZ);
     }
 
     @Override
@@ -86,7 +87,7 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
 
         @Override
         public Vector4.F32 withW(Float w) {
-            return v4(x, y, z, w);
+            return v4(x(), y(), z(), w);
         }
 
         @Override
@@ -136,12 +137,12 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
 
         @Override
         public Vector4.F64 withW(Double w) {
-            return v4(x, y, z, w);
+            return v4(x(), y(), z(), w);
         }
 
         @Override
         public Vector2.F64 withoutZ() {
-            return v2(x, y);
+            return v2(x(), y());
         }
 
         @Override
@@ -186,7 +187,7 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
 
         @Override
         public Vector4.I32 withW(Integer w) {
-            return v4(x, y, z, w);
+            return v4(x(), y(), z(), w);
         }
 
         @Override
@@ -222,7 +223,7 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
 
         @Override
         public Vector4.I64 withW(Long w) {
-            return v4(x, y, z, w);
+            return v4(x(), y(), z(), w);
         }
 
         @Override

@@ -57,16 +57,16 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
 
     @Override
     default T operation(T other, Operation<N> operation) {
-        final N x = operation.calculate(arithmetic(), x(), other.x());
-        final N y = operation.calculate(arithmetic(), y(), other.y());
-        return new_(x, y);
+        final N newX = operation.calculate(arithmetic(), x(), other.x());
+        final N newY = operation.calculate(arithmetic(), y(), other.y());
+        return new_(newX, newY);
     }
 
     @Override
     default T operation(Transformation<N> operation) {
-        final N x = operation.calculate(arithmetic(), x());
-        final N y = operation.calculate(arithmetic(), y());
-        return new_(x, y);
+        final N newX = operation.calculate(arithmetic(), x());
+        final N newY = operation.calculate(arithmetic(), y());
+        return new_(newX, newY);
     }
 
     @Override
@@ -78,9 +78,9 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
     default N cross(T vector) {
         final var ath = arithmetic();
         // x * vec.y - y * vec.x
-        final N x = ath.mul(x(), vector.y());
-        final N y = ath.mul(y(), vector.x());
-        return ath.sub(x, y);
+        final N newX = ath.mul(x(), vector.y());
+        final N newY = ath.mul(y(), vector.x());
+        return ath.sub(newX, newY);
     }
 
     @LooselyConsistentValue
