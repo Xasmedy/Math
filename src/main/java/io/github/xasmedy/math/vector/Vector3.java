@@ -4,13 +4,18 @@ import io.github.xasmedy.math.arithmetic.*;
 import io.github.xasmedy.math.point.Point3;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
 import jdk.internal.vm.annotation.NullRestricted;
-
 import static io.github.xasmedy.math.vector.Vectors.*;
+import static io.github.xasmedy.math.arithmetic.Arithmetics.*;
 
-@LooselyConsistentValue
 public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vector<T, N>, Point3<N> {
 
+    // TODO I need to implement Quaternion for rotation..
+
     T new_(N x, N y, N z);
+
+    Vector4<?, N> withW(N w);
+
+    Vector2<?, N> withoutZ();
 
     @Override
     default int dimension() {
@@ -69,44 +74,14 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
         return new_(newX, newY, newZ);
     }
 
-    Vector2<?, N> withoutZ();
-
-    Vector4<?, N> withW(N w);
-
-//    @Override
-//    default boolean isCollinear(T vector, N epsilon) {
-//        return v3(cross(vector)).length2() <= epsilon;
-//    }
-
-    // TODO I need to implement Quaternion for rotation..
-
-
+    @LooselyConsistentValue
     value record F32(@NullRestricted Float x,
                      @NullRestricted Float y,
                      @NullRestricted Float z) implements Vector3<F32, Float>, RealVector<F32, Float> {
 
         @Override
-        public IntegerVector<?, ?> ceilAsInt() {
-            return v3((int) Math.ceil(x()),
-                    (int) Math.ceil(y()),
-                    (int) Math.ceil(z()));
-        }
-
-        @Override
-        public IntegerVector<?, ?> floorAsInt() {
-            return v3((int) Math.floor(x()),
-                    (int) Math.floor(y()),
-                    (int) Math.floor(z()));
-        }
-
-        @Override
         public Vector3.F32 new_(Float x, Float y, Float z) {
             return v3(x, y, z);
-        }
-
-        @Override
-        public Vector2.F32 withoutZ() {
-            return v2(x(), y());
         }
 
         @Override
@@ -115,8 +90,32 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
         }
 
         @Override
+        public Vector2.F32 withoutZ() {
+            return v2(x(), y());
+        }
+
+        @Override
+        public Vector3.I32 ceilAsInt() {
+            return v3((int) Math.ceil(x()),
+                      (int) Math.ceil(y()),
+                      (int) Math.ceil(z()));
+        }
+
+        @Override
+        public Vector3.I32 floorAsInt() {
+            return v3((int) Math.floor(x()),
+                      (int) Math.floor(y()),
+                      (int) Math.floor(z()));
+        }
+
+        @Override
+        public boolean isCollinear(Vector3.F32 vector, Float epsilon) {
+            return cross(vector).length2() <= epsilon;
+        }
+
+        @Override
         public ArithmeticF32 arithmetic() {
-            return new ArithmeticF32();
+            return ATH_F32;
         }
 
         @Override
@@ -125,9 +124,25 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
         }
     }
 
+    @LooselyConsistentValue
     value record F64(@NullRestricted Double x,
                      @NullRestricted Double y,
                      @NullRestricted Double z) implements Vector3<F64, Double>, RealVector<F64, Double> {
+
+        @Override
+        public Vector3.F64 new_(Double x, Double y, Double z) {
+            return v3(x, y, z);
+        }
+
+        @Override
+        public Vector4.F64 withW(Double w) {
+            return v4(x, y, z, w);
+        }
+
+        @Override
+        public Vector2.F64 withoutZ() {
+            return v2(x, y);
+        }
 
         @Override
         public Vector3.I64 ceilAsInt() {
@@ -144,23 +159,13 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
         }
 
         @Override
-        public Vector3.F64 new_(Double x, Double y, Double z) {
-            return v3(x, y, z);
-        }
-
-        @Override
-        public Vector2.F64 withoutZ() {
-            return v2(x, y);
-        }
-
-        @Override
-        public Vector4.F64 withW(Double w) {
-            return v4(x, y, z, w);
+        public boolean isCollinear(Vector3.F64 vector, Double epsilon) {
+            return cross(vector).length2() <= epsilon;
         }
 
         @Override
         public ArithmeticF64 arithmetic() {
-            return new ArithmeticF64();
+            return ATH_F64;
         }
 
         @Override
@@ -169,23 +174,14 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
         }
     }
 
+    @LooselyConsistentValue
     value record I32(@NullRestricted Integer x,
                      @NullRestricted Integer y,
                      @NullRestricted Integer z) implements Vector3<I32, Integer>, IntegerVector<I32, Integer> {
 
         @Override
-        public Vector3.F32 asReal() {
-            return v3((float) x(), (float) y(), (float) z());
-        }
-
-        @Override
         public Vector3.I32 new_(Integer x, Integer y, Integer z) {
             return v3(x, y, z);
-        }
-
-        @Override
-        public Vector2.I32 withoutZ() {
-            return v2(x(), y());
         }
 
         @Override
@@ -194,8 +190,18 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
         }
 
         @Override
+        public Vector2.I32 withoutZ() {
+            return v2(x(), y());
+        }
+
+        @Override
+        public Vector3.F32 asReal() {
+            return v3((float) x(), (float) y(), (float) z());
+        }
+
+        @Override
         public ArithmeticI32 arithmetic() {
-            return new ArithmeticI32();
+            return ATH_I32;
         }
 
         @Override
@@ -204,23 +210,14 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
         }
     }
 
+    @LooselyConsistentValue
     value record I64(@NullRestricted Long x,
                      @NullRestricted Long y,
                      @NullRestricted Long z) implements Vector3<I64, Long>, IntegerVector<I64, Long> {
 
         @Override
-        public Vector3.F64 asReal() {
-            return v3((double) x(), (double) y(), (double) z());
-        }
-
-        @Override
         public Vector3.I64 new_(Long x, Long y, Long z) {
             return v3(x, y, z);
-        }
-
-        @Override
-        public Vector2.I64 withoutZ() {
-            return v2(x(), y());
         }
 
         @Override
@@ -229,8 +226,18 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
         }
 
         @Override
+        public Vector2.I64 withoutZ() {
+            return v2(x(), y());
+        }
+
+        @Override
+        public Vector3.F64 asReal() {
+            return v3((double) x(), (double) y(), (double) z());
+        }
+
+        @Override
         public ArithmeticI64 arithmetic() {
-            return new ArithmeticI64();
+            return ATH_I64;
         }
 
         @Override
