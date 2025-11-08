@@ -1,124 +1,241 @@
 package io.github.xasmedy.math.vector;
 
+import io.github.xasmedy.math.arithmetic.*;
 import io.github.xasmedy.math.point.Point3;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
 import jdk.internal.vm.annotation.NullRestricted;
-import java.util.function.Function;
+
 import static io.github.xasmedy.math.vector.Vectors.*;
 
 @LooselyConsistentValue
-public value record Vector3(@NullRestricted Float x,
-                            @NullRestricted Float y,
-                            @NullRestricted Float z) implements Vector<Vector3>, Point3<Float> {
+public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vector<T, N>, Point3<N> {
+
+    T new_(N x, N y, N z);
 
     @Override
-    public Vector3 add(Vector3 value) {
-        return v3(x() + value.x(), y() + value.y(), z() + value.z());
-    }
-
-    public Vector3 sum(float x, float y, float z) {
-        return add(v3(x, y, z));
-    }
-
-    @Override
-    public Vector3 sub(Vector3 value) {
-        return v3(x() - value.x(), y() - value.y(), z() - value.z());
-    }
-
-    public Vector3 sub(float x, float y, float z) {
-        return sub(v3(x, y, z));
-    }
-
-    @Override
-    public Vector3 mul(Vector3 value) {
-        return v3(x() * value.x(), y() * value.y(), z() * value.z());
-    }
-
-    @Override
-    public Vector3 div(Vector3 value) {
-        return v3(x() / value.x(), y() / value.y(), z() / value.z());
-    }
-
-    @Override
-    public boolean lt(Vector3 value) {
-        return x() < value.x() &&
-               y() < value.y() &&
-               z() < value.z();
-    }
-
-    @Override
-    public boolean ltEq(Vector3 value) {
-        return x() <= value.x() &&
-               y() <= value.y() &&
-               z() <= value.z();
-    }
-
-    @Override
-    public boolean gt(Vector3 value) {
-        return x() > value.x() &&
-               y() > value.y() &&
-               z() > value.z();
-    }
-
-    @Override
-    public boolean gtEq(Vector3 value) {
-        return x() >= value.x() &&
-               y() >= value.y() &&
-               z() >= value.z();
-    }
-
-    @Override
-    public float sum() {
-        return x() + y() + z();
-    }
-
-    @Override
-    public Vector3 abs() {
-        return v3(Math.abs(x()), Math.abs(y()), Math.abs(z()));
-    }
-
-    @Override
-    public Vector3 operation(Function<Float, Float> operation) {
-        final float x = operation.apply(x());
-        final float y = operation.apply(y());
-        final float z = operation.apply(z());
-        return v3(x, y, z);
-    }
-
-    @Override
-    public int dimension() {
+    default int dimension() {
         return 3;
     }
 
     @Override
-    public Vector3 with(float value) {
-        return v3(value, value, value);
+    default N component(int index) throws IndexOutOfBoundsException {
+        return switch (index) {
+            case 0 -> x();
+            case 1 -> y();
+            case 2 -> z();
+            default -> throw new IndexOutOfBoundsException();
+        };
     }
 
     @Override
-    public Vector3 this_() {
-        return this;
+    default N sum() {
+        final var ath = arithmetic();
+        return ath.add(x(), ath.add(y(), z()));
     }
 
     @Override
-    public boolean isCollinear(Vector3 vector, float epsilon) {
-        return v3(cross(vector)).length2() <= epsilon;
+    default T filled(N value) {
+        return new_(value, value, value);
     }
 
-    public Vector3 cross(Vector3 vector) {
-        final float newX = y() * vector.z() - z() * vector.y();
-        final float newY = z() * vector.x() - x() * vector.z();
-        final float newZ = x() * vector.y() - y() * vector.x();
-        return v3(newX, newY, newZ);
+    @Override
+    default T operation(T other, Operation<N> operation) {
+        final N x = operation.calculate(arithmetic(), x(), other.x());
+        final N y = operation.calculate(arithmetic(), y(), other.y());
+        final N z = operation.calculate(arithmetic(), z(), other.z());
+        return new_(x, y, z);
     }
 
-    public Vector2 withoutZ() {
-        return v2(x(), y());
+    @Override
+    default T operation(Transformation<N> operation) {
+        final N x = operation.calculate(arithmetic(), x());
+        final N y = operation.calculate(arithmetic(), y());
+        final N z = operation.calculate(arithmetic(), z());
+        return new_(x, y, z);
     }
 
-    public Vector4 withW(float w) {
-        return v4(x(), y(), z(), w);
+    @Override
+    default boolean condition(T other, Predicate<N> predicate) {
+        return predicate.test(arithmetic(), x(), other.x()) &&
+               predicate.test(arithmetic(), y(), other.y()) &&
+               predicate.test(arithmetic(), z(), other.z());
     }
+
+    default T cross(T vector) {
+        final var ath = arithmetic();
+        final N newX = ath.sub(ath.mul(y(), vector.z()), ath.mul(z(), vector.y()));
+        final N newY = ath.sub(ath.mul(z(), vector.x()), ath.mul(x(), vector.z()));
+        final N newZ = ath.sub(ath.mul(x(), vector.y()), ath.mul(y(), vector.x()));
+        return new_(newX, newY, newZ);
+    }
+
+    Vector2<?, N> withoutZ();
+
+    Vector4<?, N> withW(N w);
+
+//    @Override
+//    default boolean isCollinear(T vector, N epsilon) {
+//        return v3(cross(vector)).length2() <= epsilon;
+//    }
 
     // TODO I need to implement Quaternion for rotation..
+
+
+    value record F32(@NullRestricted Float x,
+                     @NullRestricted Float y,
+                     @NullRestricted Float z) implements Vector3<F32, Float>, FloatVector<F32, Float> {
+
+        @Override
+        public IntegerVector<?, ?> ceilAsInt() {
+            return v3((int) Math.ceil(x()),
+                    (int) Math.ceil(y()),
+                    (int) Math.ceil(z()));
+        }
+
+        @Override
+        public IntegerVector<?, ?> floorAsInt() {
+            return v3((int) Math.floor(x()),
+                    (int) Math.floor(y()),
+                    (int) Math.floor(z()));
+        }
+
+        @Override
+        public Vector3.F32 new_(Float x, Float y, Float z) {
+            return v3(x, y, z);
+        }
+
+        @Override
+        public Vector2.F32 withoutZ() {
+            return v2(x(), y());
+        }
+
+        @Override
+        public Vector4.F32 withW(Float w) {
+            return v4(x, y, z, w);
+        }
+
+        @Override
+        public ArithmeticF32 arithmetic() {
+            return new ArithmeticF32();
+        }
+
+        @Override
+        public Vector3.F32 value() {
+            return this;
+        }
+    }
+
+    value record F64(@NullRestricted Double x,
+                     @NullRestricted Double y,
+                     @NullRestricted Double z) implements Vector3<F64, Double>, FloatVector<F64, Double> {
+
+        @Override
+        public Vector3.I64 ceilAsInt() {
+            return v3((long)Math.ceil(x()),
+                      (long)Math.ceil(y()),
+                      (long)Math.ceil(z()));
+        }
+
+        @Override
+        public Vector3.I64 floorAsInt() {
+            return v3((long) Math.floor(x()),
+                      (long) Math.floor(y()),
+                      (long) Math.floor(z()));
+        }
+
+        @Override
+        public Vector3.F64 new_(Double x, Double y, Double z) {
+            return v3(x, y, z);
+        }
+
+        @Override
+        public Vector2.F64 withoutZ() {
+            return v2(x, y);
+        }
+
+        @Override
+        public Vector4.F64 withW(Double w) {
+            return v4(x, y, z, w);
+        }
+
+        @Override
+        public ArithmeticF64 arithmetic() {
+            return new ArithmeticF64();
+        }
+
+        @Override
+        public Vector3.F64 value() {
+            return this;
+        }
+    }
+
+    value record I32(@NullRestricted Integer x,
+                     @NullRestricted Integer y,
+                     @NullRestricted Integer z) implements Vector3<I32, Integer>, IntegerVector<I32, Integer> {
+
+        @Override
+        public Vector3.F32 asReal() {
+            return v3((float) x(), (float) y(), (float) z());
+        }
+
+        @Override
+        public Vector3.I32 new_(Integer x, Integer y, Integer z) {
+            return v3(x, y, z);
+        }
+
+        @Override
+        public Vector2.I32 withoutZ() {
+            return v2(x(), y());
+        }
+
+        @Override
+        public Vector4.I32 withW(Integer w) {
+            return v4(x, y, z, w);
+        }
+
+        @Override
+        public ArithmeticI32 arithmetic() {
+            return new ArithmeticI32();
+        }
+
+        @Override
+        public Vector3.I32 value() {
+            return this;
+        }
+    }
+
+    value record I64(@NullRestricted Long x,
+                     @NullRestricted Long y,
+                     @NullRestricted Long z) implements Vector3<I64, Long>, IntegerVector<I64, Long> {
+
+        @Override
+        public Vector3.F64 asReal() {
+            return v3((double) x(), (double) y(), (double) z());
+        }
+
+        @Override
+        public Vector3.I64 new_(Long x, Long y, Long z) {
+            return v3(x, y, z);
+        }
+
+        @Override
+        public Vector2.I64 withoutZ() {
+            return v2(x(), y());
+        }
+
+        @Override
+        public Vector4.I64 withW(Long w) {
+            return v4(x, y, z, w);
+        }
+
+        @Override
+        public ArithmeticI64 arithmetic() {
+            return new ArithmeticI64();
+        }
+
+        @Override
+        public Vector3.I64 value() {
+            return this;
+        }
+    }
 }

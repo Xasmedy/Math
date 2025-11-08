@@ -1,8 +1,11 @@
-package io.github.xasmedy.math;
+package io.github.xasmedy.math.arithmetic;
 
 /// Defines a generic interface for Java numeric operators.\
 /// This will likely be replaced by Java operator overloading once it comes out.
-public interface Operators<T> {
+public interface Numeric<T> {
+
+    /// Returns the value of this numeric is holding.
+    T value();
 
     T add(T value);
 
@@ -11,6 +14,12 @@ public interface Operators<T> {
     T mul(T value);
 
     T div(T value);
+
+    T abs();
+
+    T max(T value);
+
+    T min(T value);
 
     boolean lt(T value);
 

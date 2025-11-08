@@ -1,148 +1,142 @@
 package io.github.xasmedy.math.vector;
 
-import io.github.xasmedy.math.Operators;
-import java.util.function.Function;
-import static io.github.xasmedy.math.util.MathUtil.sqrt;
+import io.github.xasmedy.math.arithmetic.Arithmetic;
+import io.github.xasmedy.math.arithmetic.Numeric;
+import io.github.xasmedy.math.arithmetic.Operator;
 
-/// @implSpec T must extends P.
-public interface Vector<T extends Vector<T>> extends Operators<T> {
+public interface Vector<T extends Vector<T, N>, N extends Number> extends Numeric<T> {
 
-    /// Sums the vector components together.\
-    /// In the case of a {@link Vector2}, the result would be `x + y`.
-    float sum();
-
-    /// @return the absolute value of all the vector components.
-    /// @see Math#abs(float)
-    T abs();
-
-    /// Generic operation that uses a [pure function](https://en.wikipedia.org/wiki/Pure_function) to mutate all the components of the vector.\
-    /// For example, we can implement an abs operation thanks to the function `comp -> Math.abs(comp)`.
-    /// @apiNote There's no guarantee on the order of components passed to the function.
-    T operation(Function<Float, Float> operation);
+    // TODO Make this class generic for Float, Double, Int etc, the class has a type F extends Numeric,
+    //  then uses intValue(), floatValue(), doubleValue() to do generic computations,
+    //  if the conversion is lossy (like BigInteger/BigDecimal),
+    //  the methods should be overwritable to provide a non-lossy version.
 
     /// @return The dimension of this vector.
     int dimension();
 
+    /// @return the component at the provided index.<br>
+    ///  Example, for a Vector2, `0` returns `x`, `1` returns `y`, while `2` throws {@link IndexOutOfBoundsException}.
+    /// @apiNote **Warning!** This method is slow since it needs to resolve the index, and
+    ///  most operations can be computed by using the fast {@link Numeric},
+    ///  {@link Arithmetic}, {@link Vector#operation(Vector, Operation)}, or {@link Vector#operation(Transformation)}.
+    N component(int index) throws IndexOutOfBoundsException;
+
+    /// Sums the vector components together.\
+    /// In the case of a {@link Vector2}, the result would be `x + y`.
+    N sum();
+
     /// Utility method to create a new vector with all the components set as the provided value.
-    T with(float value);
+    T filled(N value);
 
-    /// Utility method to convert {@link Vector} to {@link T}.\
-    /// This allows the Vector interface to generalize some code.
-    T this_();
+    Arithmetic<N> arithmetic();
 
-    default T mul(float scalar) {
-        return mul(with(scalar));
+    // TODO Docs, and convert all the code! This is crazy good for me.
+    T operation(T other, Operation<N> operation);
+
+    T operation(Transformation<N> operation);
+
+    boolean condition(T other, Predicate<N> predicate);
+
+    @Override
+    default T add(T value) {
+        return operation(value, Operator::add);
     }
 
-    default float length() {
-        return sqrt(length2());
+    @Override
+    default T sub(T value) {
+        return operation(value, Operator::sub);
     }
 
-    default float length2() {
-        return mul(this_()).sum();
+    @Override
+    default T mul(T value) {
+        return operation(value, Operator::mul);
     }
 
-    default T withLength(float length) {
-        return withLength2(length * length);
+    default T mul(N scalar) {
+        return mul(filled(scalar));
     }
 
-    default T withLength2(float length2) {
-        final float len2 = length2();
-        if (len2 == 0 || len2 == length2) return this_(); // No changes done.
-        return mul(sqrt(length2 / len2));
+    @Override
+    default T div(T value) {
+        return operation(value, Operator::div);
     }
 
-    default T limit(float limit) {
-        return limit2(limit * limit);
+    @Override
+    default boolean lt(T value) {
+        return condition(value, Operator::lt);
     }
 
-    default T limit2(float limit2) {
-        final float len2 = length2();
-        if (limit2 <= len2) return this_(); // No changes done.
-        return mul(sqrt(limit2 / len2));
+    @Override
+    default boolean ltEq(T value) {
+        return condition(value, Operator::ltEq);
     }
 
-    default T clamp(float min, float max) {
-
-        final float len2 = length2();
-        if (len2 == 0) return this_();
-
-        final float max2 = max * max;
-        if (len2 > max2) return mul(sqrt(max2 / len2));
-
-        final float min2 = min * min;
-        if (len2 < min2) return mul(sqrt(min2 / len2));
-        return this_();
+    @Override
+    default boolean gt(T value) {
+        return condition(value, Operator::gt);
     }
 
-    default T normalize() {
-        final float len2 = length2();
-        if (len2 == 0 || len2 == 1) return this_();
-        return mul(1 / sqrt(len2));
+    @Override
+    default boolean gtEq(T value) {
+        return condition(value, Operator::gtEq);
     }
 
-    default float dot(T vector) {
-        return mul(vector).sum();
+    @Override
+    default T abs() {
+        return operation(Arithmetic::abs);
     }
 
-    default float distance(T vector) {
-        return sqrt(distance2(vector));
+    @Override
+    default T max(T value) {
+        return operation(value, Arithmetic::max);
     }
 
-    default float distance2(T vector) {
-        final var delta = vector.sub(this_());
+    @Override
+    default T min(T value) {
+        return operation(value, Arithmetic::min);
+    }
+
+    default N distance2(T vector) {
+        final var delta = vector.sub(value());
         return delta.mul(delta).sum();
     }
 
-    default T lerp(T target, float alpha) {
-        final float invAlpha = 1.0f - alpha;
-        return mul(invAlpha).add(mul(alpha));
+    default N length2() {
+        return mul(value()).sum();
     }
 
-    default T interpolate(T target, float alpha, Function<Float, Float> interpolator) {
-        return lerp(target, interpolator.apply(alpha));
-    }
-
-    default boolean isUnit(float margin) {
-        return Math.abs(length2() - 1f) < margin;
-    }
-
-    default boolean isUnit() {
-        return isUnit(0.000000001f);
+    default N dot(T vector) {
+        return mul(vector).sum();
     }
 
     default boolean isZero() {
-        return equals(with(0));
-    }
-
-    default boolean isLengthZero(float margin) {
-        return length2() < margin;
-    }
-
-    default boolean isCollinear(T vector, float epsilon) {
-        final float len = length();
-        final float vLen = vector.length();
-        if (len == 0 || vLen == 0) return false;
-
-        final float cosTheta = dot(vector) / (len * vLen);
-        return Math.abs(Math.abs(cosTheta) - 1f) <= epsilon;
-    }
-
-    default boolean isPerpendicular(T vector, float epsilon) {
-        return Math.abs(dot(vector)) <= epsilon;
+        return eq(filled(arithmetic().zero()));
     }
 
     default boolean hasSameDirection(T vector) {
-        return dot(vector) > 0;
+        final var op = arithmetic();
+        // dot(this, vector) > 0
+        return op.gt(dot(vector), op.zero());
     }
 
     default boolean hasOppositeDirection(T vector) {
-        return dot(vector) < 0;
+        final var op = arithmetic();
+        // dot(this, vector) < 0
+        return op.lt(dot(vector), op.zero());
     }
 
-    default boolean epsilonEquals(T vector, float epsilon) {
-        return vector.sub(this_())
-                .abs()
-                .ltEq(with(epsilon));
+    @FunctionalInterface
+    interface Operation<N extends Number> {
+        N calculate(Arithmetic<N> op, N current, N other);
+    }
+
+    @FunctionalInterface
+    interface Transformation<N extends Number> {
+        N calculate(Arithmetic<N> op, N current);
+    }
+
+    @FunctionalInterface
+    interface Predicate<N extends Number> {
+        boolean test(Arithmetic<N> op, N current, N other);
     }
 }
