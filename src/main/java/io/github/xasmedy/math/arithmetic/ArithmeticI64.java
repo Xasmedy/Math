@@ -2,6 +2,8 @@ package io.github.xasmedy.math.arithmetic;
 
 public value class ArithmeticI64 implements Arithmetic<Long> {
 
+    ArithmeticI64() {}
+
     @Override
     public Long add(Long value1, Long value2) {
         return value1 + value2;

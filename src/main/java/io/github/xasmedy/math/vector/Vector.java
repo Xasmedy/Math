@@ -6,11 +6,6 @@ import io.github.xasmedy.math.arithmetic.Operator;
 
 public interface Vector<T extends Vector<T, N>, N extends Number> extends Numeric<T> {
 
-    // TODO Make this class generic for Float, Double, Int etc, the class has a type F extends Numeric,
-    //  then uses intValue(), floatValue(), doubleValue() to do generic computations,
-    //  if the conversion is lossy (like BigInteger/BigDecimal),
-    //  the methods should be overwritable to provide a non-lossy version.
-
     /// @return The dimension of this vector.
     int dimension();
 
@@ -30,7 +25,6 @@ public interface Vector<T extends Vector<T, N>, N extends Number> extends Numeri
 
     Arithmetic<N> arithmetic();
 
-    // TODO Docs, and convert all the code! This is crazy good for me.
     T operation(T other, Operation<N> operation);
 
     T operation(Transformation<N> operation);

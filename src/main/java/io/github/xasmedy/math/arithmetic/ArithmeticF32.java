@@ -2,6 +2,8 @@ package io.github.xasmedy.math.arithmetic;
 
 public value class ArithmeticF32 implements Arithmetic<Float> {
 
+    ArithmeticF32() {}
+
     @Override
     public Float add(Float value1, Float value2) {
         return value1 + value2;

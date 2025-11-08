@@ -2,6 +2,8 @@ package io.github.xasmedy.math.arithmetic;
 
 public value class ArithmeticF64 implements Arithmetic<Double> {
 
+    ArithmeticF64() {}
+
     @Override
     public Double add(Double value1, Double value2) {
         return value1 + value2;

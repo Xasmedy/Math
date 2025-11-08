@@ -2,6 +2,8 @@ package io.github.xasmedy.math.arithmetic;
 
 public value class ArithmeticI32 implements Arithmetic<Integer> {
 
+    ArithmeticI32() {}
+
     @Override
     public Integer add(Integer value1, Integer value2) {
         return value1 + value2;
@@ -54,7 +56,7 @@ public value class ArithmeticI32 implements Arithmetic<Integer> {
 
     @Override
     public Integer sqrt(Integer value) {
-        return (int) Math.sqrt(value); // Kinda useless.
+        return (int) Math.sqrt(value);
     }
 
     @Override

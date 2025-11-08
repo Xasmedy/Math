@@ -3,7 +3,7 @@ package io.github.xasmedy.math.vector;
 import io.github.xasmedy.math.arithmetic.Arithmetic;
 import java.util.function.Function;
 
-public interface FloatVector<T extends FloatVector<T, F>, F extends Number> extends Vector<T, F> {
+public interface RealVector<T extends RealVector<T, F>, F extends Number> extends Vector<T, F> {
 
     IntegerVector<?, ?> ceilAsInt();
 

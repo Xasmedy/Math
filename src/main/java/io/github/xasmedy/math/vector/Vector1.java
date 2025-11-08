@@ -2,6 +2,7 @@ package io.github.xasmedy.math.vector;
 
 import io.github.xasmedy.math.arithmetic.*;
 import io.github.xasmedy.math.point.Point1;
+import jdk.internal.vm.annotation.LooselyConsistentValue;
 import jdk.internal.vm.annotation.NullRestricted;
 import static io.github.xasmedy.math.vector.Vectors.*;
 import static io.github.xasmedy.math.arithmetic.Arithmetics.*;
@@ -48,7 +49,8 @@ public interface Vector1<T extends Vector1<T, N>, N extends Number> extends Vect
         return predicate.test(arithmetic(), x(), other.x());
     }
 
-    value record F32(@NullRestricted Float x) implements Vector1<F32, Float>, FloatVector<F32, Float> {
+    @LooselyConsistentValue
+    value record F32(@NullRestricted Float x) implements Vector1<F32, Float>, RealVector<F32, Float> {
         
         @Override
         public Vector1.F32 new_(Float x) {
@@ -58,11 +60,6 @@ public interface Vector1<T extends Vector1<T, N>, N extends Number> extends Vect
         @Override
         public Vector2.F32 withY(Float y) {
             return v2(x(), y);
-        }
-
-        @Override
-        public Vector1.F32 value() {
-            return this;
         }
 
         @Override
@@ -85,9 +82,15 @@ public interface Vector1<T extends Vector1<T, N>, N extends Number> extends Vect
         public ArithmeticF32 arithmetic() {
             return ATH_F32;
         }
+
+        @Override
+        public Vector1.F32 value() {
+            return this;
+        }
     }
 
-    value record F64(@NullRestricted Double x) implements Vector1<F64, Double>, FloatVector<F64, Double> {
+    @LooselyConsistentValue
+    value record F64(@NullRestricted Double x) implements Vector1<F64, Double>, RealVector<F64, Double> {
 
         @Override
         public Vector1.F64 new_(Double x) {
@@ -97,11 +100,6 @@ public interface Vector1<T extends Vector1<T, N>, N extends Number> extends Vect
         @Override
         public Vector2.F64 withY(Double y) {
             return v2(x(), y);
-        }
-
-        @Override
-        public Vector1.F64 value() {
-            return this;
         }
 
         @Override
@@ -124,8 +122,14 @@ public interface Vector1<T extends Vector1<T, N>, N extends Number> extends Vect
         public ArithmeticF64 arithmetic() {
             return ATH_F64;
         }
+
+        @Override
+        public Vector1.F64 value() {
+            return this;
+        }
     }
 
+    @LooselyConsistentValue
     value record I32(@NullRestricted Integer x) implements Vector1<I32, Integer>, IntegerVector<I32, Integer> {
 
         @Override
@@ -139,11 +143,6 @@ public interface Vector1<T extends Vector1<T, N>, N extends Number> extends Vect
         }
 
         @Override
-        public Vector1.I32 value() {
-            return this;
-        }
-
-        @Override
         public Vector1.F32 asReal() {
             return v1((float) x());
         }
@@ -152,8 +151,14 @@ public interface Vector1<T extends Vector1<T, N>, N extends Number> extends Vect
         public ArithmeticI32 arithmetic() {
             return ATH_I32;
         }
+
+        @Override
+        public Vector1.I32 value() {
+            return this;
+        }
     }
 
+    @LooselyConsistentValue
     value record I64(@NullRestricted Long x) implements Vector1<I64, Long>, IntegerVector<I64, Long> {
 
         @Override
@@ -167,11 +172,6 @@ public interface Vector1<T extends Vector1<T, N>, N extends Number> extends Vect
         }
 
         @Override
-        public Vector1.I64 value() {
-            return this;
-        }
-
-        @Override
         public Vector1.F64 asReal() {
             return v1((double) x());
         }
@@ -179,6 +179,11 @@ public interface Vector1<T extends Vector1<T, N>, N extends Number> extends Vect
         @Override
         public ArithmeticI64 arithmetic() {
             return ATH_I64;
+        }
+
+        @Override
+        public Vector1.I64 value() {
+            return this;
         }
     }
 }

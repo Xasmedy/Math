@@ -12,5 +12,5 @@ public interface IntegerVector<T extends IntegerVector<T, I>, I extends Number> 
     ///     var newVector = new Vector2.I32(x, y);
     /// }
     /// ```
-    FloatVector<?, ?> asReal();
+    RealVector<?, ?> asReal();
 }

@@ -83,7 +83,7 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
 
     value record F32(@NullRestricted Float x,
                      @NullRestricted Float y,
-                     @NullRestricted Float z) implements Vector3<F32, Float>, FloatVector<F32, Float> {
+                     @NullRestricted Float z) implements Vector3<F32, Float>, RealVector<F32, Float> {
 
         @Override
         public IntegerVector<?, ?> ceilAsInt() {
@@ -127,7 +127,7 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
 
     value record F64(@NullRestricted Double x,
                      @NullRestricted Double y,
-                     @NullRestricted Double z) implements Vector3<F64, Double>, FloatVector<F64, Double> {
+                     @NullRestricted Double z) implements Vector3<F64, Double>, RealVector<F64, Double> {
 
         @Override
         public Vector3.I64 ceilAsInt() {

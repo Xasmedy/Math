@@ -6,6 +6,7 @@ import io.github.xasmedy.math.unit.Radians;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
 import jdk.internal.vm.annotation.NullRestricted;
 import static io.github.xasmedy.math.vector.Vectors.*;
+import static io.github.xasmedy.math.arithmetic.Arithmetics.*;
 
 public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vector<T, N>, Point2<N> {
 
@@ -26,9 +27,9 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
 
     T new_(N x, N y);
 
-    Vector1<?, N> withoutY();
-
     Vector3<?, N> withZ(N z);
+
+    Vector1<?, N> withoutY();
 
     @Override
     default int dimension() {
@@ -84,7 +85,17 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
 
     @LooselyConsistentValue
     value record F32(@NullRestricted Float x,
-                     @NullRestricted Float y) implements Vector2<F32, Float>, FloatVector<F32, Float> {
+                     @NullRestricted Float y) implements Vector2<F32, Float>, RealVector<F32, Float> {
+
+        public Vector2.F32 rotate(Radians radians) {
+            final var copy = new Vector2.F64((double) x(), (double) y());
+            final var rotated = Vector2.rotate(copy, radians);
+            return new Vector2.F32((float) (double) rotated.x(), (float) (double) rotated.y());
+        }
+
+        public Radians angle() {
+            return Vector2.angle(new Vector2.F64((double) x(), (double) y()));
+        }
 
         @Override
         public Vector2.F32 new_(Float x, Float y) {
@@ -92,8 +103,13 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         }
 
         @Override
-        public Vector2.F32 value() {
-            return this;
+        public Vector3.F32 withZ(Float z) {
+            return v3(x(), y(), z);
+        }
+
+        @Override
+        public Vector1.F32 withoutY() {
+            return v1(x());
         }
 
         @Override
@@ -106,43 +122,32 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
             return v2((int) Math.floor(x()), (int) Math.floor(y()));
         }
 
-        public Vector1.F32 withoutY() {
-            return v1(x());
-        }
-
-        @Override
-        public Vector3.F32 withZ(Float z) {
-            return v3(x(), y(), z);
-        }
-
         @Override
         public ArithmeticF32 arithmetic() {
-            return new ArithmeticF32();
+            return ATH_F32;
         }
 
-        public Vector2.F32 rotate(Radians radians) {
-            final var copy = new Vector2.F64((double) x(), (double) y());
-            final var rotated = Vector2.rotate(copy, radians);
-            return new Vector2.F32((float) (double) rotated.x(), (float) (double) rotated.y());
-        }
-
-        public Radians angle() {
-            return Vector2.angle(new Vector2.F64((double) x(), (double) y()));
+        @Override
+        public Vector2.F32 value() {
+            return this;
         }
     }
 
     @LooselyConsistentValue
     value record F64(@NullRestricted Double x,
-                     @NullRestricted Double y) implements Vector2<F64, Double>, FloatVector<F64, Double> {
+                     @NullRestricted Double y) implements Vector2<F64, Double>, RealVector<F64, Double> {
+
+        public Vector2.F64 rotate(Radians radians) {
+            return Vector2.rotate(this, radians);
+        }
+
+        public Radians angle() {
+            return Vector2.angle(this);
+        }
 
         @Override
         public Vector2.F64 new_(Double x, Double y) {
             return new Vector2.F64(x, y);
-        }
-
-        @Override
-        public Vector1.F64 withoutY() {
-            return v1(x());
         }
 
         @Override
@@ -151,13 +156,8 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         }
 
         @Override
-        public Arithmetic<Double> arithmetic() {
-            return new ArithmeticF64();
-        }
-
-        @Override
-        public Vector2.F64 value() {
-            return this;
+        public Vector1.F64 withoutY() {
+            return v1(x());
         }
 
         @Override
@@ -170,12 +170,14 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
             return new Vector2.I64((long) Math.floor(x()), (long) Math.floor(y()));
         }
 
-        public Vector2.F64 rotate(Radians radians) {
-            return Vector2.rotate(this, radians);
+        @Override
+        public ArithmeticF64 arithmetic() {
+            return ATH_F64;
         }
 
-        public Radians angle() {
-            return Vector2.angle(this);
+        @Override
+        public Vector2.F64 value() {
+            return this;
         }
     }
 
@@ -189,28 +191,28 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         }
 
         @Override
-        public Vector1.I32 withoutY() {
-            return v1(x());
-        }
-
-        @Override
         public Vector3.I32 withZ(Integer z) {
             return v3(x(), y(), z);
         }
 
         @Override
-        public Arithmetic<Integer> arithmetic() {
-            return new ArithmeticI32();
-        }
-
-        @Override
-        public Vector2.I32 value() {
-            return this;
+        public Vector1.I32 withoutY() {
+            return v1(x());
         }
 
         @Override
         public Vector2.F32 asReal() {
             return new Vector2.F32((float) x(), (float) y());
+        }
+
+        @Override
+        public ArithmeticI32 arithmetic() {
+            return ATH_I32;
+        }
+
+        @Override
+        public Vector2.I32 value() {
+            return this;
         }
     }
 
@@ -224,28 +226,28 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         }
 
         @Override
-        public Vector1.I64 withoutY() {
-            return v1(x());
-        }
-
-        @Override
         public Vector3.I64 withZ(Long z) {
             return v3(x(), y(), z);
         }
 
         @Override
-        public ArithmeticI64 arithmetic() {
-            return new ArithmeticI64();
-        }
-
-        @Override
-        public Vector2.I64 value() {
-            return this;
+        public Vector1.I64 withoutY() {
+            return v1(x());
         }
 
         @Override
         public Vector2.F64 asReal() {
             return new Vector2.F64((double) x(), (double) y());
+        }
+
+        @Override
+        public ArithmeticI64 arithmetic() {
+            return ATH_I64;
+        }
+
+        @Override
+        public Vector2.I64 value() {
+            return this;
         }
     }
 }

@@ -72,7 +72,7 @@ public interface Vector4<T extends Vector4<T, N>, N extends Number> extends Vect
     value record F32(@NullRestricted Float x,
                      @NullRestricted Float y,
                      @NullRestricted Float z,
-                     @NullRestricted Float w) implements Vector4<Vector4.F32, Float>, FloatVector<Vector4.F32, Float> {
+                     @NullRestricted Float w) implements Vector4<Vector4.F32, Float>, RealVector<F32, Float> {
 
         @Override
         public Vector4.I32 ceilAsInt() {
@@ -114,7 +114,7 @@ public interface Vector4<T extends Vector4<T, N>, N extends Number> extends Vect
     value record F64(@NullRestricted Double x,
                      @NullRestricted Double y,
                      @NullRestricted Double z,
-                     @NullRestricted Double w) implements Vector4<Vector4.F64, Double>, FloatVector<Vector4.F64, Double> {
+                     @NullRestricted Double w) implements Vector4<Vector4.F64, Double>, RealVector<F64, Double> {
         @Override
         public IntegerVector<?, ?> ceilAsInt() {
             return v4((long) Math.ceil(x()),
