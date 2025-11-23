@@ -19,10 +19,9 @@ public final class MathBuild extends Project {
 
         pkg = "io.github.xasmedy.math";
         name = "Math";
-        mainClass = "io.github.xasmedy.math.Main";
         module = "xasmedy.math";
         version = version(0,1,0);
-        javaTool = Files.readString(projectPath.resolve(JAVA_VERSION_NAME));
+        javaTool = Files.readString(projectPath.resolve(JAVA_VERSION_NAME)) + "/bin/java";
 
         downloadSources = true;
         repositories = List.of(MAVEN_CENTRAL, RIFE2_RELEASES);
@@ -30,9 +29,7 @@ public final class MathBuild extends Project {
         scope(compile).include(module("org.jspecify", "jspecify", version(1, 0, 0)));
         scope(test)
             .include(dependency("org.junit.jupiter", "junit-jupiter", version(5,11,4)))
-            .include(dependency("org.junit.platform", "junit-platform-console-standalone", version(1,11,4)))
-            .include(dependency("org.openjdk.jmh", "jmh-core", version(1, 37)));
-        scope(provided).include(dependency("org.openjdk.jmh", "jmh-generator-annprocess", version(1, 37)));
+            .include(dependency("org.junit.platform", "junit-platform-console-standalone", version(1,11,4)));
     }
 
     void main(String[] args) {
