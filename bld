@@ -1,3 +1,4 @@
 #!/usr/bin/env sh
-# TODO This is a quick fix to make bld use the valhalla ea2 build, I will add a better way for this in the future.
-~/Downloads/jdk-26/bin/java -jar "$(dirname "$0")/lib/bld/bld-wrapper.jar" "$0" --build io.github.xasmedy.math.MathBuild "$@"
+value=`cat java-version.txt`
+binary="${value}/bin/java"
+${binary} -jar "$(dirname "$0")/lib/bld/bld-wrapper.jar" "$0" --build io.github.xasmedy.math.MathBuild "$@"

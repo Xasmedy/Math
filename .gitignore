@@ -54,3 +54,6 @@ atlassian-ide-plugin.xml
 
 # Editor-based Rest Client
 .idea/httpRequests
+
+# Local properties file
+/java-version.txt
