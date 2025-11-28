@@ -25,8 +25,6 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         return Radians.radians(Math.atan2(vector.y(), vector.x()));
     }
 
-    T new_(N x, N y);
-
     Vector3<?, N> withZ(N z);
 
     Vector1<?, N> withoutY();
@@ -48,31 +46,6 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
     @Override
     default N sum() {
         return arithmetic().add(x(), y());
-    }
-
-    @Override
-    default T filled(N value) {
-        return new_(value, value);
-    }
-
-    @Override
-    default T operation(T other, Operation<N> operation) {
-        final N newX = operation.calculate(arithmetic(), x(), other.x());
-        final N newY = operation.calculate(arithmetic(), y(), other.y());
-        return new_(newX, newY);
-    }
-
-    @Override
-    default T operation(Transformation<N> operation) {
-        final N newX = operation.calculate(arithmetic(), x());
-        final N newY = operation.calculate(arithmetic(), y());
-        return new_(newX, newY);
-    }
-
-    @Override
-    default boolean condition(T other, Predicate<N> predicate) {
-        return predicate.test(arithmetic(), x(), other.x()) &&
-               predicate.test(arithmetic(), y(), other.y());
     }
 
     default N cross(T vector) {
@@ -98,11 +71,6 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         }
 
         @Override
-        public Vector2.F32 new_(Float x, Float y) {
-            return v2(x, y);
-        }
-
-        @Override
         public Vector3.F32 withZ(Float z) {
             return v3(x(), y(), z);
         }
@@ -123,6 +91,11 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         }
 
         @Override
+        public Vector2.F32 filled(Float value) {
+            return v2(value, value);
+        }
+
+        @Override
         public ArithmeticF32 arithmetic() {
             return ATH_F32;
         }
@@ -130,6 +103,30 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         @Override
         public Vector2.F32 value() {
             return this;
+        }
+
+        // ==== Manual Monomorphization for performance ====
+        // The method signature without specialization would collide, not allowing the JIT to inline.
+        // Now thanks to specializing `other`, the signature becomes unique and the JIT can inline.
+
+        @Override
+        public Vector2.F32 operation(Vector2.F32 other, Operation<Float> operation) {
+            final Float newX = operation.calculate(arithmetic(), x(), other.x());
+            final Float newY = operation.calculate(arithmetic(), y(), other.y());
+            return v2(newX, newY);
+        }
+
+        @Override
+        public Vector2.F32 operation(Transformation<Float> operation) {
+            final Float newX = operation.calculate(arithmetic(), x());
+            final Float newY = operation.calculate(arithmetic(), y());
+            return v2(newX, newY);
+        }
+
+        @Override
+        public boolean condition(Vector2.F32 other, Predicate<Float> predicate) {
+            return predicate.test(arithmetic(), x(), other.x()) &&
+                    predicate.test(arithmetic(), y(), other.y());
         }
     }
 
@@ -143,11 +140,6 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
 
         public Radians angle() {
             return Vector2.angle(this);
-        }
-
-        @Override
-        public Vector2.F64 new_(Double x, Double y) {
-            return new Vector2.F64(x, y);
         }
 
         @Override
@@ -171,6 +163,11 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         }
 
         @Override
+        public Vector2.F64 filled(Double value) {
+            return v2(value, value);
+        }
+
+        @Override
         public ArithmeticF64 arithmetic() {
             return ATH_F64;
         }
@@ -179,16 +176,35 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         public Vector2.F64 value() {
             return this;
         }
+
+        // ==== Manual Monomorphization for performance ====
+        // The method signature without specialization would collide, not allowing the JIT to inline.
+        // Now thanks to specializing `other`, the signature becomes unique and the JIT can inline.
+
+        @Override
+        public Vector2.F64 operation(Vector2.F64 other, Operation<Double> operation) {
+            final Double newX = operation.calculate(arithmetic(), x(), other.x());
+            final Double newY = operation.calculate(arithmetic(), y(), other.y());
+            return v2(newX, newY);
+        }
+
+        @Override
+        public Vector2.F64 operation(Transformation<Double> operation) {
+            final Double newX = operation.calculate(arithmetic(), x());
+            final Double newY = operation.calculate(arithmetic(), y());
+            return v2(newX, newY);
+        }
+
+        @Override
+        public boolean condition(Vector2.F64 other, Predicate<Double> predicate) {
+            return predicate.test(arithmetic(), x(), other.x()) &&
+                   predicate.test(arithmetic(), y(), other.y());
+        }
     }
 
     @LooselyConsistentValue
     value record I32(@NullRestricted Integer x,
                      @NullRestricted Integer y) implements Vector2<I32, Integer>, IntegerVector<I32, Integer> {
-
-        @Override
-        public Vector2.I32 new_(Integer x, Integer y) {
-            return new Vector2.I32(x, y);
-        }
 
         @Override
         public Vector3.I32 withZ(Integer z) {
@@ -206,6 +222,11 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         }
 
         @Override
+        public Vector2.I32 filled(Integer value) {
+            return v2(value, value);
+        }
+
+        @Override
         public ArithmeticI32 arithmetic() {
             return ATH_I32;
         }
@@ -214,16 +235,35 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         public Vector2.I32 value() {
             return this;
         }
+
+        // ==== Manual Monomorphization for performance ====
+        // The method signature without specialization would collide, not allowing the JIT to inline.
+        // Now thanks to specializing `other`, the signature becomes unique and the JIT can inline.
+
+        @Override
+        public Vector2.I32 operation(Vector2.I32 other, Operation<Integer> operation) {
+            final Integer newX = operation.calculate(arithmetic(), x(), other.x());
+            final Integer newY = operation.calculate(arithmetic(), y(), other.y());
+            return v2(newX, newY);
+        }
+
+        @Override
+        public Vector2.I32 operation(Transformation<Integer> operation) {
+            final Integer newX = operation.calculate(arithmetic(), x());
+            final Integer newY = operation.calculate(arithmetic(), y());
+            return v2(newX, newY);
+        }
+
+        @Override
+        public boolean condition(Vector2.I32 other, Predicate<Integer> predicate) {
+            return predicate.test(arithmetic(), x(), other.x()) &&
+                   predicate.test(arithmetic(), y(), other.y());
+        }
     }
 
     @LooselyConsistentValue
     value record I64(@NullRestricted Long x,
                      @NullRestricted Long y) implements Vector2<I64, Long>, IntegerVector<I64, Long> {
-
-        @Override
-        public Vector2.I64 new_(Long x, Long y) {
-            return new Vector2.I64(x, y);
-        }
 
         @Override
         public Vector3.I64 withZ(Long z) {
@@ -241,6 +281,11 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         }
 
         @Override
+        public Vector2.I64 filled(Long value) {
+            return v2(value, value);
+        }
+
+        @Override
         public ArithmeticI64 arithmetic() {
             return ATH_I64;
         }
@@ -248,6 +293,30 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         @Override
         public Vector2.I64 value() {
             return this;
+        }
+
+        // ==== Manual Monomorphization for performance ====
+        // The method signature without specialization would collide, not allowing the JIT to inline.
+        // Now thanks to specializing `other`, the signature becomes unique and the JIT can inline.
+
+        @Override
+        public Vector2.I64 operation(Vector2.I64 other, Operation<Long> operation) {
+            final Long newX = operation.calculate(arithmetic(), x(), other.x());
+            final Long newY = operation.calculate(arithmetic(), y(), other.y());
+            return v2(newX, newY);
+        }
+
+        @Override
+        public Vector2.I64 operation(Transformation<Long> operation) {
+            final Long newX = operation.calculate(arithmetic(), x());
+            final Long newY = operation.calculate(arithmetic(), y());
+            return v2(newX, newY);
+        }
+
+        @Override
+        public boolean condition(Vector2.I64 other, Predicate<Long> predicate) {
+            return predicate.test(arithmetic(), x(), other.x()) &&
+                   predicate.test(arithmetic(), y(), other.y());
         }
     }
 }
