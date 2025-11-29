@@ -9,7 +9,7 @@ import static io.github.xasmedy.math.arithmetic.Arithmetics.*;
 
 public interface Vector4<T extends Vector4<T, N>, N extends Number> extends Vector<T, N>, Point4<N> {
 
-    T new_(N x, N y, N z, N w);
+    T create(N x, N y, N z, N w);
 
     Vector3<?, N> withoutY();
 
@@ -39,33 +39,7 @@ public interface Vector4<T extends Vector4<T, N>, N extends Number> extends Vect
 
     @Override
     default T filled(N value) {
-        return new_(value, value, value, value);
-    }
-
-    @Override
-    default T operation(T other, Operation<N> operation) {
-        final N newX = operation.calculate(arithmetic(), x(), other.x());
-        final N newY = operation.calculate(arithmetic(), y(), other.y());
-        final N newZ = operation.calculate(arithmetic(), z(), other.z());
-        final N newW = operation.calculate(arithmetic(), w(), other.w());
-        return new_(newX, newY, newZ, newW);
-    }
-
-    @Override
-    default T operation(Transformation<N> operation) {
-        final N newX = operation.calculate(arithmetic(), x());
-        final N newY = operation.calculate(arithmetic(), y());
-        final N newZ = operation.calculate(arithmetic(), z());
-        final N newW = operation.calculate(arithmetic(), w());
-        return new_(newX, newY, newZ, newW);
-    }
-
-    @Override
-    default boolean condition(T other, Predicate<N> predicate) {
-        return predicate.test(arithmetic(), x(), other.x()) &&
-               predicate.test(arithmetic(), y(), other.y()) &&
-               predicate.test(arithmetic(), z(), other.z()) &&
-               predicate.test(arithmetic(), w(), other.w());
+        return create(value, value, value, value);
     }
 
     @LooselyConsistentValue
@@ -75,7 +49,7 @@ public interface Vector4<T extends Vector4<T, N>, N extends Number> extends Vect
                      @NullRestricted Float w) implements Vector4<Vector4.F32, Float>, RealVector<F32, Float> {
 
         @Override
-        public Vector4.F32 new_(Float x, Float y, Float z, Float w) {
+        public Vector4.F32 create(Float x, Float y, Float z, Float w) {
             return v4(x, y, z, w);
         }
 
@@ -109,6 +83,27 @@ public interface Vector4<T extends Vector4<T, N>, N extends Number> extends Vect
         public Vector4.F32 value() {
             return this;
         }
+
+        // ==== Manual Monomorphization for performance ====
+        // The method signature without specialization would collide, not allowing the JIT to inline.
+        // Now thanks to specializing `other`, the signature becomes unique and the JIT can inline.
+
+        @Override
+        public Vector4.F32 operation(Vector4.F32 other, Operation<Float> operation) {
+            final Float newX = operation.calculate(arithmetic(), x(), other.x());
+            final Float newY = operation.calculate(arithmetic(), y(), other.y());
+            final Float newZ = operation.calculate(arithmetic(), z(), other.z());
+            final Float newW = operation.calculate(arithmetic(), w(), other.w());
+            return v4(newX, newY, newZ, newW);
+        }
+
+        @Override
+        public boolean condition(Vector4.F32 other, Predicate<Float> predicate) {
+            return predicate.test(arithmetic(), x(), other.x()) &&
+                    predicate.test(arithmetic(), y(), other.y()) &&
+                    predicate.test(arithmetic(), z(), other.z()) &&
+                    predicate.test(arithmetic(), w(), other.w());
+        }
     }
 
     @LooselyConsistentValue
@@ -118,7 +113,7 @@ public interface Vector4<T extends Vector4<T, N>, N extends Number> extends Vect
                      @NullRestricted Double w) implements Vector4<Vector4.F64, Double>, RealVector<F64, Double> {
 
         @Override
-        public Vector4.F64 new_(Double x, Double y, Double z, Double w) {
+        public Vector4.F64 create(Double x, Double y, Double z, Double w) {
             return v4(x, y, z, w);
         }
 
@@ -152,6 +147,27 @@ public interface Vector4<T extends Vector4<T, N>, N extends Number> extends Vect
         public Vector4.F64 value() {
             return this;
         }
+
+        // ==== Manual Monomorphization for performance ====
+        // The method signature without specialization would collide, not allowing the JIT to inline.
+        // Now thanks to specializing `other`, the signature becomes unique and the JIT can inline.
+
+        @Override
+        public Vector4.F64 operation(Vector4.F64 other, Operation<Double> operation) {
+            final Double newX = operation.calculate(arithmetic(), x(), other.x());
+            final Double newY = operation.calculate(arithmetic(), y(), other.y());
+            final Double newZ = operation.calculate(arithmetic(), z(), other.z());
+            final Double newW = operation.calculate(arithmetic(), w(), other.w());
+            return v4(newX, newY, newZ, newW);
+        }
+
+        @Override
+        public boolean condition(Vector4.F64 other, Predicate<Double> predicate) {
+            return predicate.test(arithmetic(), x(), other.x()) &&
+                    predicate.test(arithmetic(), y(), other.y()) &&
+                    predicate.test(arithmetic(), z(), other.z()) &&
+                    predicate.test(arithmetic(), w(), other.w());
+        }
     }
 
     @LooselyConsistentValue
@@ -161,7 +177,7 @@ public interface Vector4<T extends Vector4<T, N>, N extends Number> extends Vect
                      @NullRestricted Integer w) implements Vector4<Vector4.I32, Integer>, IntegerVector<Vector4.I32, Integer> {
 
         @Override
-        public Vector4.I32 new_(Integer x, Integer y, Integer z, Integer w) {
+        public Vector4.I32 create(Integer x, Integer y, Integer z, Integer w) {
             return v4(x, y, z, w);
         }
 
@@ -184,6 +200,27 @@ public interface Vector4<T extends Vector4<T, N>, N extends Number> extends Vect
         public Vector4.I32 value() {
             return this;
         }
+
+        // ==== Manual Monomorphization for performance ====
+        // The method signature without specialization would collide, not allowing the JIT to inline.
+        // Now thanks to specializing `other`, the signature becomes unique and the JIT can inline.
+
+        @Override
+        public Vector4.I32 operation(Vector4.I32 other, Operation<Integer> operation) {
+            final Integer newX = operation.calculate(arithmetic(), x(), other.x());
+            final Integer newY = operation.calculate(arithmetic(), y(), other.y());
+            final Integer newZ = operation.calculate(arithmetic(), z(), other.z());
+            final Integer newW = operation.calculate(arithmetic(), w(), other.w());
+            return v4(newX, newY, newZ, newW);
+        }
+
+        @Override
+        public boolean condition(Vector4.I32 other, Predicate<Integer> predicate) {
+            return predicate.test(arithmetic(), x(), other.x()) &&
+                    predicate.test(arithmetic(), y(), other.y()) &&
+                    predicate.test(arithmetic(), z(), other.z()) &&
+                    predicate.test(arithmetic(), w(), other.w());
+        }
     }
 
     @LooselyConsistentValue
@@ -193,7 +230,7 @@ public interface Vector4<T extends Vector4<T, N>, N extends Number> extends Vect
                      @NullRestricted Long w) implements Vector4<Vector4.I64, Long>, IntegerVector<Vector4.I64, Long> {
 
         @Override
-        public Vector4.I64 new_(Long x, Long y, Long z, Long w) {
+        public Vector4.I64 create(Long x, Long y, Long z, Long w) {
             return v4(x, y, z, w);
         }
 
@@ -218,6 +255,28 @@ public interface Vector4<T extends Vector4<T, N>, N extends Number> extends Vect
         @Override
         public Vector4.I64 value() {
             return this;
+        }
+
+
+        // ==== Manual Monomorphization for performance ====
+        // The method signature without specialization would collide, not allowing the JIT to inline.
+        // Now thanks to specializing `other`, the signature becomes unique and the JIT can inline.
+
+        @Override
+        public Vector4.I64 operation(Vector4.I64 other, Operation<Long> operation) {
+            final Long newX = operation.calculate(arithmetic(), x(), other.x());
+            final Long newY = operation.calculate(arithmetic(), y(), other.y());
+            final Long newZ = operation.calculate(arithmetic(), z(), other.z());
+            final Long newW = operation.calculate(arithmetic(), w(), other.w());
+            return v4(newX, newY, newZ, newW);
+        }
+
+        @Override
+        public boolean condition(Vector4.I64 other, Predicate<Long> predicate) {
+            return predicate.test(arithmetic(), x(), other.x()) &&
+                    predicate.test(arithmetic(), y(), other.y()) &&
+                    predicate.test(arithmetic(), z(), other.z()) &&
+                    predicate.test(arithmetic(), w(), other.w());
         }
     }
 }

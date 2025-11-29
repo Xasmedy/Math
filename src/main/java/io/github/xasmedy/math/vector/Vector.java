@@ -13,7 +13,7 @@ public interface Vector<T extends Vector<T, N>, N extends Number> extends Numeri
     ///  Example, for a Vector2, `0` returns `x`, `1` returns `y`, while `2` throws {@link IndexOutOfBoundsException}.
     /// @apiNote **Warning!** This method is slow since it needs to resolve the index, and
     ///  most operations can be computed by using the fast {@link Numeric},
-    ///  {@link Arithmetic}, {@link Vector#operation(Vector, Operation)}, or {@link Vector#operation(Transformation)}.
+    ///  {@link Arithmetic}, or {@link Vector#operation(Vector, Operation)}.
     N component(int index) throws IndexOutOfBoundsException;
 
     /// Sums the vector components together.\
@@ -26,8 +26,6 @@ public interface Vector<T extends Vector<T, N>, N extends Number> extends Numeri
     Arithmetic<N> arithmetic();
 
     T operation(T other, Operation<N> operation);
-
-    T operation(Transformation<N> operation);
 
     boolean condition(T other, Predicate<N> predicate);
 
@@ -77,7 +75,7 @@ public interface Vector<T extends Vector<T, N>, N extends Number> extends Numeri
 
     @Override
     default T abs() {
-        return operation(Arithmetic::abs);
+        return operation(value(), (op, current, _) -> op.abs(current));
     }
 
     @Override
@@ -122,11 +120,6 @@ public interface Vector<T extends Vector<T, N>, N extends Number> extends Numeri
     @FunctionalInterface
     interface Operation<N extends Number> {
         N calculate(Arithmetic<N> op, N current, N other);
-    }
-
-    @FunctionalInterface
-    interface Transformation<N extends Number> {
-        N calculate(Arithmetic<N> op, N current);
     }
 
     @FunctionalInterface

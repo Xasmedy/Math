@@ -11,7 +11,7 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
 
     // TODO I need to implement Quaternion for rotation..
 
-    T new_(N x, N y, N z);
+    T create(N x, N y, N z);
 
     Vector4<?, N> withW(N w);
 
@@ -41,30 +41,7 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
 
     @Override
     default T filled(N value) {
-        return new_(value, value, value);
-    }
-
-    @Override
-    default T operation(T other, Operation<N> operation) {
-        final N newX = operation.calculate(arithmetic(), x(), other.x());
-        final N newY = operation.calculate(arithmetic(), y(), other.y());
-        final N newZ = operation.calculate(arithmetic(), z(), other.z());
-        return new_(newX, newY, newZ);
-    }
-
-    @Override
-    default T operation(Transformation<N> operation) {
-        final N newX = operation.calculate(arithmetic(), x());
-        final N newY = operation.calculate(arithmetic(), y());
-        final N newZ = operation.calculate(arithmetic(), z());
-        return new_(newX, newY, newZ);
-    }
-
-    @Override
-    default boolean condition(T other, Predicate<N> predicate) {
-        return predicate.test(arithmetic(), x(), other.x()) &&
-               predicate.test(arithmetic(), y(), other.y()) &&
-               predicate.test(arithmetic(), z(), other.z());
+        return create(value, value, value);
     }
 
     default T cross(T vector) {
@@ -72,7 +49,7 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
         final N newX = ath.sub(ath.mul(y(), vector.z()), ath.mul(z(), vector.y()));
         final N newY = ath.sub(ath.mul(z(), vector.x()), ath.mul(x(), vector.z()));
         final N newZ = ath.sub(ath.mul(x(), vector.y()), ath.mul(y(), vector.x()));
-        return new_(newX, newY, newZ);
+        return create(newX, newY, newZ);
     }
 
     @LooselyConsistentValue
@@ -81,7 +58,7 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
                      @NullRestricted Float z) implements Vector3<F32, Float>, RealVector<F32, Float> {
 
         @Override
-        public Vector3.F32 new_(Float x, Float y, Float z) {
+        public Vector3.F32 create(Float x, Float y, Float z) {
             return v3(x, y, z);
         }
 
@@ -123,6 +100,25 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
         public Vector3.F32 value() {
             return this;
         }
+
+        // ==== Manual Monomorphization for performance ====
+        // The method signature without specialization would collide, not allowing the JIT to inline.
+        // Now thanks to specializing `other`, the signature becomes unique and the JIT can inline.
+
+        @Override
+        public Vector3.F32 operation(Vector3.F32 other, Operation<Float> operation) {
+            final Float newX = operation.calculate(arithmetic(), x(), other.x());
+            final Float newY = operation.calculate(arithmetic(), y(), other.y());
+            final Float newZ = operation.calculate(arithmetic(), z(), other.z());
+            return v3(newX, newY, newZ);
+        }
+
+        @Override
+        public boolean condition(Vector3.F32 other, Predicate<Float> predicate) {
+            return predicate.test(arithmetic(), x(), other.x()) &&
+                    predicate.test(arithmetic(), y(), other.y()) &&
+                    predicate.test(arithmetic(), z(), other.z());
+        }
     }
 
     @LooselyConsistentValue
@@ -131,7 +127,7 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
                      @NullRestricted Double z) implements Vector3<F64, Double>, RealVector<F64, Double> {
 
         @Override
-        public Vector3.F64 new_(Double x, Double y, Double z) {
+        public Vector3.F64 create(Double x, Double y, Double z) {
             return v3(x, y, z);
         }
 
@@ -173,6 +169,25 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
         public Vector3.F64 value() {
             return this;
         }
+
+        // ==== Manual Monomorphization for performance ====
+        // The method signature without specialization would collide, not allowing the JIT to inline.
+        // Now thanks to specializing `other`, the signature becomes unique and the JIT can inline.
+
+        @Override
+        public Vector3.F64 operation(Vector3.F64 other, Operation<Double> operation) {
+            final Double newX = operation.calculate(arithmetic(), x(), other.x());
+            final Double newY = operation.calculate(arithmetic(), y(), other.y());
+            final Double newZ = operation.calculate(arithmetic(), z(), other.z());
+            return v3(newX, newY, newZ);
+        }
+
+        @Override
+        public boolean condition(Vector3.F64 other, Predicate<Double> predicate) {
+            return predicate.test(arithmetic(), x(), other.x()) &&
+                    predicate.test(arithmetic(), y(), other.y()) &&
+                    predicate.test(arithmetic(), z(), other.z());
+        }
     }
 
     @LooselyConsistentValue
@@ -181,7 +196,7 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
                      @NullRestricted Integer z) implements Vector3<I32, Integer>, IntegerVector<I32, Integer> {
 
         @Override
-        public Vector3.I32 new_(Integer x, Integer y, Integer z) {
+        public Vector3.I32 create(Integer x, Integer y, Integer z) {
             return v3(x, y, z);
         }
 
@@ -209,6 +224,25 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
         public Vector3.I32 value() {
             return this;
         }
+
+        // ==== Manual Monomorphization for performance ====
+        // The method signature without specialization would collide, not allowing the JIT to inline.
+        // Now thanks to specializing `other`, the signature becomes unique and the JIT can inline.
+
+        @Override
+        public Vector3.I32 operation(Vector3.I32 other, Operation<Integer> operation) {
+            final Integer newX = operation.calculate(arithmetic(), x(), other.x());
+            final Integer newY = operation.calculate(arithmetic(), y(), other.y());
+            final Integer newZ = operation.calculate(arithmetic(), z(), other.z());
+            return v3(newX, newY, newZ);
+        }
+
+        @Override
+        public boolean condition(Vector3.I32 other, Predicate<Integer> predicate) {
+            return predicate.test(arithmetic(), x(), other.x()) &&
+                    predicate.test(arithmetic(), y(), other.y()) &&
+                    predicate.test(arithmetic(), z(), other.z());
+        }
     }
 
     @LooselyConsistentValue
@@ -217,7 +251,7 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
                      @NullRestricted Long z) implements Vector3<I64, Long>, IntegerVector<I64, Long> {
 
         @Override
-        public Vector3.I64 new_(Long x, Long y, Long z) {
+        public Vector3.I64 create(Long x, Long y, Long z) {
             return v3(x, y, z);
         }
 
@@ -244,6 +278,25 @@ public interface Vector3<T extends Vector3<T, N>, N extends Number> extends Vect
         @Override
         public Vector3.I64 value() {
             return this;
+        }
+
+        // ==== Manual Monomorphization for performance ====
+        // The method signature without specialization would collide, not allowing the JIT to inline.
+        // Now thanks to specializing `other`, the signature becomes unique and the JIT can inline.
+
+        @Override
+        public Vector3.I64 operation(Vector3.I64 other, Operation<Long> operation) {
+            final Long newX = operation.calculate(arithmetic(), x(), other.x());
+            final Long newY = operation.calculate(arithmetic(), y(), other.y());
+            final Long newZ = operation.calculate(arithmetic(), z(), other.z());
+            return v3(newX, newY, newZ);
+        }
+
+        @Override
+        public boolean condition(Vector3.I64 other, Predicate<Long> predicate) {
+            return predicate.test(arithmetic(), x(), other.x()) &&
+                    predicate.test(arithmetic(), y(), other.y()) &&
+                    predicate.test(arithmetic(), z(), other.z());
         }
     }
 }

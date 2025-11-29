@@ -25,6 +25,8 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         return Radians.radians(Math.atan2(vector.y(), vector.x()));
     }
 
+    T create(N x, N y);
+
     Vector3<?, N> withZ(N z);
 
     Vector1<?, N> withoutY();
@@ -46,6 +48,11 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
     @Override
     default N sum() {
         return arithmetic().add(x(), y());
+    }
+
+    @Override
+    default T filled(N value) {
+        return create(value, value);
     }
 
     default N cross(T vector) {
@@ -71,6 +78,11 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         }
 
         @Override
+        public Vector2.F32 create(Float x, Float y) {
+            return v2(x, y);
+        }
+
+        @Override
         public Vector3.F32 withZ(Float z) {
             return v3(x(), y(), z);
         }
@@ -88,11 +100,6 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         @Override
         public Vector2.I32 floorAsInt() {
             return v2((int) Math.floor(x()), (int) Math.floor(y()));
-        }
-
-        @Override
-        public Vector2.F32 filled(Float value) {
-            return v2(value, value);
         }
 
         @Override
@@ -117,13 +124,6 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         }
 
         @Override
-        public Vector2.F32 operation(Transformation<Float> operation) {
-            final Float newX = operation.calculate(arithmetic(), x());
-            final Float newY = operation.calculate(arithmetic(), y());
-            return v2(newX, newY);
-        }
-
-        @Override
         public boolean condition(Vector2.F32 other, Predicate<Float> predicate) {
             return predicate.test(arithmetic(), x(), other.x()) &&
                     predicate.test(arithmetic(), y(), other.y());
@@ -140,6 +140,11 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
 
         public Radians angle() {
             return Vector2.angle(this);
+        }
+
+        @Override
+        public Vector2.F64 create(Double x, Double y) {
+            return v2(x, y);
         }
 
         @Override
@@ -160,11 +165,6 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         @Override
         public Vector2.I64 floorAsInt() {
             return new Vector2.I64((long) Math.floor(x()), (long) Math.floor(y()));
-        }
-
-        @Override
-        public Vector2.F64 filled(Double value) {
-            return v2(value, value);
         }
 
         @Override
@@ -189,13 +189,6 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         }
 
         @Override
-        public Vector2.F64 operation(Transformation<Double> operation) {
-            final Double newX = operation.calculate(arithmetic(), x());
-            final Double newY = operation.calculate(arithmetic(), y());
-            return v2(newX, newY);
-        }
-
-        @Override
         public boolean condition(Vector2.F64 other, Predicate<Double> predicate) {
             return predicate.test(arithmetic(), x(), other.x()) &&
                    predicate.test(arithmetic(), y(), other.y());
@@ -205,6 +198,11 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
     @LooselyConsistentValue
     value record I32(@NullRestricted Integer x,
                      @NullRestricted Integer y) implements Vector2<I32, Integer>, IntegerVector<I32, Integer> {
+
+        @Override
+        public Vector2.I32 create(Integer x, Integer y) {
+            return v2(x, y);
+        }
 
         @Override
         public Vector3.I32 withZ(Integer z) {
@@ -248,13 +246,6 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         }
 
         @Override
-        public Vector2.I32 operation(Transformation<Integer> operation) {
-            final Integer newX = operation.calculate(arithmetic(), x());
-            final Integer newY = operation.calculate(arithmetic(), y());
-            return v2(newX, newY);
-        }
-
-        @Override
         public boolean condition(Vector2.I32 other, Predicate<Integer> predicate) {
             return predicate.test(arithmetic(), x(), other.x()) &&
                    predicate.test(arithmetic(), y(), other.y());
@@ -264,6 +255,11 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
     @LooselyConsistentValue
     value record I64(@NullRestricted Long x,
                      @NullRestricted Long y) implements Vector2<I64, Long>, IntegerVector<I64, Long> {
+
+        @Override
+        public Vector2.I64 create(Long x, Long y) {
+            return v2(x, y);
+        }
 
         @Override
         public Vector3.I64 withZ(Long z) {
@@ -278,11 +274,6 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         @Override
         public Vector2.F64 asReal() {
             return new Vector2.F64((double) x(), (double) y());
-        }
-
-        @Override
-        public Vector2.I64 filled(Long value) {
-            return v2(value, value);
         }
 
         @Override
@@ -303,13 +294,6 @@ public interface Vector2<T extends Vector2<T, N>, N extends Number> extends Vect
         public Vector2.I64 operation(Vector2.I64 other, Operation<Long> operation) {
             final Long newX = operation.calculate(arithmetic(), x(), other.x());
             final Long newY = operation.calculate(arithmetic(), y(), other.y());
-            return v2(newX, newY);
-        }
-
-        @Override
-        public Vector2.I64 operation(Transformation<Long> operation) {
-            final Long newX = operation.calculate(arithmetic(), x());
-            final Long newY = operation.calculate(arithmetic(), y());
             return v2(newX, newY);
         }
 

@@ -1,6 +1,5 @@
 package io.github.xasmedy.math.vector;
 
-import io.github.xasmedy.math.arithmetic.Arithmetic;
 import java.util.function.Function;
 
 public interface RealVector<T extends RealVector<T, F>, F extends Number> extends Vector<T, F> {
@@ -10,11 +9,11 @@ public interface RealVector<T extends RealVector<T, F>, F extends Number> extend
     IntegerVector<?, ?> floorAsInt();
 
     default T ceil() {
-        return operation(Arithmetic::ceil);
+        return operation(value(), (op, current, _) -> op.ceil(current));
     }
 
     default T floor() {
-        return operation(Arithmetic::floor);
+        return operation(value(), (op, current, _) -> op.floor(current));
     }
 
     default F length() {
