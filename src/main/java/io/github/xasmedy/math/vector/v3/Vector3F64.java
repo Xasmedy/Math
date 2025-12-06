@@ -1,0 +1,267 @@
+package io.github.xasmedy.math.vector.v3;
+
+
+import io.github.xasmedy.math.vector.abstracts.Vector3;
+import io.github.xasmedy.math.vector.v2.Vector2F64;
+import io.github.xasmedy.math.vector.v4.Vector4F64;
+import jdk.internal.vm.annotation.LooselyConsistentValue;
+import jdk.internal.vm.annotation.NullRestricted;
+
+import java.util.function.Function;
+
+import static io.github.xasmedy.math.vector.Vectors.v3;
+
+@LooselyConsistentValue
+public value record Vector3F64(@NullRestricted Double x,
+                               @NullRestricted Double y,
+                               @NullRestricted Double z) implements Vector3<Vector3F64, Double>, Vector3.Real<Vector3F64, Double> {
+    @Override
+    public Vector3I64 ceilAsInt() {
+        final long x = (long) Math.ceil(x());
+        final long y = (long) Math.ceil(y());
+        final long z = (long) Math.ceil(z());
+        return v3(x, y, z);
+    }
+
+    @Override
+    public Vector3I64 floorAsInt() {
+        final long x = (long) Math.floor(x());
+        final long y = (long) Math.floor(y());
+        final long z = (long) Math.floor(z());
+        return v3(x, y, z);
+    }
+
+    @Override
+    public Vector3F64 ceil() {
+        final double x = Math.ceil(x());
+        final double y = Math.ceil(y());
+        final double z = Math.ceil(z());
+        return v3(x, y, z);
+    }
+
+    @Override
+    public Vector3F64 floor() {
+        final double x = Math.floor(x());
+        final double y = Math.floor(y());
+        final double z = Math.floor(z());
+        return v3(x, y, z);
+    }
+
+    @Override
+    public Double length() {
+        return Math.sqrt(length2());
+    }
+
+    @Override
+    public Vector3F64 withLength(Double length) {
+        final double len = length();
+        if (len == 0) return v3(0d, 0d, 0d);
+        return mul(length / len);
+    }
+
+    @Override
+    public Vector3F64 withLength2(Double length2) {
+        return withLength(Math.sqrt(length2));
+    }
+
+    @Override
+    public Vector3F64 limit(Double limit) {
+        return limit2(limit * limit);
+    }
+
+    @Override
+    public Vector3F64 limit2(Double limit2) {
+        final double len2 = length2();
+        if (len2 == 0 || len2 <= limit2) return this;
+        return mul(Math.sqrt(limit2 / len2));
+    }
+
+    @Override
+    public Vector3F64 normalize() {
+        return withLength(1d);
+    }
+
+    @Override
+    public Double distance(Vector3F64 vector) {
+        return Math.sqrt(distance2(vector));
+    }
+
+    @Override
+    public Vector3F64 lerp(Vector3F64 target, Double alpha) {
+        final double x = x() + (target.x() - x()) * alpha;
+        final double y = y() + (target.y() - y()) * alpha;
+        final double z = z() + (target.z() - z()) * alpha;
+        return v3(x, y, z);
+    }
+
+    @Override
+    public Vector3F64 interpolate(Vector3F64 target, Double alpha, Function<Double, Double> interpolator) {
+        return lerp(target, interpolator.apply(alpha));
+    }
+
+    @Override
+    public boolean isUnit(Double margin) {
+        return Math.abs(length2() - 1) < margin * margin;
+    }
+
+    @Override
+    public boolean isCollinear(Vector3F64 vector, Double epsilon) {
+        return cross(vector).length() <= epsilon * length() * vector.length();
+    }
+
+    @Override
+    public boolean isPerpendicular(Vector3F64 vector, Double epsilon) {
+        return Math.abs(dot(vector)) <= epsilon * length() * vector.length();
+    }
+
+    @Override
+    public boolean epsilonEquals(Vector3F64 vector, Double epsilon) {
+        return vector.sub(this).abs()
+                .ltEq(v3(epsilon, epsilon, epsilon));
+    }
+
+    @Override
+    public boolean isZero(Double epsilon) {
+        return epsilonEquals(v3(0d, 0d, 0d), epsilon);
+    }
+
+    @Override
+    public Vector2F64 withoutZ() {
+        return new Vector2F64(x(), y());
+    }
+
+    @Override
+    public Vector4F64 withW(Double w) {
+        return new Vector4F64(x(), y(), z(), w);
+    }
+
+    @Override
+    public Vector3F64 cross(Vector3F64 vector) {
+        final double x = y() * vector.z() - z() * vector.y();
+        final double y = z() * vector.x() - x() * vector.z();
+        final double z = x() * vector.y() - y() * vector.x();
+        return v3(x, y, z);
+    }
+
+    @Override
+    public Double component(int index) throws IndexOutOfBoundsException {
+        return switch (index) {
+            case 0 -> x();
+            case 1 -> y();
+            case 2 -> z();
+            default -> throw new IndexOutOfBoundsException("There's no component for index " + index + ".");
+        };
+    }
+
+    @Override
+    public Double sum() {
+        return x() + y() + z();
+    }
+
+    @Override
+    public Vector3F64 add(Vector3F64 other) {
+        final double x = x() + other.x();
+        final double y = y() + other.y();
+        final double z = z() + other.z();
+        return v3(x, y, z);
+    }
+
+    @Override
+    public Vector3F64 sub(Vector3F64 other) {
+        final double x = x() - other.x();
+        final double y = y() - other.y();
+        final double z = z() - other.z();
+        return v3(x, y, z);
+    }
+
+    @Override
+    public Vector3F64 mul(Vector3F64 other) {
+        final double x = x() * other.x();
+        final double y = y() * other.y();
+        final double z = z() * other.z();
+        return v3(x, y, z);
+    }
+
+    @Override
+    public Vector3F64 mul(Double scalar) {
+        return mul(v3(scalar, scalar, scalar));
+    }
+
+    @Override
+    public Vector3F64 div(Vector3F64 other) {
+        final double x = x() / other.x();
+        final double y = y() / other.y();
+        final double z = z() / other.z();
+        return v3(x, y, z);
+    }
+
+    @Override
+    public boolean lt(Vector3F64 other) {
+        return x() < other.x() && y() < other.y() && z() < other.z();
+    }
+
+    @Override
+    public boolean ltEq(Vector3F64 other) {
+        return x() <= other.x() && y() <= other.y() && z() <= other.z();
+    }
+
+    @Override
+    public boolean gt(Vector3F64 other) {
+        return x() > other.x() && y() > other.y() && z() > other.z();
+    }
+
+    @Override
+    public boolean gtEq(Vector3F64 other) {
+        return x() >= other.x() && y() >= other.y() && z() >= other.z();
+    }
+
+    @Override
+    public Vector3F64 abs() {
+        return v3(Math.abs(x()), Math.abs(y()), Math.abs(z()));
+    }
+
+    @Override
+    public Vector3F64 max(Vector3F64 other) {
+        return v3(Math.max(x(), other.x()), Math.max(y(), other.y()), Math.max(z(), other.z()));
+    }
+
+    @Override
+    public Vector3F64 min(Vector3F64 other) {
+        return v3(Math.min(x(), other.x()), Math.min(y(), other.y()), Math.min(z(), other.z()));
+    }
+
+    @Override
+    public Double distance2(Vector3F64 vector) {
+        final var delta = sub(vector);
+        final var delta2 = delta.mul(delta);
+        return delta2.sum();
+    }
+
+    @Override
+    public Double length2() {
+        return mul(this).sum();
+    }
+
+    @Override
+    public Double dot(Vector3F64 vector) {
+        return mul(vector).sum();
+    }
+
+    @Override
+    public Vector3F64 clamp(Double min, Double max) {
+        final double x = Math.clamp(x(), min, max);
+        final double y = Math.clamp(y(), min, max);
+        final double z = Math.clamp(z(), min, max);
+        return v3(x, y, z);
+    }
+
+    @Override
+    public boolean hasSameDirection(Vector3F64 vector) {
+        return dot(vector) > 0;
+    }
+
+    @Override
+    public boolean hasOppositeDirection(Vector3F64 vector) {
+        return dot(vector) < 0;
+    }
+}

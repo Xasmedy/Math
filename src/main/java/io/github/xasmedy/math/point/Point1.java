@@ -3,7 +3,9 @@ package io.github.xasmedy.math.point;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
 import jdk.internal.vm.annotation.NullRestricted;
 
-public interface Point1<T extends Number> {
+// TODO Have refined interfaces for T, because of performance,
+//  and move the value record class as Point1F32, Point1I32 (the same as the vectors)
+public interface Point1<T> {
 
     T x();
 
@@ -18,4 +20,5 @@ public interface Point1<T extends Number> {
 
     @LooselyConsistentValue
     value record F64(@NullRestricted Double x ) implements Point1<Double> {}
+
 }

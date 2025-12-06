@@ -3,7 +3,7 @@ package io.github.xasmedy.math.point;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
 import jdk.internal.vm.annotation.NullRestricted;
 
-public interface Point4<T extends Number> {
+public interface Point4<T> {
 
     T x();
 
