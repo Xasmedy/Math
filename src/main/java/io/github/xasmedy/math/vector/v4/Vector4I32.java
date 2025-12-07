@@ -1,5 +1,6 @@
 package io.github.xasmedy.math.vector.v4;
 
+import io.github.xasmedy.math.point.abstracts.Point4;
 import io.github.xasmedy.math.vector.abstracts.Vector;
 import io.github.xasmedy.math.vector.abstracts.Vector4;
 import io.github.xasmedy.math.vector.v3.Vector3I32;
@@ -12,7 +13,7 @@ public value record Vector4I32(@NullRestricted Integer x,
                                @NullRestricted Integer y,
                                @NullRestricted Integer z,
                                @NullRestricted Integer w
-) implements Vector4<Vector4I32, Integer>, Vector.Int<Vector4I32, Integer> {
+) implements Vector4<Vector4I32, Integer>, Vector.Int<Vector4I32, Integer>, Point4.I32 {
 
     @Override
     public Vector4F32 asReal() {

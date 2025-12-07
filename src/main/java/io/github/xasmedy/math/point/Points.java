@@ -1,5 +1,22 @@
 package io.github.xasmedy.math.point;
 
+import io.github.xasmedy.math.point.p1.Point1F32;
+import io.github.xasmedy.math.point.p1.Point1F64;
+import io.github.xasmedy.math.point.p1.Point1I32;
+import io.github.xasmedy.math.point.p1.Point1I64;
+import io.github.xasmedy.math.point.p2.Point2F32;
+import io.github.xasmedy.math.point.p2.Point2F64;
+import io.github.xasmedy.math.point.p2.Point2I32;
+import io.github.xasmedy.math.point.p2.Point2I64;
+import io.github.xasmedy.math.point.p3.Point3F32;
+import io.github.xasmedy.math.point.p3.Point3F64;
+import io.github.xasmedy.math.point.p3.Point3I32;
+import io.github.xasmedy.math.point.p3.Point3I64;
+import io.github.xasmedy.math.point.p4.Point4F32;
+import io.github.xasmedy.math.point.p4.Point4F64;
+import io.github.xasmedy.math.point.p4.Point4I32;
+import io.github.xasmedy.math.point.p4.Point4I64;
+
 /// A class to import statically to have a short way to initialize all the library points.
 public value class Points {
 
@@ -7,73 +24,73 @@ public value class Points {
 
     /* -- Point1D -- */
 
-    public Point1.I32 p1(int x) {
-        return new Point1.I32(x);
+    public Point1I32 p1(int x) {
+        return new Point1I32(x);
     }
 
-    public Point1.I64 p1(long x) {
-        return new Point1.I64(x);
+    public Point1I64 p1(long x) {
+        return new Point1I64(x);
     }
 
-    public Point1.F32 p1(float x) {
-        return new Point1.F32(x);
+    public Point1F32 p1(float x) {
+        return new Point1F32(x);
     }
 
-    public Point1.F64 p1(double x) {
-        return new Point1.F64(x);
+    public Point1F64 p1(double x) {
+        return new Point1F64(x);
     }
 
     /* -- Point2D -- */
 
-    public Point2.I32 p2(int x, int y) {
-        return new Point2.I32(x, y);
+    public Point2I32 p2(int x, int y) {
+        return new Point2I32(x, y);
     }
 
-    public Point2.I64 p2(long x, long y) {
-        return new Point2.I64(x, y);
+    public Point2I64 p2(long x, long y) {
+        return new Point2I64(x, y);
     }
 
-    public Point2.F32 p2(float x, float y) {
-        return new Point2.F32(x, y);
+    public Point2F32 p2(float x, float y) {
+        return new Point2F32(x, y);
     }
 
-    public Point2.F64 p2(double x, double y) {
-        return new Point2.F64(x, y);
+    public Point2F64 p2(double x, double y) {
+        return new Point2F64(x, y);
     }
 
     /* -- Point3D -- */
 
-    public Point3.I32 p3(int x, int y, int z) {
-        return new Point3.I32(x, y, z);
+    public Point3I32 p3(int x, int y, int z) {
+        return new Point3I32(x, y, z);
     }
 
-    public Point3.I64 p3(long x, long y, long z) {
-        return new Point3.I64(x, y, z);
+    public Point3I64 p3(long x, long y, long z) {
+        return new Point3I64(x, y, z);
     }
 
-    public Point3.F32 p3(float x, float y, float z) {
-        return new Point3.F32(x, y, z);
+    public Point3F32 p3(float x, float y, float z) {
+        return new Point3F32(x, y, z);
     }
 
-    public Point3.F64 p3(double x, double y, double z) {
-        return new Point3.F64(x, y, z);
+    public Point3F64 p3(double x, double y, double z) {
+        return new Point3F64(x, y, z);
     }
 
     /* -- Point4D -- */
 
-    public Point4.I32 p4(int x, int y, int z, int w) {
-        return new Point4.I32(x, y, z, w);
+    public Point4I32 p4(int x, int y, int z, int w) {
+        return new Point4I32(x, y, z, w);
     }
 
-    public Point4.I64 p4(long x, long y, long z, long w) {
-        return new Point4.I64(x, y, z, w);
+    public Point4I64 p4(long x, long y, long z, long w) {
+        return new Point4I64(x, y, z, w);
     }
 
-    public Point4.F32 p4(float x, float y, float z, float w) {
-        return new Point4.F32(x, y, z, w);
+    public Point4F32 p4(float x, float y, float z, float w) {
+        return new Point4F32(x, y, z, w);
     }
 
-    public Point4.F64 p4(double x, double y, double z, double w) {
-        return new Point4.F64(x, y, z, w);
+    public Point4F64 p4(double x, double y, double z, double w) {
+        return new Point4F64(x, y, z, w);
     }
 }

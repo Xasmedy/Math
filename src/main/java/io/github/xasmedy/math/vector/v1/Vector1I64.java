@@ -1,13 +1,14 @@
 package io.github.xasmedy.math.vector.v1;
 
+import io.github.xasmedy.math.point.abstracts.Point1;
 import io.github.xasmedy.math.vector.abstracts.Vector1;
 import io.github.xasmedy.math.vector.v2.Vector2I64;
 import jdk.internal.vm.annotation.NullRestricted;
 
 import static io.github.xasmedy.math.vector.Vectors.v1;
 
-public value record Vector1I64(
-        @NullRestricted Long x) implements Vector1<Vector1I64, Long>, Vector1.Int<Vector1I64, Long> {
+public value record Vector1I64(@NullRestricted Long x
+) implements Vector1<Vector1I64, Long>, Vector1.Int<Vector1I64, Long>, Point1.I64 {
 
     @Override
     public Vector1F64 asReal() {

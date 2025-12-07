@@ -1,10 +1,13 @@
 package io.github.xasmedy.math.shape;
 
-import io.github.xasmedy.math.point.Point2;
+import io.github.xasmedy.math.point.abstracts.Point2;
+import io.github.xasmedy.math.point.p2.Point2F32;
+import io.github.xasmedy.math.point.p2.Point2F64;
+import io.github.xasmedy.math.point.p2.Point2I32;
+import io.github.xasmedy.math.point.p2.Point2I64;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
 import jdk.internal.vm.annotation.NullRestricted;
 
-// TODO Generalize to all dimensions if worth it
 public interface Line<P extends Point2<?>> {
 
     P start();
@@ -12,18 +15,18 @@ public interface Line<P extends Point2<?>> {
     P end();
 
     @LooselyConsistentValue
-    value record I32(@NullRestricted Point2.I32 start,
-                     @NullRestricted Point2.I32 end   ) implements Line<Point2.I32> {}
+    value record I32(@NullRestricted Point2I32 start,
+                     @NullRestricted Point2I32 end) implements Line<Point2I32> {}
 
     @LooselyConsistentValue
-    value record I64(@NullRestricted Point2.I64 start,
-                     @NullRestricted Point2.I64 end   ) implements Line<Point2.I64> {}
+    value record I64(@NullRestricted Point2I64 start,
+                     @NullRestricted Point2I64 end) implements Line<Point2I64> {}
 
     @LooselyConsistentValue
-    value record F32(@NullRestricted Point2.F32 start,
-                     @NullRestricted Point2.F32 end   ) implements Line<Point2.F32> {}
+    value record F32(@NullRestricted Point2F32 start,
+                     @NullRestricted Point2F32 end) implements Line<Point2F32> {}
 
     @LooselyConsistentValue
-    value record F64(@NullRestricted Point2.F64 start,
-                     @NullRestricted Point2.F64 end   ) implements Line<Point2.F64> {}
+    value record F64(@NullRestricted Point2F64 start,
+                     @NullRestricted Point2F64 end) implements Line<Point2F64> {}
 }

@@ -1,5 +1,6 @@
 package io.github.xasmedy.math.vector.v3;
 
+import io.github.xasmedy.math.point.abstracts.Point3;
 import io.github.xasmedy.math.vector.abstracts.Vector3;
 import io.github.xasmedy.math.vector.v2.Vector2I32;
 import io.github.xasmedy.math.vector.v4.Vector4I32;
@@ -10,7 +11,8 @@ import static io.github.xasmedy.math.vector.Vectors.v3;
 @LooselyConsistentValue
 public value record Vector3I32(@NullRestricted Integer x,
                                @NullRestricted Integer y,
-                               @NullRestricted Integer z) implements Vector3<Vector3I32, Integer>, Vector3.Int<Vector3I32, Integer> {
+                               @NullRestricted Integer z
+) implements Vector3<Vector3I32, Integer>, Vector3.Int<Vector3I32, Integer>, Point3.I32 {
 
     @Override
     public Vector3F32 asReal() {

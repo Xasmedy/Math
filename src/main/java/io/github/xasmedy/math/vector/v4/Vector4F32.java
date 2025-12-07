@@ -1,5 +1,6 @@
 package io.github.xasmedy.math.vector.v4;
 
+import io.github.xasmedy.math.point.abstracts.Point4;
 import io.github.xasmedy.math.vector.abstracts.Vector4;
 import io.github.xasmedy.math.vector.v3.Vector3F32;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
@@ -13,7 +14,8 @@ import static io.github.xasmedy.math.vector.Vectors.v4;
 public value record Vector4F32(@NullRestricted Float x,
                                @NullRestricted Float y,
                                @NullRestricted Float z,
-                               @NullRestricted Float w) implements Vector4<Vector4F32, Float>, Vector4.Real<Vector4F32, Float> {
+                               @NullRestricted Float w
+) implements Vector4<Vector4F32, Float>, Vector4.Real<Vector4F32, Float>, Point4.F32 {
 
     @Override
     public Vector4I32 ceilAsInt() {

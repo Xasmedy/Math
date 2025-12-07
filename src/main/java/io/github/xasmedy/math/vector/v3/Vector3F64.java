@@ -1,6 +1,7 @@
 package io.github.xasmedy.math.vector.v3;
 
 
+import io.github.xasmedy.math.point.abstracts.Point3;
 import io.github.xasmedy.math.vector.abstracts.Vector3;
 import io.github.xasmedy.math.vector.v2.Vector2F64;
 import io.github.xasmedy.math.vector.v4.Vector4F64;
@@ -14,7 +15,9 @@ import static io.github.xasmedy.math.vector.Vectors.v3;
 @LooselyConsistentValue
 public value record Vector3F64(@NullRestricted Double x,
                                @NullRestricted Double y,
-                               @NullRestricted Double z) implements Vector3<Vector3F64, Double>, Vector3.Real<Vector3F64, Double> {
+                               @NullRestricted Double z
+) implements Vector3<Vector3F64, Double>, Vector3.Real<Vector3F64, Double>, Point3.F64 {
+
     @Override
     public Vector3I64 ceilAsInt() {
         final long x = (long) Math.ceil(x());

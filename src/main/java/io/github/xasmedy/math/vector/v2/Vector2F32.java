@@ -1,5 +1,6 @@
 package io.github.xasmedy.math.vector.v2;
 
+import io.github.xasmedy.math.point.abstracts.Point2;
 import io.github.xasmedy.math.unit.Radians;
 import io.github.xasmedy.math.vector.abstracts.Vector2;
 import io.github.xasmedy.math.vector.v1.Vector1F32;
@@ -9,7 +10,8 @@ import java.util.function.Function;
 import static io.github.xasmedy.math.vector.Vectors.v2;
 
 public value record Vector2F32(@NullRestricted Float x,
-                               @NullRestricted Float y) implements Vector2<Vector2F32, Float>, Vector2.Real<Vector2F32, Float> {
+                               @NullRestricted Float y
+) implements Vector2<Vector2F32, Float>, Vector2.Real<Vector2F32, Float>, Point2.F32 {
 
     @Override
     public Vector1F32 withoutY() {

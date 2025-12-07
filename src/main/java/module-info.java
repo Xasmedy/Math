@@ -7,9 +7,14 @@ module xasmedy.math {
     exports io.github.xasmedy.math.point;
     exports io.github.xasmedy.math.shape;
     exports io.github.xasmedy.math.unit;
-    exports io.github.xasmedy.math.arithmetic;
+    exports io.github.xasmedy.math.vector.abstracts;
     exports io.github.xasmedy.math.vector.v1;
     exports io.github.xasmedy.math.vector.v2;
     exports io.github.xasmedy.math.vector.v3;
     exports io.github.xasmedy.math.vector.v4;
+    exports io.github.xasmedy.math.point.abstracts;
+    exports io.github.xasmedy.math.point.p1;
+    exports io.github.xasmedy.math.point.p2;
+    exports io.github.xasmedy.math.point.p3;
+    exports io.github.xasmedy.math.point.p4;
 }

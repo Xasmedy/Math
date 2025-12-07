@@ -1,14 +1,18 @@
 package io.github.xasmedy.math.vector.v2;
 
+import io.github.xasmedy.math.point.abstracts.Point2;
 import io.github.xasmedy.math.unit.Radians;
 import io.github.xasmedy.math.vector.abstracts.Vector;
 import io.github.xasmedy.math.vector.abstracts.Vector2;
 import io.github.xasmedy.math.vector.v1.Vector1I64;
 import io.github.xasmedy.math.vector.v3.Vector3I64;
 import jdk.internal.vm.annotation.NullRestricted;
+
 import static io.github.xasmedy.math.vector.Vectors.v2;
 
-public value record Vector2I64(@NullRestricted Long x, @NullRestricted Long y) implements Vector2<Vector2I64, Long>, Vector.Int<Vector2I64, Long> {
+public value record Vector2I64(@NullRestricted Long x,
+                               @NullRestricted Long y
+) implements Vector2<Vector2I64, Long>, Vector.Int<Vector2I64, Long>, Point2.I64 {
 
     @Override
     public Vector1I64 withoutY() {

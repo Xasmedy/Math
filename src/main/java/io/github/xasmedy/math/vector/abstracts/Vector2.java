@@ -1,6 +1,6 @@
 package io.github.xasmedy.math.vector.abstracts;
 
-import io.github.xasmedy.math.point.Point2;
+import io.github.xasmedy.math.point.abstracts.Point2;
 import io.github.xasmedy.math.unit.Radians;
 
 public interface Vector2<T extends Vector2<T, N>, N> extends Vector<T, N>, Point2<N> {

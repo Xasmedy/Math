@@ -1,11 +1,11 @@
 package io.github.xasmedy.math.vector.v4;
 
+import io.github.xasmedy.math.point.abstracts.Point4;
 import io.github.xasmedy.math.vector.abstracts.Vector;
 import io.github.xasmedy.math.vector.abstracts.Vector4;
 import io.github.xasmedy.math.vector.v3.Vector3I64;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
 import jdk.internal.vm.annotation.NullRestricted;
-
 import static io.github.xasmedy.math.vector.Vectors.v4;
 
 @LooselyConsistentValue
@@ -13,7 +13,7 @@ public value record Vector4I64(@NullRestricted Long x,
                                @NullRestricted Long y,
                                @NullRestricted Long z,
                                @NullRestricted Long w
-) implements Vector4<Vector4I64, Long>, Vector.Int<Vector4I64, Long> {
+) implements Vector4<Vector4I64, Long>, Vector.Int<Vector4I64, Long>, Point4.I64 {
 
     @Override
     public Vector4F64 asReal() {

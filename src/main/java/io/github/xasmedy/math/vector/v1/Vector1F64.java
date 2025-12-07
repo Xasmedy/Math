@@ -1,5 +1,6 @@
 package io.github.xasmedy.math.vector.v1;
 
+import io.github.xasmedy.math.point.abstracts.Point1;
 import io.github.xasmedy.math.vector.abstracts.Vector1;
 import io.github.xasmedy.math.vector.v2.Vector2F64;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
@@ -10,8 +11,8 @@ import java.util.function.Function;
 import static io.github.xasmedy.math.vector.Vectors.v1;
 
 @LooselyConsistentValue
-public value record Vector1F64(
-        @NullRestricted Double x) implements Vector1<Vector1F64, Double>, Vector1.Real<Vector1F64, Double> {
+public value record Vector1F64(@NullRestricted Double x
+) implements Vector1<Vector1F64, Double>, Vector1.Real<Vector1F64, Double>, Point1.F64 {
 
     @Override
     public Vector1I64 ceilAsInt() {
