@@ -1,6 +1,8 @@
-package io.github.xasmedy.math.vector.abstracts;
+package io.github.xasmedy.math.vector.v1;
 
-import io.github.xasmedy.math.point.abstracts.Point1;
+import io.github.xasmedy.math.point.p1.Point1;
+import io.github.xasmedy.math.vector.Vector;
+import io.github.xasmedy.math.vector.v2.Vector2;
 
 public interface Vector1<T extends Vector1<T, N>, N> extends Vector<T, N>, Point1<N> {
 

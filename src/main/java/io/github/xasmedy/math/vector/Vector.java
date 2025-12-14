@@ -1,4 +1,4 @@
-package io.github.xasmedy.math.vector.abstracts;
+package io.github.xasmedy.math.vector;
 
 import java.util.function.Function;
 

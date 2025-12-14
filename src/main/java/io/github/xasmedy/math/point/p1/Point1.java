@@ -1,4 +1,4 @@
-package io.github.xasmedy.math.point.abstracts;
+package io.github.xasmedy.math.point.p1;
 
 // TODO Have refined interfaces for T, because of performance,
 //  and move the value record class as Point1F32, Point1I32 (the same as the vectors)

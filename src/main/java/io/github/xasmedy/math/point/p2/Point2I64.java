@@ -1,6 +1,5 @@
 package io.github.xasmedy.math.point.p2;
 
-import io.github.xasmedy.math.point.abstracts.Point2;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
 import jdk.internal.vm.annotation.NullRestricted;
 

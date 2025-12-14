@@ -7,4 +7,4 @@ import jdk.internal.vm.annotation.NullRestricted;
 public value record Cuboid<T, P>(@NullRestricted P pos,
                                  @NullRestricted T width,
                                  @NullRestricted T height,
-                                 @NullRestricted T length)  implements Shape.Cuboid<T, P> {}
+                                 @NullRestricted T length) implements Shape.Cuboid<T, P> {}

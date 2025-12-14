@@ -1,4 +1,4 @@
-package io.github.xasmedy.math.point.abstracts;
+package io.github.xasmedy.math.point.p2;
 
 public interface Point2<T> {
 

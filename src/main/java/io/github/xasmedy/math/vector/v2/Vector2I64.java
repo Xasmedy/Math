@@ -1,9 +1,8 @@
 package io.github.xasmedy.math.vector.v2;
 
-import io.github.xasmedy.math.point.abstracts.Point2;
+import io.github.xasmedy.math.point.p2.Point2;
 import io.github.xasmedy.math.unit.Radians;
-import io.github.xasmedy.math.vector.abstracts.Vector;
-import io.github.xasmedy.math.vector.abstracts.Vector2;
+import io.github.xasmedy.math.vector.Vector;
 import io.github.xasmedy.math.vector.v1.Vector1I64;
 import io.github.xasmedy.math.vector.v3.Vector3I64;
 import jdk.internal.vm.annotation.NullRestricted;

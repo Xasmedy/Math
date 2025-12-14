@@ -1,7 +1,4 @@
-package io.github.xasmedy.math.point.abstracts;
-
-import jdk.internal.vm.annotation.LooselyConsistentValue;
-import jdk.internal.vm.annotation.NullRestricted;
+package io.github.xasmedy.math.point.p3;
 
 public interface Point3<T> {
 

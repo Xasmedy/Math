@@ -1,8 +1,7 @@
 package io.github.xasmedy.math.vector.v4;
 
-import io.github.xasmedy.math.point.abstracts.Point4;
-import io.github.xasmedy.math.vector.abstracts.Vector;
-import io.github.xasmedy.math.vector.abstracts.Vector4;
+import io.github.xasmedy.math.point.p4.Point4;
+import io.github.xasmedy.math.vector.Vector;
 import io.github.xasmedy.math.vector.v3.Vector3I32;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
 import jdk.internal.vm.annotation.NullRestricted;

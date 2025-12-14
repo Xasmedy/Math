@@ -1,7 +1,6 @@
 package io.github.xasmedy.math.vector.v1;
 
-import io.github.xasmedy.math.point.abstracts.Point1;
-import io.github.xasmedy.math.vector.abstracts.Vector1;
+import io.github.xasmedy.math.point.p1.Point1;
 import io.github.xasmedy.math.vector.v2.Vector2F32;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
 import jdk.internal.vm.annotation.NullRestricted;
