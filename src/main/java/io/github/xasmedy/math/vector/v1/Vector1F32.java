@@ -108,7 +108,7 @@ public value record Vector1F32(@NullRestricted Float x
     }
 
     @Override
-    public Vector2F32 withY(Float y) {
+    public Vector2F32 asV2(Float y) {
         return new Vector2F32(x(), y);
     }
 

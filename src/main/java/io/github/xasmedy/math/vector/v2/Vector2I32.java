@@ -18,12 +18,12 @@ public value record Vector2I32(@NullRestricted Integer x,
     }
 
     @Override
-    public Vector1I32 withoutY() {
+    public Vector1I32 asV1() {
         return new Vector1I32(x());
     }
 
     @Override
-    public Vector3I32 withZ(Integer z) {
+    public Vector3I32 asV3(Integer z) {
         return new Vector3I32(x(), y(), z);
     }
 

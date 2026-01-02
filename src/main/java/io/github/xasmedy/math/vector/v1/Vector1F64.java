@@ -110,7 +110,7 @@ public value record Vector1F64(@NullRestricted Double x
     }
 
     @Override
-    public Vector2F64 withY(Double y) {
+    public Vector2F64 asV2(Double y) {
         return new Vector2F64(x(), y);
     }
 

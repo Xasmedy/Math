@@ -13,12 +13,12 @@ public value record Vector2F64(@NullRestricted Double x,
 ) implements Vector2<Vector2F64, Double>, Vector2.Real<Vector2F64, Double>, Point2.F64 {
 
     @Override
-    public Vector1F64 withoutY() {
+    public Vector1F64 asV1() {
         return new Vector1F64(x());
     }
 
     @Override
-    public Vector3F64 withZ(Double z) {
+    public Vector3F64 asV3(Double z) {
         return new Vector3F64(x(), y(), z);
     }
 

@@ -128,12 +128,12 @@ public value record Vector3F32(@NullRestricted Float x,
     }
 
     @Override
-    public Vector2F32 withoutZ() {
+    public Vector2F32 asV2() {
         return new Vector2F32(x(), y());
     }
 
     @Override
-    public Vector4F32 withW(Float w) {
+    public Vector4F32 asV4(Float w) {
         return new Vector4F32(x(), y(), z(), w);
     }
 

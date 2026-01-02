@@ -17,7 +17,7 @@ public value record Vector1I32(@NullRestricted Integer x
     }
 
     @Override
-    public Vector2I32 withY(Integer y) {
+    public Vector2I32 asV2(Integer y) {
         return new Vector2I32(x(), y);
     }
 

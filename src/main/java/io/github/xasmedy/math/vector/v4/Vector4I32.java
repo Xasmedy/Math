@@ -20,7 +20,7 @@ public value record Vector4I32(@NullRestricted Integer x,
     }
 
     @Override
-    public Vector3I32 withoutW() {
+    public Vector3I32 asV3() {
         return new Vector3I32(x(), y(), z());
     }
 

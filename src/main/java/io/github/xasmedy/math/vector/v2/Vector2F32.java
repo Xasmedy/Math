@@ -13,12 +13,12 @@ public value record Vector2F32(@NullRestricted Float x,
 ) implements Vector2<Vector2F32, Float>, Vector2.Real<Vector2F32, Float>, Point2.F32 {
 
     @Override
-    public Vector1F32 withoutY() {
+    public Vector1F32 asV1() {
         return new Vector1F32(x());
     }
 
     @Override
-    public Vector3F32 withZ(Float z) {
+    public Vector3F32 asV3(Float z) {
         return new Vector3F32(x(), y(), z);
     }
 

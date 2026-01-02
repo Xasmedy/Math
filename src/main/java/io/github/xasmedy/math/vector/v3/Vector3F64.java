@@ -128,12 +128,12 @@ public value record Vector3F64(@NullRestricted Double x,
     }
 
     @Override
-    public Vector2F64 withoutZ() {
+    public Vector2F64 asV2() {
         return new Vector2F64(x(), y());
     }
 
     @Override
-    public Vector4F64 withW(Double w) {
+    public Vector4F64 asV4(Double w) {
         return new Vector4F64(x(), y(), z(), w);
     }
 

@@ -15,7 +15,7 @@ public value record Vector1I64(@NullRestricted Long x
     }
 
     @Override
-    public Vector2I64 withY(Long y) {
+    public Vector2I64 asV2(Long y) {
         return new Vector2I64(x(), y);
     }
 

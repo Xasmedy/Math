@@ -284,11 +284,11 @@ public value record Quaternion(float x, float y, float z, float w) {
     /// @return a new rotated vector.
     /// @apiNote The quaternion should be normalized for correct results.
     public Vector3F32 rotate(Vector3F32 v3) {
-        final var other = new Quaternion(v3.withW(0f));
+        final var other = new Quaternion(v3.asV4(0f));
         return conjugate()
                 .preMul(other)
                 .preMul(this).v4()
-                .withoutW();
+                .asV3();
     }
 
     /// Returns the Hamilton product of `this` quaternion and `other`.
@@ -480,7 +480,7 @@ public value record Quaternion(float x, float y, float z, float w) {
     public SwingTwist swingTwist(Vector3F32 axis) {
 
         final var norm = axis.normalize();
-        final float dot = v4().withoutW().dot(norm);
+        final float dot = v4().asV3().dot(norm);
 
         var twist = new Quaternion(norm.x() * dot, norm.y() * dot, norm.z() * dot, w).normalize();
         if (dot < 0) twist = twist.mul(-1f);
@@ -497,7 +497,7 @@ public value record Quaternion(float x, float y, float z, float w) {
      */
     public Radians angleAround(Vector3F32 axis) {
 
-        final float dot = v4().withoutW().dot(axis);
+        final float dot = v4().asV3().dot(axis);
         final var qAxis = new Quaternion(axis.x() * dot, axis.y() * dot, axis.z() * dot, w);
         final float l2 = qAxis.length2();
 

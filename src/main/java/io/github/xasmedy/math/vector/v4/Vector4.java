@@ -11,5 +11,5 @@ public interface Vector4<T extends Vector4<T, N>, N> extends Vector<T, N>, Point
         return 4;
     }
 
-    Vector3<?, N> withoutW();
+    Vector3<?, N> asV3();
 }

@@ -14,12 +14,12 @@ public value record Vector2I64(@NullRestricted Long x,
 ) implements Vector2<Vector2I64, Long>, Vector.Int<Vector2I64, Long>, Point2.I64 {
 
     @Override
-    public Vector1I64 withoutY() {
+    public Vector1I64 asV1() {
         return new Vector1I64(x());
     }
 
     @Override
-    public Vector3I64 withZ(Long z) {
+    public Vector3I64 asV3(Long z) {
         return new Vector3I64(x(), y(), z);
     }
 

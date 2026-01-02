@@ -639,6 +639,8 @@ public value record Matrix4(
         return Affine2.fromMatrix4(this);
     }
 
+    // TODO Consider SIMD versions of mulVec(), project(), and rotateVec()?
+
     /** Multiplies the vector with the given matrix.
      * @param vector the vector. */
     public Vector3F32 mulVec(Vector3F32 vector) {

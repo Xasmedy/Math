@@ -20,12 +20,12 @@ public value record Vector3I64(@NullRestricted Long x,
     }
 
     @Override
-    public Vector2I64 withoutZ() {
+    public Vector2I64 asV2() {
         return new Vector2I64(x(), y());
     }
 
     @Override
-    public Vector4I64 withW(Long w) {
+    public Vector4I64 asV4(Long w) {
         return new Vector4I64(x(), y(), z(), w);
     }
 

@@ -11,7 +11,7 @@ public interface Vector1<T extends Vector1<T, N>, N> extends Vector<T, N>, Point
         return 1;
     }
 
-    Vector2<?, N> withY(N y);
+    Vector2<?, N> asV2(N y);
 
     // In 1D integers vector will always have an integer length.
     N length();

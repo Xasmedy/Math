@@ -13,9 +13,9 @@ public interface Vector2<T extends Vector2<T, N>, N> extends Vector<T, N>, Point
         return 2;
     }
 
-    Vector1<?, N> withoutY();
+    Vector1<?, N> asV1();
 
-    Vector3<?, N> withZ(N z);
+    Vector3<?, N> asV3(N z);
 
     T rotate(Radians radians);
 

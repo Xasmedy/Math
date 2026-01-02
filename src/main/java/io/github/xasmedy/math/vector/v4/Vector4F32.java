@@ -137,7 +137,7 @@ public value record Vector4F32(@NullRestricted Float x,
     }
 
     @Override
-    public Vector3F32 withoutW() {
+    public Vector3F32 asV3() {
         return new Vector3F32(x(), y(), z());
     }
 

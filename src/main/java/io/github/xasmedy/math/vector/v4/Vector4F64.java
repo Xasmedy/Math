@@ -135,7 +135,7 @@ public value record Vector4F64(@NullRestricted Double x,
     }
 
     @Override
-    public Vector3F64 withoutW() {
+    public Vector3F64 asV3() {
         return new Vector3F64(x(), y(), z());
     }
 
