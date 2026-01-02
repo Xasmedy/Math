@@ -3,6 +3,8 @@ package io.github.xasmedy.math.unit;
 // No need for @LooselyConsistentValue, the class is 64 bit big, meaning the CPU supports atomic operations.
 public value record Radians(double value) {
 
+    // TODO rad() and deg() aliases?
+
     public static Radians radians(double radians) {
         return new Radians(radians);
     }

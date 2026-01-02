@@ -1,13 +1,13 @@
 package io.github.xasmedy.math.complex;
 
+import io.github.xasmedy.math.matrix.Matrix4;
 import io.github.xasmedy.math.unit.Radians;
 import io.github.xasmedy.math.vector.v3.Vector3F32;
 import io.github.xasmedy.math.vector.v4.Vector4F32;
 import static io.github.xasmedy.math.vector.Vectors.v3;
+import static io.github.xasmedy.math.FloatingPointUtil.EPSILON;
 
 public value record Quaternion(float x, float y, float z, float w) {
-
-    private static final float TOLERANCE = 1e-6f;
 
     public Quaternion(Vector4F32 v4) {
         this(v4.x(), v4.y(), v4.z(), v4.w());
@@ -25,7 +25,7 @@ public value record Quaternion(float x, float y, float z, float w) {
     /// @apiNote The axis is normalized automatically.
     public static Quaternion fromAxisAngle(Vector3F32 axis, Radians angle) {
         final var nor = axis.normalize();
-        final double half = angle.value() * 0.5;
+        final double half = angle.value() * .5f;
         final double sin = Math.sin(half);
         final double cos = Math.cos(half);
         return new Quaternion(
@@ -83,7 +83,7 @@ public value record Quaternion(float x, float y, float z, float w) {
         final var cross = v1.cross(v2);
 
         // I check if the vectors are not parallel.
-        if (cross.length2() >= TOLERANCE) {
+        if (cross.length2() >= EPSILON) {
             final Radians angle = Radians.radians(Math.acos(dot));
             return fromAxisAngle(cross, angle);
         }
@@ -137,6 +137,62 @@ public value record Quaternion(float x, float y, float z, float w) {
             result = result.mul(exp);
         }
         return result.normalize();
+    }
+
+    /// Creates a quaternion representing a rotation from three orthogonal axes.
+    ///
+    /// The method computes the quaternion using the matrix trace to select the largest component first,
+    /// which ensures numerical stability and avoids division by very small numbers.
+    /// @return a quaternion representing the same rotation as the given axes.
+    /// @apiNote The axes are normalized internally.
+    public static Quaternion fromAxes(Vector3F32 xAxis, Vector3F32 yAxis, Vector3F32 zAxis) {
+
+        final var x = xAxis.normalize();
+        final var y = yAxis.normalize();
+        final var z = zAxis.normalize();
+
+        final float trace = x.x() + y.y() + z.z();
+        final float qw, qx, qy, qz;
+
+        // We make the division safe by ensuring that s is always bigger or equal than 1.
+        if (trace >= 0f) {
+            final float s = (float) Math.sqrt(trace + 1f);
+            final float ss = .5f / s;
+            qw = .5f * s; // |w| >= .5
+            qx = (z.y() - y.z()) * ss;
+            qy = (x.z() - z.x()) * ss;
+            qz = (y.x() - x.y()) * ss;
+        } else if ((x.x() > y.y()) && (x.x() > z.z())) {
+            final float s = (float) Math.sqrt(1f + x.x() - y.y() - z.z());
+            final float ss = .5f / s;
+            qx = s * .5f; // |x| >= .5
+            qy = (y.x() + x.y()) * ss;
+            qz = (x.z() + z.x()) * ss;
+            qw = (z.y() - y.z()) * ss;
+        } else if (y.y() > z.z()) {
+            final float s = (float) Math.sqrt(1f + y.y() - x.x() - z.z());
+            final float ss = .5f / s;
+            qy = s * .5f; // |y| >= .5
+            qx = (y.x() + x.y()) * ss;
+            qz = (z.y() + y.z()) * ss;
+            qw = (x.z() - z.x()) * ss;
+        } else {
+            final float s = (float) Math.sqrt(1f + z.z() - x.x() - y.y());
+            final float ss = .5f / s;
+            qz = s * .5f; // |z| >= .5
+            qx = (x.z() + z.x()) * ss;
+            qy = (z.y() + y.z()) * ss;
+            qw = (y.x() - x.y()) * ss;
+        }
+        return new Quaternion(qx, qy, qz, qw);
+    }
+
+    /// @return A quaternion representing the rotation of the matrix.
+    public static Quaternion fromMatrix(Matrix4 matrix) {
+        final var x = v3(matrix.m00(), matrix.m01(), matrix.m02());
+        final var y = v3(matrix.m10(), matrix.m11(), matrix.m12());
+        final var z = v3(matrix.m20(), matrix.m21(), matrix.m22());
+        return fromAxes(x, y, z);
     }
 
     public Vector4F32 v4() {
@@ -256,7 +312,6 @@ public value record Quaternion(float x, float y, float z, float w) {
     public Quaternion preMul(Quaternion other) {
         return other.mul(this);
     }
-
     /**
      * Add the x,y,z,w components of the passed in quaternion to the ones of this quaternion
      */
@@ -264,49 +319,11 @@ public value record Quaternion(float x, float y, float z, float w) {
         return new Quaternion(v4().add(other.v4()));
     }
 
-    // TODO : the matrix4 set(quaternion) doesnt set the last row+col of the matrix to 0,0,0,1 so... that's why there is this
-// method
-
-    // TODO Xas Note: TO IMPLEMENT
-    /**
-     * Fills a 4x4 matrix with the rotation matrix represented by this quaternion.
-     *
-     * @param matrix Matrix to fill
-     */
-//    public void toMatrix(final float[] matrix) {
-//        final float xx = x * x;
-//        final float xy = x * y;
-//        final float xz = x * z;
-//        final float xw = x * w;
-//        final float yy = y * y;
-//        final float yz = y * z;
-//        final float yw = y * w;
-//        final float zz = z * z;
-//        final float zw = z * w;
-//        // Set matrix from quaternion
-//        matrix[Matrix4.M00] = 1 - 2 * (yy + zz);
-//        matrix[Matrix4.M01] = 2 * (xy - zw);
-//        matrix[Matrix4.M02] = 2 * (xz + yw);
-//        matrix[Matrix4.M03] = 0;
-//        matrix[Matrix4.M10] = 2 * (xy + zw);
-//        matrix[Matrix4.M11] = 1 - 2 * (xx + zz);
-//        matrix[Matrix4.M12] = 2 * (yz - xw);
-//        matrix[Matrix4.M13] = 0;
-//        matrix[Matrix4.M20] = 2 * (xz - yw);
-//        matrix[Matrix4.M21] = 2 * (yz + xw);
-//        matrix[Matrix4.M22] = 1 - 2 * (xx + yy);
-//        matrix[Matrix4.M23] = 0;
-//        matrix[Matrix4.M30] = 0;
-//        matrix[Matrix4.M31] = 0;
-//        matrix[Matrix4.M32] = 0;
-//        matrix[Matrix4.M33] = 1;
-//    }
-
     /**
      * @return If this quaternion is an identity Quaternion
      */
     public boolean isIdentity() {
-        return isIdentity(TOLERANCE);
+        return isIdentity(EPSILON);
     }
 
     /**
@@ -324,28 +341,11 @@ public value record Quaternion(float x, float y, float z, float w) {
     /**
      * Sets the Quaternion from the given matrix, optionally removing any scaling.
      */
-//    public Quaternion setFromMatrix(boolean normalizeAxes, Matrix4 matrix) {
-//        return setFromAxes(normalizeAxes, matrix.val[Matrix4.M00], matrix.val[Matrix4.M01], matrix.val[Matrix4.M02],
-//                matrix.val[Matrix4.M10], matrix.val[Matrix4.M11], matrix.val[Matrix4.M12], matrix.val[Matrix4.M20],
-//                matrix.val[Matrix4.M21], matrix.val[Matrix4.M22]);
-//    }
-
-    // TODO Xas Note: TO IMPLEMENT
-    /**
-     * Sets the Quaternion from the given rotation matrix, which must not contain scaling.
-     */
-//    public Quaternion setFromMatrix(Matrix4 matrix) {
-//        return setFromMatrix(false, matrix);
-//    }
-
-    // TODO Xas Note: TO IMPLEMENT
-    /**
-     * Sets the Quaternion from the given matrix, optionally removing any scaling.
-     */
 //    public Quaternion setFromMatrix(boolean normalizeAxes, Matrix3 matrix) {
 //        return setFromAxes(normalizeAxes, matrix.val[Matrix3.M00], matrix.val[Matrix3.M01], matrix.val[Matrix3.M02],
 //                matrix.val[Matrix3.M10], matrix.val[Matrix3.M11], matrix.val[Matrix3.M12], matrix.val[Matrix3.M20],
 //                matrix.val[Matrix3.M21], matrix.val[Matrix3.M22]);
+//
 //    }
 
     // TODO Xas Note: TO IMPLEMENT
@@ -356,115 +356,17 @@ public value record Quaternion(float x, float y, float z, float w) {
 //        return setFromMatrix(false, matrix);
 //    }
 
-    // TODO Xas Note: TO IMPLEMENT
-    /**
-     * <p>
-     * Sets the Quaternion from the given x-, y- and z-axis which have to be orthonormal.
-     * </p>
-     *
-     * <p>
-     * Taken from Bones framework for JPCT, see http://www.aptalkarga.com/bones/ which in turn took it from Graphics Gem code at
-     * ftp://ftp.cis.upenn.edu/pub/graphics/shoemake/quatut.ps.Z.
-     * </p>
-     *
-     * @param xx x-axis x-coordinate
-     * @param xy x-axis y-coordinate
-     * @param xz x-axis z-coordinate
-     * @param yx y-axis x-coordinate
-     * @param yy y-axis y-coordinate
-     * @param yz y-axis z-coordinate
-     * @param zx z-axis x-coordinate
-     * @param zy z-axis y-coordinate
-     * @param zz z-axis z-coordinate
-     */
-//    public Quaternion setFromAxes(float xx, float xy, float xz, float yx, float yy, float yz, float zx, float zy, float zz) {
-//        return setFromAxes(false, xx, xy, xz, yx, yy, yz, zx, zy, zz);
-//    }
-
-    // TODO Xas Note: TO IMPLEMENT
-    /**
-     * <p>
-     * Sets the Quaternion from the given x-, y- and z-axis.
-     * </p>
-     *
-     * <p>
-     * Taken from Bones framework for JPCT, see http://www.aptalkarga.com/bones/ which in turn took it from Graphics Gem code at
-     * ftp://ftp.cis.upenn.edu/pub/graphics/shoemake/quatut.ps.Z.
-     * </p>
-     *
-     * @param normalizeAxes whether to normalize the axes (necessary when they contain scaling)
-     * @param xx            x-axis x-coordinate
-     * @param xy            x-axis y-coordinate
-     * @param xz            x-axis z-coordinate
-     * @param yx            y-axis x-coordinate
-     * @param yy            y-axis y-coordinate
-     * @param yz            y-axis z-coordinate
-     * @param zx            z-axis x-coordinate
-     * @param zy            z-axis y-coordinate
-     * @param zz            z-axis z-coordinate
-     */
-//    public Quaternion setFromAxes(boolean normalizeAxes, float xx, float xy, float xz, float yx, float yy, float yz, float zx,
-//                                  float zy, float zz) {
-//        if (normalizeAxes) {
-//            final float lx = 1f / Vector3.len(xx, xy, xz);
-//            final float ly = 1f / Vector3.len(yx, yy, yz);
-//            final float lz = 1f / Vector3.len(zx, zy, zz);
-//            xx *= lx;
-//            xy *= lx;
-//            xz *= lx;
-//            yx *= ly;
-//            yy *= ly;
-//            yz *= ly;
-//            zx *= lz;
-//            zy *= lz;
-//            zz *= lz;
-//        }
-//        // the trace is the sum of the diagonal elements; see
-//        // http://mathworld.wolfram.com/MatrixTrace.html
-//        final float t = xx + yy + zz;
-//
-//        // we protect the division by s by ensuring that s>=1
-//        if (t >= 0) { // |w| >= .5
-//            float s = (float) Math.sqrt(t + 1); // |s|>=1 ...
-//            w = 0.5f * s;
-//            s = 0.5f / s; // so this division isn't bad
-//            x = (zy - yz) * s;
-//            y = (xz - zx) * s;
-//            z = (yx - xy) * s;
-//        } else if ((xx > yy) && (xx > zz)) {
-//            float s = (float) Math.sqrt(1.0 + xx - yy - zz); // |s|>=1
-//            x = s * 0.5f; // |x| >= .5
-//            s = 0.5f / s;
-//            y = (yx + xy) * s;
-//            z = (xz + zx) * s;
-//            w = (zy - yz) * s;
-//        } else if (yy > zz) {
-//            float s = (float) Math.sqrt(1.0 + yy - xx - zz); // |s|>=1
-//            y = s * 0.5f; // |y| >= .5
-//            s = 0.5f / s;
-//            x = (yx + xy) * s;
-//            z = (zy + yz) * s;
-//            w = (xz - zx) * s;
-//        } else {
-//            float s = (float) Math.sqrt(1.0 + zz - xx - yy); // |s|>=1
-//            z = s * 0.5f; // |z| >= .5
-//            s = 0.5f / s;
-//            x = (xz + zx) * s;
-//            y = (zy + yz) * s;
-//            w = (yx - xy) * s;
-//        }
-//
-//        return this;
-//    }
-
     /// Spherical interpolation between this quaternion and the other quaternion.
     /// @param end the other quaternion.
     /// @param alpha value in the range of `[0,1]`.
     /// @param epsilon threshold to switch between lerp and full slerp at small angles.
     /// @return the interpolated quaternion.
+    /// @apiNote The quaternions are normalized internally.
     public Quaternion slerp(Quaternion end, float alpha, float epsilon) {
 
-        final float dot = dot(end);
+        final Quaternion t = normalize();
+        final Quaternion e = end.normalize();
+        final float dot = t.dot(e);
         final float absDot = Math.abs(dot);
 
         // Set the default values in case the angle is too small to calculate the slerp.
@@ -483,10 +385,10 @@ public value record Quaternion(float x, float y, float z, float w) {
 
         if (dot < 0f) scale1 = -scale1;
         return new Quaternion(
-                (scale0 * x) + (scale1 * end.x),
-                (scale0 * y) + (scale1 * end.y),
-                (scale0 * z) + (scale1 * end.z),
-                (scale0 * w) + (scale1 * end.w)
+                (scale0 * t.x) + (scale1 * e.x),
+                (scale0 * t.y) + (scale1 * e.y),
+                (scale0 * t.z) + (scale1 * e.z),
+                (scale0 * t.w) + (scale1 * e.w)
         );
     }
 
@@ -508,7 +410,7 @@ public value record Quaternion(float x, float y, float z, float w) {
         final double sinTheta = Math.sin(theta);
 
         // To avoid numerical instability at low angles, I approximate the coefficient.
-        final double coefficient = Math.abs(theta) < TOLERANCE ?
+        final double coefficient = Math.abs(theta) < EPSILON ?
                 normExp * alpha / norm :
                 normExp * Math.sin(alpha * theta) / (norm * sinTheta);
 
@@ -550,8 +452,8 @@ public value record Quaternion(float x, float y, float z, float w) {
         final float sqrt = (float) Math.sqrt(1d - quat.w * quat.w);
 
         // I avoid dividing by 0 if the sqrt is small enough.
-        final Vector3F32 newAxis = sqrt < TOLERANCE ?
-                v3(quat.x, quat.y, quat.z).normalize() : // I re-normalize because without w the previous normalization might be off.
+        final Vector3F32 newAxis = sqrt < EPSILON ?
+                v3(quat.x, quat.y, quat.z).normalize() : // I re-normalize because without w the length might no longer be 1.
                 v3(quat.x / sqrt, quat.y / sqrt, quat.z / sqrt);
 
         final Radians angle = angle();
@@ -599,7 +501,7 @@ public value record Quaternion(float x, float y, float z, float w) {
         final var qAxis = new Quaternion(axis.x() * dot, axis.y() * dot, axis.z() * dot, w);
         final float l2 = qAxis.length2();
 
-        if (Math.abs(l2) < TOLERANCE) return Radians.radians(0.0);
+        if (l2 < EPSILON * EPSILON) return Radians.radians(0.0);
 
         final float fixedW = dot < 0 ? -w : w;
         final double clamped = Math.clamp(fixedW / Math.sqrt(l2), -1.0, 1.0);
