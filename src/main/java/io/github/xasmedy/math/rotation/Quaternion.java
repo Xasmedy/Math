@@ -1,4 +1,4 @@
-package io.github.xasmedy.math.complex;
+package io.github.xasmedy.math.rotation;
 
 import io.github.xasmedy.math.matrix.Matrix4;
 import io.github.xasmedy.math.unit.Radians;

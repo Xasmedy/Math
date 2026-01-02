@@ -5,7 +5,7 @@ module xasmedy.math {
     requires org.jspecify;
     requires jdk.incubator.vector;
     requires java.desktop;
-    exports io.github.xasmedy.math.complex;
+    exports io.github.xasmedy.math.rotation;
     exports io.github.xasmedy.math.matrix;
 
     exports io.github.xasmedy.math.point;
