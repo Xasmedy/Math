@@ -1,5 +1,6 @@
 package io.github.xasmedy.math.rotation;
 
+import io.github.xasmedy.math.matrix.Matrix3;
 import io.github.xasmedy.math.matrix.Matrix4;
 import io.github.xasmedy.math.unit.Radians;
 import io.github.xasmedy.math.vector.v3.Vector3F32;
@@ -188,7 +189,14 @@ public value record Quaternion(float x, float y, float z, float w) {
     }
 
     /// @return A quaternion representing the rotation of the matrix.
-    public static Quaternion fromMatrix(Matrix4 matrix) {
+    public static Quaternion fromMatrix4(Matrix4 matrix) {
+        return fromMatrix3(matrix.asMatrix3());
+    }
+
+    /**
+     * Sets the Quaternion from the given rotation matrix, which must not contain scaling.
+     */
+    public static Quaternion fromMatrix3(Matrix3 matrix) {
         final var x = v3(matrix.m00(), matrix.m01(), matrix.m02());
         final var y = v3(matrix.m10(), matrix.m11(), matrix.m12());
         final var z = v3(matrix.m20(), matrix.m21(), matrix.m22());
@@ -337,25 +345,6 @@ public value record Quaternion(float x, float y, float z, float w) {
                 && Math.abs(z) < tolerance
                 && Math.abs(w - 1f) < tolerance;
     }
-
-    // TODO Xas Note: TO IMPLEMENT
-    /**
-     * Sets the Quaternion from the given matrix, optionally removing any scaling.
-     */
-//    public Quaternion setFromMatrix(boolean normalizeAxes, Matrix3 matrix) {
-//        return setFromAxes(normalizeAxes, matrix.val[Matrix3.M00], matrix.val[Matrix3.M01], matrix.val[Matrix3.M02],
-//                matrix.val[Matrix3.M10], matrix.val[Matrix3.M11], matrix.val[Matrix3.M12], matrix.val[Matrix3.M20],
-//                matrix.val[Matrix3.M21], matrix.val[Matrix3.M22]);
-//
-//    }
-
-    // TODO Xas Note: TO IMPLEMENT
-    /**
-     * Sets the Quaternion from the given rotation matrix, which must not contain scaling.
-     */
-//    public Quaternion setFromMatrix(Matrix3 matrix) {
-//        return setFromMatrix(false, matrix);
-//    }
 
     /// Spherical interpolation between this quaternion and the other quaternion.
     /// @param end the other quaternion.

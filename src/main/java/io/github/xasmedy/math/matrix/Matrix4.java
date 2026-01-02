@@ -613,7 +613,7 @@ public value record Matrix4(
 
     /// @return The rotation of this matrix.
     public Quaternion rotation() {
-        return Quaternion.fromMatrix(this);
+        return Quaternion.fromMatrix4(this);
     }
 
     /// @return the vector which will receive the (non-negative) scale components on each axis.
