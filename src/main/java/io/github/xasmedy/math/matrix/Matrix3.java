@@ -5,6 +5,7 @@ import io.github.xasmedy.math.unit.Radians;
 import io.github.xasmedy.math.vector.v2.Vector2F32;
 import io.github.xasmedy.math.vector.v3.Vector3F32;
 import static io.github.xasmedy.math.FloatingPointUtil.EPSILON;
+import static io.github.xasmedy.math.vector.Vectors.v3;
 
 /// A Matrix3x3 stored in major-order.
 public value record Matrix3(
@@ -149,6 +150,13 @@ public value record Matrix3(
         );
 	}
 
+    public Vector3F32 mulVec(Vector3F32 vector) {
+        final float x = vector.x() * m00 + vector.y() * m01 + vector.z() * m02;
+        final float y = vector.x() * m10 + vector.y() * m11 + vector.z() * m12;
+        final float z = vector.x() * m20 + vector.y() * m21 + vector.z() * m22;
+        return v3(x, y, z);
+    }
+
 	/** Premultiplies this matrix with the provided matrix and stores the result in this matrix. For example:
 	 *
 	 * <pre>
@@ -229,6 +237,10 @@ public value record Matrix3(
 
     public Matrix3 preRotate(Radians angle) {
         return fromRotation(angle).mul(this);
+    }
+
+    public Vector3F32 unrotate(Vector3F32 vector) {
+        return mulVec(vector);
     }
 
     /** Postmultiplies this matrix with a scale matrix. Postmultiplication is also used by OpenGL ES' 1.x

@@ -718,6 +718,15 @@ public value record Matrix4(
         return mul(fromScale(scale));
     }
 
+    public Vector3F32 unrotate(Vector3F32 vector) {
+        return asMatrix3().mulVec(vector);
+    }
+
+    public Vector3F32 untransform(Vector3F32 vector) {
+        final var v = vector.sub(v3(m30, m31, m32));
+        return asMatrix3().mulVec(v);
+    }
+
     /** Copies the 4x3 upper-left sub-matrix into float array. The destination array is supposed to be a column major matrix.
      * @param out the destination matrix */
     public void toMatrix4x3Array(float[] out) {

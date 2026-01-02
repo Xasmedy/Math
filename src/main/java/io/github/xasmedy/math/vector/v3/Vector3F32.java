@@ -1,14 +1,16 @@
 package io.github.xasmedy.math.vector.v3;
 
+import io.github.xasmedy.math.matrix.Matrix3;
+import io.github.xasmedy.math.matrix.Matrix4;
 import io.github.xasmedy.math.point.p3.Point3;
+import io.github.xasmedy.math.rotation.Quaternion;
+import io.github.xasmedy.math.unit.Radians;
 import io.github.xasmedy.math.vector.Vector;
 import io.github.xasmedy.math.vector.v2.Vector2F32;
 import io.github.xasmedy.math.vector.v4.Vector4F32;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
 import jdk.internal.vm.annotation.NullRestricted;
-
 import java.util.function.Function;
-
 import static io.github.xasmedy.math.vector.Vectors.v3;
 
 @LooselyConsistentValue
@@ -143,6 +145,46 @@ public value record Vector3F32(@NullRestricted Float x,
         final float y = z() * vector.x() - x() * vector.z();
         final float z = x() * vector.y() - y() * vector.x();
         return v3(x, y, z);
+    }
+
+    @Override
+    public Vector3F32 mul(Matrix4 matrix) {
+        return matrix.mulVec(this);
+    }
+
+    @Override
+    public Vector3F32 mul(Matrix3 matrix) {
+        return matrix.mulVec(this);
+    }
+
+    @Override
+    public Vector3F32 rotate(Quaternion quaternion) {
+        return quaternion.rotate(this);
+    }
+
+    @Override
+    public Vector3F32 rotate(Matrix4 matrix) {
+        return matrix.rotateVec(this);
+    }
+
+    @Override
+    public Vector3F32 rotate(Vector3F32 axis, Radians angle) {
+        return Matrix4.fromAxisAngle(axis, angle).rotateVec(this);
+    }
+
+    @Override
+    public Vector3F32 unrotate(Matrix4 matrix) {
+        return matrix.unrotate(this);
+    }
+
+    @Override
+    public Vector3F32 project(Matrix4 matrix) {
+        return matrix.project(this);
+    }
+
+    @Override
+    public Vector3F32 untransform(Matrix4 matrix) {
+        return matrix.untransform(this);
     }
 
     @Override

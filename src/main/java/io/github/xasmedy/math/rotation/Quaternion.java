@@ -284,10 +284,11 @@ public value record Quaternion(float x, float y, float z, float w) {
     /// @return a new rotated vector.
     /// @apiNote The quaternion should be normalized for correct results.
     public Vector3F32 rotate(Vector3F32 v3) {
+        final var norm = normalize();
         final var other = new Quaternion(v3.asV4(0f));
-        return conjugate()
-                .preMul(other)
-                .preMul(this).v4()
+        return norm.mul(other)
+                .mul(norm.conjugate())
+                .v4()
                 .asV3();
     }
 
