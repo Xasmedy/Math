@@ -316,28 +316,13 @@ public value record Matrix4(
 
     /** Sets this matrix to the given 3x3 matrix. The third column of this matrix is set to (0,0,1,0).
      * @param matrix the matrix */
-    public static Matrix4 fromMatrix3(Matrix3 matrix) {
+    public static Matrix4 fromMatrix3(Matrix3F32 matrix) {
         return new Matrix4(
                 matrix.m00(), matrix.m01(), matrix.m02(), 0,
                 matrix.m10(), matrix.m11(), matrix.m12(), 0,
                 matrix.m20(), matrix.m21(), matrix.m22(), 0,
-                0,0, 0, 1
+                0, 0, 0, 1
         );
-    }
-
-    /** Sets this matrix to the given affine matrix. The values are mapped as follows:
-     *
-     * <pre>
-     *      [  M00  M01   0   M02  ]
-     *      [  M10  M11   0   M12  ]
-     *      [   0    0    1    0   ]
-     *      [   0    0    0    1   ]
-     * </pre>
-     *
-     * @param affine the affine matrix
-     * @return This matrix for chaining */
-    public static Matrix4 fromAffine2(Affine2 affine) {
-        return fromMatrix3(affine.asMatrix3());
     }
 
     /// Adds the translation to the matrix.
@@ -631,41 +616,18 @@ public value record Matrix4(
                 .transpose();
     }
 
-    public Matrix3 asMatrix3() {
-        return Matrix3.fromMatrix4(this);
-    }
-
-    public Affine2 asAffine2() {
-        return Affine2.fromMatrix4(this);
+    public Matrix3F32 asMatrix3() {
+        return Matrix3F32.fromMatrix4(this);
     }
 
     // TODO Consider SIMD versions of mulVec(), project(), and rotateVec()?
 
     /** Multiplies the vector with the given matrix.
      * @param vector the vector. */
-    public Vector3F32 mulVec(Vector3F32 vector) {
-        final float x = vector.x() * m00 + vector.y() * m01 + vector.z() * m02 + m03;
-        final float y = vector.x() * m10 + vector.y() * m11 + vector.z() * m12 + m13;
-        final float z = vector.x() * m20 + vector.y() * m21 + vector.z() * m22 + m23;
-        return new Vector3F32(x, y, z);
-    }
-
-    /** Multiplies the vector with the given matrix, performing a division by w.*/
-    public Vector3F32 project(Vector3F32 vector) {
-        final float invW = 1f / (vector.x() * m30 + vector.y() * m31 + vector.z() * m32 + m33);
-        final float x = (vector.x() * m00 + vector.y() * m01 + vector.z() * m02 + m03) * invW;
-        final float y = (vector.x() * m10 + vector.y() * m11 + vector.z() * m12 + m13) * invW;
-        final float z = (vector.x() * m20 + vector.y() * m21 + vector.z() * m22 + m23) * invW;
-        return new Vector3F32(x, y, z);
-    }
-
-    /** Multiplies the vector with the top most 3x3 sub-matrix of the given matrix.
-     * @param vector the vector. */
-    public Vector3F32 rotateVec(Vector3F32 vector) {
-        final float x = vector.x() * m00 + vector.y() * m01 + vector.z() * m02;
-        final float y = vector.x() * m10 + vector.y() * m11 + vector.z() * m12;
-        final float z = vector.x() * m20 + vector.y() * m21 + vector.z() * m22;
-        return new Vector3F32(x, y, z);
+    public Vector3F32 transform(Vector3F32 vector) {
+        return asMatrix3()
+                .transform(vector)
+                .add(v3(m03, m13, m23));
     }
 
     /** Postmultiplies this matrix by a translation matrix. Postmultiplication is also used by OpenGL ES' 1.x
@@ -719,12 +681,11 @@ public value record Matrix4(
     }
 
     public Vector3F32 unrotate(Vector3F32 vector) {
-        return asMatrix3().mulVec(vector);
+        return asMatrix3().unrotate(vector);
     }
 
     public Vector3F32 untransform(Vector3F32 vector) {
-        final var v = vector.sub(v3(m30, m31, m32));
-        return asMatrix3().mulVec(v);
+        return asMatrix3().unrotate(vector.sub(v3(m03, m13, m23)));
     }
 
     /** Copies the 4x3 upper-left sub-matrix into float array. The destination array is supposed to be a column major matrix.

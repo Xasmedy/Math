@@ -1,6 +1,6 @@
 package io.github.xasmedy.math.rotation;
 
-import io.github.xasmedy.math.matrix.Matrix3;
+import io.github.xasmedy.math.matrix.Matrix3F32;
 import io.github.xasmedy.math.matrix.Matrix4;
 import io.github.xasmedy.math.unit.Radians;
 import io.github.xasmedy.math.vector.v3.Vector3F32;
@@ -196,7 +196,7 @@ public value record Quaternion(float x, float y, float z, float w) {
     /**
      * Sets the Quaternion from the given rotation matrix, which must not contain scaling.
      */
-    public static Quaternion fromMatrix3(Matrix3 matrix) {
+    public static Quaternion fromMatrix3(Matrix3F32 matrix) {
         final var x = v3(matrix.m00(), matrix.m01(), matrix.m02());
         final var y = v3(matrix.m10(), matrix.m11(), matrix.m12());
         final var z = v3(matrix.m20(), matrix.m21(), matrix.m22());

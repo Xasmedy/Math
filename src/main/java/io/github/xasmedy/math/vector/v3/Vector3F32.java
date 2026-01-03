@@ -1,6 +1,5 @@
 package io.github.xasmedy.math.vector.v3;
 
-import io.github.xasmedy.math.matrix.Matrix3;
 import io.github.xasmedy.math.matrix.Matrix4;
 import io.github.xasmedy.math.point.p3.Point3;
 import io.github.xasmedy.math.rotation.Quaternion;
@@ -148,13 +147,8 @@ public value record Vector3F32(@NullRestricted Float x,
     }
 
     @Override
-    public Vector3F32 mul(Matrix4 matrix) {
-        return matrix.mulVec(this);
-    }
-
-    @Override
-    public Vector3F32 mul(Matrix3 matrix) {
-        return matrix.mulVec(this);
+    public Vector3F32 transform(Matrix4 matrix) {
+        return matrix.transform(this);
     }
 
     @Override
@@ -164,12 +158,14 @@ public value record Vector3F32(@NullRestricted Float x,
 
     @Override
     public Vector3F32 rotate(Matrix4 matrix) {
-        return matrix.rotateVec(this);
+        return matrix.asMatrix3().transform(this);
     }
 
     @Override
     public Vector3F32 rotate(Vector3F32 axis, Radians angle) {
-        return Matrix4.fromAxisAngle(axis, angle).rotateVec(this);
+        return Matrix4.fromAxisAngle(axis, angle)
+                .asMatrix3()
+                .transform(this);
     }
 
     @Override
@@ -179,7 +175,8 @@ public value record Vector3F32(@NullRestricted Float x,
 
     @Override
     public Vector3F32 project(Matrix4 matrix) {
-        return matrix.project(this);
+        final float invW = 1f / (x() * matrix.m30() + y() * matrix.m31() + z() * matrix.m32() + matrix.m33());
+        return matrix.transform(this).mul(invW);
     }
 
     @Override
