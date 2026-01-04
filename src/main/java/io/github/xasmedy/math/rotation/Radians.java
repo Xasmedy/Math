@@ -1,4 +1,4 @@
-package io.github.xasmedy.math.unit;
+package io.github.xasmedy.math.rotation;
 
 // No need for @LooselyConsistentValue, the class is 64 bit big, meaning the CPU supports atomic operations.
 public value record Radians(double value) {

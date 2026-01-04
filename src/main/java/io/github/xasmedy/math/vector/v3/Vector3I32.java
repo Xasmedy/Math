@@ -1,7 +1,7 @@
 package io.github.xasmedy.math.vector.v3;
 
 import io.github.xasmedy.math.point.p3.Point3;
-import io.github.xasmedy.math.unit.Radians;
+import io.github.xasmedy.math.rotation.Radians;
 import io.github.xasmedy.math.vector.v2.Vector2I32;
 import io.github.xasmedy.math.vector.v4.Vector4I32;
 import jdk.internal.vm.annotation.LooselyConsistentValue;

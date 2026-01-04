@@ -1,7 +1,7 @@
 package io.github.xasmedy.math.matrix;
 
 import io.github.xasmedy.math.rotation.Quaternion;
-import io.github.xasmedy.math.unit.Radians;
+import io.github.xasmedy.math.rotation.Radians;
 import io.github.xasmedy.math.vector.v2.Vector2F32;
 import io.github.xasmedy.math.vector.v3.Vector3F32;
 import jdk.internal.vm.annotation.LooselyConsistentValue;

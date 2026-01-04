@@ -2,7 +2,6 @@ package io.github.xasmedy.math.rotation;
 
 import io.github.xasmedy.math.matrix.Matrix3F32;
 import io.github.xasmedy.math.matrix.Matrix4;
-import io.github.xasmedy.math.unit.Radians;
 import io.github.xasmedy.math.vector.v3.Vector3F32;
 import io.github.xasmedy.math.vector.v4.Vector4F32;
 import static io.github.xasmedy.math.vector.Vectors.v3;
