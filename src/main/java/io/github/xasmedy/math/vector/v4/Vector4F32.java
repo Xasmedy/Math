@@ -17,21 +17,13 @@ public value record Vector4F32(@NullRestricted Float x,
 ) implements Vector4<Vector4F32, Float>, Vector4.Real<Vector4F32, Float>, Point4.F32 {
 
     @Override
-    public Vector4I32 ceilAsInt() {
-        final int x = (int) Math.ceil(x());
-        final int y = (int) Math.ceil(y());
-        final int z = (int) Math.ceil(z());
-        final int w = (int) Math.ceil(w());
-        return v4(x, y, z, w);
-    }
-
-    @Override
-    public Vector4I32 floorAsInt() {
-        final int x = (int) Math.floor(x());
-        final int y = (int) Math.floor(y());
-        final int z = (int) Math.floor(z());
-        final int w = (int) Math.floor(w());
-        return v4(x, y, z, w);
+    public Vector4I32 asInt() {
+        return v4(
+                (int) (float) x(),
+                (int) (float) y(),
+                (int) (float) z(),
+                (int) (float) w()
+        );
     }
 
     @Override

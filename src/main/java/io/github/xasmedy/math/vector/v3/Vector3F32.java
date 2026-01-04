@@ -2,7 +2,6 @@ package io.github.xasmedy.math.vector.v3;
 
 import io.github.xasmedy.math.matrix.Matrix4;
 import io.github.xasmedy.math.point.p3.Point3;
-import io.github.xasmedy.math.rotation.Quaternion;
 import io.github.xasmedy.math.unit.Radians;
 import io.github.xasmedy.math.vector.Vector;
 import io.github.xasmedy.math.vector.v2.Vector2F32;
@@ -19,19 +18,8 @@ public value record Vector3F32(@NullRestricted Float x,
 ) implements Vector3<Vector3F32, Float>, Vector.Real<Vector3F32, Float>, Point3.F32 {
 
     @Override
-    public Vector3I32 ceilAsInt() {
-        final int x = (int) Math.ceil(x());
-        final int y = (int) Math.ceil(y());
-        final int z = (int) Math.ceil(z());
-        return v3(x, y, z);
-    }
-
-    @Override
-    public Vector3I32 floorAsInt() {
-        final int x = (int) Math.floor(x());
-        final int y = (int) Math.floor(y());
-        final int z = (int) Math.floor(z());
-        return v3(x, y, z);
+    public Vector3I32 asInt() {
+        return v3((int) (float) x(), (int) (float) y(), (int) (float) z());
     }
 
     @Override
@@ -147,41 +135,10 @@ public value record Vector3F32(@NullRestricted Float x,
     }
 
     @Override
-    public Vector3F32 transform(Matrix4 matrix) {
-        return matrix.transform(this);
-    }
-
-    @Override
-    public Vector3F32 rotate(Quaternion quaternion) {
-        return quaternion.rotate(this);
-    }
-
-    @Override
-    public Vector3F32 rotate(Matrix4 matrix) {
-        return matrix.asMatrix3().transform(this);
-    }
-
-    @Override
     public Vector3F32 rotate(Vector3F32 axis, Radians angle) {
         return Matrix4.fromAxisAngle(axis, angle)
                 .asMatrix3()
                 .transform(this);
-    }
-
-    @Override
-    public Vector3F32 unrotate(Matrix4 matrix) {
-        return matrix.unrotate(this);
-    }
-
-    @Override
-    public Vector3F32 project(Matrix4 matrix) {
-        final float invW = 1f / (x() * matrix.m30() + y() * matrix.m31() + z() * matrix.m32() + matrix.m33());
-        return matrix.transform(this).mul(invW);
-    }
-
-    @Override
-    public Vector3F32 untransform(Matrix4 matrix) {
-        return matrix.untransform(this);
     }
 
     @Override

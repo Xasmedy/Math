@@ -290,7 +290,7 @@ public value record Quaternion(float x, float y, float z, float w) {
     ///
     /// @param v3 the vector to rotate
     /// @return a new rotated vector.
-    /// @apiNote The quaternion should be normalized for correct results.
+    /// @apiNote The quaternion is normalized internally.
     public Vector3F32 rotate(Vector3F32 v3) {
         final var norm = normalize();
         final var other = new Quaternion(v3.asV4(0f));

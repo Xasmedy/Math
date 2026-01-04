@@ -26,7 +26,7 @@ public value class MathTest {
 
                 final var _3 = i32Vector2() * _2.sum();
                 results[i] = _3;
-                results2[i] = _1.ceilAsInt().dot(v2(213, 123)) < i64Vector2();
+                results2[i] = _1.ceil().asInt().dot(v2(213, 123)) < i64Vector2();
             }
         }
         final int index = new Random().nextInt(0, results.length);

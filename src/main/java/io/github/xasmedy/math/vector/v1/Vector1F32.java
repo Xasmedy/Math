@@ -12,13 +12,8 @@ public value record Vector1F32(@NullRestricted Float x
 ) implements Vector1<Vector1F32, Float>, Vector1.Real<Vector1F32, Float>, Point1.F32 {
 
     @Override
-    public Vector1I32 ceilAsInt() {
-        return v1((int) Math.ceil(x()));
-    }
-
-    @Override
-    public Vector1I32 floorAsInt() {
-        return v1((int) Math.floor(x()));
+    public Vector1I32 asInt() {
+        return v1((int) (float) x());
     }
 
     @Override

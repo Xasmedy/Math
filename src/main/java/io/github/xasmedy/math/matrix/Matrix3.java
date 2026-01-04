@@ -47,6 +47,10 @@ public interface Matrix3<M extends Matrix3<M, N, V2, V3>, N, V2 extends Vector2<
     N m21();
     N m22();
 
+    V3 transform(V3 vector);
+
+    V2 transform(V2 vector);
+
     /// Applies a 3D rotation.
     M rotate(Quaternion quaternion);
 
@@ -68,10 +72,6 @@ public interface Matrix3<M extends Matrix3<M, N, V2, V3>, N, V2 extends Vector2<
     M affineInvert();
 
     boolean isAffineSingular();
-
-    V3 transform(V3 vector);
-
-    V2 transform(V2 vector);
 
     /** Postmultiplies this matrix by a translation matrix. Postmultiplication is also used by OpenGL ES' 1.x
      * glTranslate/glRotate/glScale.

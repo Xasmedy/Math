@@ -153,17 +153,8 @@ public value record Vector2F64(@NullRestricted Double x,
     }
 
     @Override
-    public Vector2I32 ceilAsInt() {
-        final int x = (int) Math.ceil(x());
-        final int y = (int) Math.ceil(y());
-        return v2(x, y);
-    }
-
-    @Override
-    public Vector2I32 floorAsInt() {
-        final int x = (int) Math.floor(x());
-        final int y = (int) Math.floor(y());
-        return v2(x, y);
+    public Vector2I64 asInt() {
+        return v2((long) (double) x(), (long) (double) y());
     }
 
     @Override

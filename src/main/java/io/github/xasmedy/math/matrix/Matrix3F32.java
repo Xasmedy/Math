@@ -12,7 +12,8 @@ import java.lang.foreign.ValueLayout;
 import static io.github.xasmedy.math.FloatingPointUtil.EPSILON;
 import static io.github.xasmedy.math.vector.Vectors.v3;
 
-/// A Matrix3x3 stored in column-major order.
+/// A Matrix3x3, the fields layout and math is row-major for ease of use.\
+/// Methods like {@link Matrix#asArray()} and {@link Matrix#asMemorySegment(Arena)} return the column-major representation.
 @LooselyConsistentValue
 public value record Matrix3F32(
         @NullRestricted Float m00, @NullRestricted Float m01, @NullRestricted Float m02,
@@ -221,7 +222,7 @@ public value record Matrix3F32(
     @Override
     public Matrix3F32 invert() {
 
-		float det = determinant();
+		final float det = determinant();
         if (Math.abs(det) < EPSILON) throw new ArithmeticException("The matrix cannot be inverted since singular.");
 
 		final float inv_det = 1f / det;
@@ -283,10 +284,11 @@ public value record Matrix3F32(
 
     @Override
     public Matrix3F32 affineInvert() {
-        float det = affineDeterminant();
+
+        final float det = affineDeterminant();
         if (Math.abs(det) < EPSILON) throw new ArithmeticException("The matrix cannot be inverted since singular.");
 
-        float invDet = 1f / det;
+        final float invDet = 1f / det;
 
         final float n00 = invDet * m11;
         final float n01 = invDet * -m01;

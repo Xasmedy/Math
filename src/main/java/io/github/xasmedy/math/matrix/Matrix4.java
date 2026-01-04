@@ -680,6 +680,15 @@ public value record Matrix4(
         return mul(fromScale(scale));
     }
 
+    public Vector3F32 project(Vector3F32 vector) {
+        final float invW = 1f / (vector.x() * m30() + vector.y() * m31() + vector.z() * m32() + m33());
+        return transform(vector).mul(invW);
+    }
+
+    public Vector3F32 rotate(Vector3F32 vector) {
+        return asMatrix3().transform(vector);
+    }
+
     public Vector3F32 unrotate(Vector3F32 vector) {
         return asMatrix3().unrotate(vector);
     }

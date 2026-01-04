@@ -153,17 +153,8 @@ public value record Vector2F32(@NullRestricted Float x,
     }
 
     @Override
-    public Vector2I32 ceilAsInt() {
-        final int x = (int) Math.ceil(x());
-        final int y = (int) Math.ceil(y());
-        return v2(x, y);
-    }
-
-    @Override
-    public Vector2I32 floorAsInt() {
-        final int x = (int) Math.floor(x());
-        final int y = (int) Math.floor(y());
-        return v2(x, y);
+    public Vector2I32 asInt() {
+        return v2((int) (float) x(), (int) (float) y());
     }
 
     @Override

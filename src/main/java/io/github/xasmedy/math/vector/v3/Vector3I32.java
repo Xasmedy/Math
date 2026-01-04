@@ -1,6 +1,7 @@
 package io.github.xasmedy.math.vector.v3;
 
 import io.github.xasmedy.math.point.p3.Point3;
+import io.github.xasmedy.math.unit.Radians;
 import io.github.xasmedy.math.vector.v2.Vector2I32;
 import io.github.xasmedy.math.vector.v4.Vector4I32;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
@@ -34,6 +35,11 @@ public value record Vector3I32(@NullRestricted Integer x,
         final int y = z() * vector.x() - x() * vector.z();
         final int z = x() * vector.y() - y() * vector.x();
         return v3(x, y, z);
+    }
+
+    @Override
+    public Vector3I32 rotate(Vector3I32 axis, Radians angle) {
+        return asReal().rotate(axis.asReal(), angle).asInt();
     }
 
     @Override

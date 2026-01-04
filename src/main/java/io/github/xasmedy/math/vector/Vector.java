@@ -66,9 +66,8 @@ public interface Vector<T extends Vector<T, N>, N> {
 
     interface Real<T extends Real<T, N>, N> extends Vector<T, N> {
 
-        Int<?, ?> ceilAsInt();
-
-        Int<?, ?> floorAsInt();
+        /// @return This vector with the floating point value truncated.
+        Int<?, ?> asInt();
 
         T ceil();
 

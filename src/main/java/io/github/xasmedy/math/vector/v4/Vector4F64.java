@@ -15,21 +15,13 @@ public value record Vector4F64(@NullRestricted Double x,
 ) implements Vector4<Vector4F64, Double>, Vector4.Real<Vector4F64, Double>, Point4.F64 {
 
     @Override
-    public Vector4I64 ceilAsInt() {
-        final long x = (long) Math.ceil(x());
-        final long y = (long) Math.ceil(y());
-        final long z = (long) Math.ceil(z());
-        final long w = (long) Math.ceil(w());
-        return v4(x, y, z, w);
-    }
-
-    @Override
-    public Vector4I64 floorAsInt() {
-        final long x = (long) Math.floor(x());
-        final long y = (long) Math.floor(y());
-        final long z = (long) Math.floor(z());
-        final long w = (long) Math.floor(w());
-        return v4(x, y, z, w);
+    public Vector4I64 asInt() {
+        return v4(
+                (long) (double) x(),
+                (long) (double) y(),
+                (long) (double) z(),
+                (long) (double) w()
+        );
     }
 
     @Override

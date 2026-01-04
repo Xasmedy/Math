@@ -1,14 +1,12 @@
 package io.github.xasmedy.math.vector.v3;
 
-
 import io.github.xasmedy.math.point.p3.Point3;
+import io.github.xasmedy.math.unit.Radians;
 import io.github.xasmedy.math.vector.v2.Vector2F64;
 import io.github.xasmedy.math.vector.v4.Vector4F64;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
 import jdk.internal.vm.annotation.NullRestricted;
-
 import java.util.function.Function;
-
 import static io.github.xasmedy.math.vector.Vectors.v3;
 
 @LooselyConsistentValue
@@ -18,19 +16,8 @@ public value record Vector3F64(@NullRestricted Double x,
 ) implements Vector3<Vector3F64, Double>, Vector3.Real<Vector3F64, Double>, Point3.F64 {
 
     @Override
-    public Vector3I64 ceilAsInt() {
-        final long x = (long) Math.ceil(x());
-        final long y = (long) Math.ceil(y());
-        final long z = (long) Math.ceil(z());
-        return v3(x, y, z);
-    }
-
-    @Override
-    public Vector3I64 floorAsInt() {
-        final long x = (long) Math.floor(x());
-        final long y = (long) Math.floor(y());
-        final long z = (long) Math.floor(z());
-        return v3(x, y, z);
+    public Vector3I64 asInt() {
+        return v3((long) (double) x(), (long) (double) y(), (long) (double) z());
     }
 
     @Override
@@ -143,6 +130,15 @@ public value record Vector3F64(@NullRestricted Double x,
         final double y = z() * vector.x() - x() * vector.z();
         final double z = x() * vector.y() - y() * vector.x();
         return v3(x, y, z);
+    }
+
+    @Override
+    public Vector3F64 rotate(Vector3F64 axis, Radians angle) {
+        // TODO Use Matrix4F64
+        throw new UnsupportedOperationException("Not supported yet.");
+//        return Matrix4.fromAxisAngle(axis, angle)
+//                .asMatrix3()
+//                .transform(this);
     }
 
     @Override

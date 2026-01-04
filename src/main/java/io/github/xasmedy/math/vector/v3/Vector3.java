@@ -1,8 +1,6 @@
 package io.github.xasmedy.math.vector.v3;
 
-import io.github.xasmedy.math.matrix.Matrix4;
 import io.github.xasmedy.math.point.p3.Point3;
-import io.github.xasmedy.math.rotation.Quaternion;
 import io.github.xasmedy.math.unit.Radians;
 import io.github.xasmedy.math.vector.Vector;
 import io.github.xasmedy.math.vector.v4.Vector4;
@@ -21,19 +19,5 @@ public interface Vector3<T extends Vector3<T, N>, N> extends Vector<T, N>, Point
 
     T cross(T vector);
 
-    T transform(Matrix4 matrix);
-
-    T untransform(Matrix4 matrix);
-
-    /// @apiNote The quaternion is normalized internally.
-    T rotate(Quaternion quaternion);
-
-    T rotate(Matrix4 matrix);
-
     T rotate(T axis, Radians angle);
-
-    T unrotate(Matrix4 matrix);
-
-    /** Multiplies the vector with the given matrix, performing a division by w.*/
-    T project(Matrix4 matrix);
 }
