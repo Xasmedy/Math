@@ -5,7 +5,6 @@ import io.github.xasmedy.math.rotation.Radians;
 import io.github.xasmedy.math.vector.v2.Vector2F64;
 import io.github.xasmedy.math.vector.v3.Vector3F64;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
-import jdk.internal.vm.annotation.NullRestricted;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
@@ -16,9 +15,9 @@ import static io.github.xasmedy.math.vector.Vectors.v3;
 /// Methods like {@link Matrix#asArray()} and {@link Matrix#asMemorySegment(Arena)} return the column-major representation.
 @LooselyConsistentValue
 public value record Matrix3F64(
-        @NullRestricted Double m00, @NullRestricted Double m01, @NullRestricted Double m02,
-        @NullRestricted Double m10, @NullRestricted Double m11, @NullRestricted Double m12,
-        @NullRestricted Double m20, @NullRestricted Double m21, @NullRestricted Double m22
+        double m00, double m01, double m02,
+        double m10, double m11, double m12,
+        double m20, double m21, double m22
 ) implements Matrix3<Matrix3F64, Double, Vector2F64, Vector3F64> {
 
     /** Sets this matrix to the identity matrix
@@ -136,12 +135,11 @@ public value record Matrix3F64(
     /** Sets this 3x3 matrix to the top left 3x3 corner of the provided 4x4 matrix.
      * @param matrix The matrix whose top left corner will be copied. This matrix will not be modified.
      * @return This matrix for the purpose of chaining operations. */
-    public static Matrix3F64 fromMatrix4(Matrix4F32 matrix) {
-        // TODO Replace with Matrix4F64 version.
+    public static Matrix3F64 fromMatrix4(Matrix4F64 matrix) {
         return new Matrix3F64(
-                (double) matrix.m00(), (double) matrix.m01(), (double) matrix.m02(),
-                (double) matrix.m10(), (double) matrix.m11(), (double) matrix.m12(),
-                (double) matrix.m20(), (double) matrix.m21(), (double) matrix.m22()
+                matrix.m00(), matrix.m01(), matrix.m02(),
+                matrix.m10(), matrix.m11(), matrix.m12(),
+                matrix.m20(), matrix.m21(), matrix.m22()
         );
     }
 

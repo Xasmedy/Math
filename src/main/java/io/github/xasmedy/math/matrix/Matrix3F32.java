@@ -5,7 +5,6 @@ import io.github.xasmedy.math.rotation.Radians;
 import io.github.xasmedy.math.vector.v2.Vector2F32;
 import io.github.xasmedy.math.vector.v3.Vector3F32;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
-import jdk.internal.vm.annotation.NullRestricted;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
@@ -16,9 +15,9 @@ import static io.github.xasmedy.math.vector.Vectors.v3;
 /// Methods like {@link Matrix#asArray()} and {@link Matrix#asMemorySegment(Arena)} return the column-major representation.
 @LooselyConsistentValue
 public value record Matrix3F32(
-        @NullRestricted Float m00, @NullRestricted Float m01, @NullRestricted Float m02,
-        @NullRestricted Float m10, @NullRestricted Float m11, @NullRestricted Float m12,
-        @NullRestricted Float m20, @NullRestricted Float m21, @NullRestricted Float m22
+        float m00, float m01, float m02,
+        float m10, float m11, float m12,
+        float m20, float m21, float m22
 ) implements Matrix3<Matrix3F32, Float, Vector2F32, Vector3F32> {
 
     /** Sets this matrix to the identity matrix
