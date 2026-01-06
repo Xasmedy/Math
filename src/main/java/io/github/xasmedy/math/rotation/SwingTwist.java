@@ -1,4 +1,8 @@
 package io.github.xasmedy.math.rotation;
 
-public value record SwingTwist(Quaternion swing, Quaternion twist) {
+import jdk.internal.vm.annotation.LooselyConsistentValue;
+import jdk.internal.vm.annotation.NullRestricted;
+
+@LooselyConsistentValue
+public value record SwingTwist(@NullRestricted Quaternion swing, @NullRestricted Quaternion twist) {
 }

@@ -4,7 +4,7 @@ import jdk.internal.vm.annotation.LooselyConsistentValue;
 import jdk.internal.vm.annotation.NullRestricted;
 
 @LooselyConsistentValue
-value public record Point3F64(@NullRestricted Double x,
+public value record Point3F64(@NullRestricted Double x,
                               @NullRestricted Double y,
                               @NullRestricted Double z) implements Point3.F64 {
 }

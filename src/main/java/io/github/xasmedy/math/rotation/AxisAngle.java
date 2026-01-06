@@ -1,5 +1,8 @@
 package io.github.xasmedy.math.rotation;
 
 import io.github.xasmedy.math.vector.v3.Vector3F64;
+import jdk.internal.vm.annotation.LooselyConsistentValue;
+import jdk.internal.vm.annotation.NullRestricted;
 
-public value record AxisAngle(Vector3F64 axis, Radians angle) {}
+@LooselyConsistentValue
+public value record AxisAngle(@NullRestricted Vector3F64 axis, @NullRestricted Radians angle) {}

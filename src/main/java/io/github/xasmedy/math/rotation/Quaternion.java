@@ -4,9 +4,11 @@ import io.github.xasmedy.math.matrix.Matrix3F64;
 import io.github.xasmedy.math.matrix.Matrix4F64;
 import io.github.xasmedy.math.vector.v3.Vector3F64;
 import io.github.xasmedy.math.vector.v4.Vector4F64;
+import jdk.internal.vm.annotation.LooselyConsistentValue;
 import static io.github.xasmedy.math.vector.Vectors.v3;
 import static io.github.xasmedy.math.FloatingUtil.EPSILON;
 
+@LooselyConsistentValue
 public value record Quaternion(double x, double y, double z, double w) {
 
     public Quaternion(Vector4F64 v4) {

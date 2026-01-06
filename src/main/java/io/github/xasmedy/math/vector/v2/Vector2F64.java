@@ -4,10 +4,12 @@ import io.github.xasmedy.math.point.p2.Point2;
 import io.github.xasmedy.math.rotation.Radians;
 import io.github.xasmedy.math.vector.v1.Vector1F64;
 import io.github.xasmedy.math.vector.v3.Vector3F64;
+import jdk.internal.vm.annotation.LooselyConsistentValue;
 import jdk.internal.vm.annotation.NullRestricted;
 import java.util.function.Function;
 import static io.github.xasmedy.math.vector.Vectors.v2;
 
+@LooselyConsistentValue
 public value record Vector2F64(@NullRestricted Double x,
                                @NullRestricted Double y
 ) implements Vector2<Vector2F64, Double>, Vector2.Real<Vector2F64, Double>, Point2.F64 {

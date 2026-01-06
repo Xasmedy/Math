@@ -4,6 +4,7 @@ import io.github.xasmedy.math.rotation.Quaternion;
 import io.github.xasmedy.math.rotation.Radians;
 import io.github.xasmedy.math.vector.v2.Vector2F32;
 import io.github.xasmedy.math.vector.v3.Vector3F32;
+import jdk.internal.vm.annotation.LooselyConsistentValue;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
@@ -12,6 +13,7 @@ import static io.github.xasmedy.math.vector.Vectors.v3;
 
 /// Matrix4x4 stored in column-major order.
 @SuppressWarnings("unused")
+@LooselyConsistentValue
 public value record Matrix4F32(
         // I'm not using an array because it's an identity object, and this reads and feels better to work with.
         float m00, float m01, float m02, float m03,

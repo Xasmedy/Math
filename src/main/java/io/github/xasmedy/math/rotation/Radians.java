@@ -1,6 +1,8 @@
 package io.github.xasmedy.math.rotation;
 
-// No need for @LooselyConsistentValue, the class is 64 bit big, meaning the CPU supports atomic operations.
+import jdk.internal.vm.annotation.LooselyConsistentValue;
+
+@LooselyConsistentValue
 public value record Radians(double value) {
 
     public static Radians radians(double radians) {

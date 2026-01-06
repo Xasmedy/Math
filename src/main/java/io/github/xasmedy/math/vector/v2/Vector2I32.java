@@ -4,9 +4,11 @@ import io.github.xasmedy.math.point.p2.Point2;
 import io.github.xasmedy.math.rotation.Radians;
 import io.github.xasmedy.math.vector.v1.Vector1I32;
 import io.github.xasmedy.math.vector.v3.Vector3I32;
+import jdk.internal.vm.annotation.LooselyConsistentValue;
 import jdk.internal.vm.annotation.NullRestricted;
 import static io.github.xasmedy.math.vector.Vectors.v2;
 
+@LooselyConsistentValue
 public value record Vector2I32(@NullRestricted Integer x,
                                @NullRestricted Integer y
 ) implements Vector2<Vector2I32, Integer>, Vector2.Int<Vector2I32, Integer>, Point2.I32 {

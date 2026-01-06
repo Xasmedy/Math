@@ -4,5 +4,5 @@ import jdk.internal.vm.annotation.LooselyConsistentValue;
 import jdk.internal.vm.annotation.NullRestricted;
 
 @LooselyConsistentValue
-value public record Point1I32(@NullRestricted Integer x) implements Point1.I32 {
+public value record Point1I32(@NullRestricted Integer x) implements Point1.I32 {
 }
