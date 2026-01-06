@@ -3,8 +3,6 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked // Makes the whole codebase non-null by default.
 module xasmedy.math {
     requires org.jspecify;
-    requires jdk.incubator.vector;
-    requires java.desktop;
     exports io.github.xasmedy.math.rotation;
     exports io.github.xasmedy.math.matrix;
 
