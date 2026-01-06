@@ -173,6 +173,15 @@ public value record Matrix3F64(
     }
 
     @Override
+    public Matrix3F64 mul(Double scalar) {
+        return new Matrix3F64(
+                m00 * scalar, m01 * scalar, m02 * scalar,
+                m10 * scalar, m11 * scalar, m12 * scalar,
+                m20 * scalar, m21 * scalar, m22 * scalar
+        );
+    }
+
+    @Override
     public Matrix3F64 mul(Matrix3F64 other) {
         final double n00 = m00 * other.m00 + m01 * other.m10 + m02 * other.m20;
         final double n01 = m00 * other.m01 + m01 * other.m11 + m02 * other.m21;

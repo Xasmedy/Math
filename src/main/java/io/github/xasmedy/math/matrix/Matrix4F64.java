@@ -396,6 +396,16 @@ public value record Matrix4F64(
         );
     }
 
+    @Override
+    public Matrix4F64 mul(Double scalar) {
+        return new Matrix4F64(
+                m00 * scalar, m01 * scalar, m02 * scalar, m03 * scalar,
+                m10 * scalar, m11 * scalar, m12 * scalar, m13 * scalar,
+                m20 * scalar, m21 * scalar, m22 * scalar, m23 * scalar,
+                m30 * scalar, m31 * scalar, m32 * scalar, m33 * scalar
+        );
+    }
+
     /// Multiples `this` matrix with the `other` matrix.
     /// @return the multiplied matrix.
     /// @apiNote Order is important! `this * other != other * this`

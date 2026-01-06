@@ -174,6 +174,15 @@ public value record Matrix3F32(
     }
 
     @Override
+    public Matrix3F32 mul(Float scalar) {
+        return new Matrix3F32(
+                m00 * scalar, m01 * scalar, m02 * scalar,
+                m10 * scalar, m11 * scalar, m12 * scalar,
+                m20 * scalar, m21 * scalar, m22 * scalar
+        );
+    }
+
+    @Override
     public Matrix3F32 mul(Matrix3F32 other) {
 		final float n00 = m00 * other.m00 + m01 * other.m10 + m02 * other.m20;
 		final float n01 = m00 * other.m01 + m01 * other.m11 + m02 * other.m21;

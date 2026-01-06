@@ -15,7 +15,7 @@ public interface Matrix<T extends Matrix<T, N>, N> {
 
     T sub(T other);
 
-    // TODO Scalar multiplication?
+    T mul(N scalar);
 
     /// Post-Multiples `this` matrix with the `other` matrix.\
     /// Results in `A := AB`.
