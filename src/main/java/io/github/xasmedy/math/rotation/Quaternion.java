@@ -498,17 +498,4 @@ public value record Quaternion(double x, double y, double z, double w) {
 
         return Radians.radians(radians);
     }
-
-    public enum GimbalPole {
-
-        NORTH(1),
-        SOUTH(-1),
-        NONE(0);
-
-        public final int sign;
-
-        GimbalPole(int sign) {
-            this.sign = sign;
-        }
-    }
 }
