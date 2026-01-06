@@ -8,7 +8,7 @@ import jdk.internal.vm.annotation.LooselyConsistentValue;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
-import static io.github.xasmedy.math.FloatingPointUtil.EPSILON;
+import static io.github.xasmedy.math.FloatingUtil.EPSILON;
 import static io.github.xasmedy.math.vector.Vectors.v3;
 
 /// A Matrix3x3, the fields layout and math is row-major for ease of use.\

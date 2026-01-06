@@ -5,7 +5,7 @@ import io.github.xasmedy.math.matrix.Matrix4F64;
 import io.github.xasmedy.math.vector.v3.Vector3F64;
 import io.github.xasmedy.math.vector.v4.Vector4F64;
 import static io.github.xasmedy.math.vector.Vectors.v3;
-import static io.github.xasmedy.math.FloatingPointUtil.EPSILON;
+import static io.github.xasmedy.math.FloatingUtil.EPSILON;
 
 public value record Quaternion(double x, double y, double z, double w) {
 

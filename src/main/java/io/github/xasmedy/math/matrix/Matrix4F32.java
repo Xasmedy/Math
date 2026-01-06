@@ -7,7 +7,7 @@ import io.github.xasmedy.math.vector.v3.Vector3F32;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
-import static io.github.xasmedy.math.FloatingPointUtil.EPSILON;
+import static io.github.xasmedy.math.FloatingUtil.EPSILON;
 import static io.github.xasmedy.math.vector.Vectors.v3;
 
 /// Matrix4x4 stored in column-major order.
