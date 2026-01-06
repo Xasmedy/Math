@@ -635,8 +635,6 @@ public value record Matrix4F32(
         return Matrix3F32.fromMatrix4(this);
     }
 
-    // TODO Consider SIMD versions of mulVec(), project(), and rotateVec()?
-
     /** Multiplies the vector with the given matrix.
      * @param vector the vector. */
     @Override
@@ -669,7 +667,7 @@ public value record Matrix4F32(
      * @return This matrix for the purpose of chaining methods together. */
     @Override
     public Matrix4F32 rotate(Quaternion rotation) {
-        return mul(fromRotation(rotation)); // TODO This can be expressed by multiplying a 4x4 matrix with a 3x3 one.
+        return mul(fromRotation(rotation));
     }
 
     /** Postmultiplies this matrix by the rotation between two vectors.

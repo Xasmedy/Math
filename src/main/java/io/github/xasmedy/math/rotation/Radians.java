@@ -3,8 +3,6 @@ package io.github.xasmedy.math.rotation;
 // No need for @LooselyConsistentValue, the class is 64 bit big, meaning the CPU supports atomic operations.
 public value record Radians(double value) {
 
-    // TODO rad() and deg() aliases?
-
     public static Radians radians(double radians) {
         return new Radians(radians);
     }
@@ -14,7 +12,7 @@ public value record Radians(double value) {
         return radians(Math.toRadians(degrees));
     }
 
-    public double toDegrees() {
+    public double asDegrees() {
         return Math.toDegrees(value);
     }
 }

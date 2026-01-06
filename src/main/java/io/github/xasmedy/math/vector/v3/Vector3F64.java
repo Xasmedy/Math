@@ -1,5 +1,6 @@
 package io.github.xasmedy.math.vector.v3;
 
+import io.github.xasmedy.math.matrix.Matrix4F64;
 import io.github.xasmedy.math.point.p3.Point3;
 import io.github.xasmedy.math.rotation.Radians;
 import io.github.xasmedy.math.vector.v2.Vector2F64;
@@ -138,11 +139,9 @@ public value record Vector3F64(@NullRestricted Double x,
 
     @Override
     public Vector3F64 rotate(Vector3F64 axis, Radians angle) {
-        // TODO Use Matrix4F64
-        throw new UnsupportedOperationException("Not supported yet.");
-//        return Matrix4.fromAxisAngle(axis, angle)
-//                .asMatrix3()
-//                .transform(this);
+        return Matrix4F64.fromAxisAngle(axis, angle)
+                .asMatrix3()
+                .transform(this);
     }
 
     @Override
