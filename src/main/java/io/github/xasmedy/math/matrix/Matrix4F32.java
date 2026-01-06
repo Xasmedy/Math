@@ -18,29 +18,19 @@ public value record Matrix4F32(
         float m10, float m11, float m12, float m13,
         float m20, float m21, float m22, float m23,
         float m30, float m31, float m32, float m33
-) {
+) implements Matrix4<Matrix4F32, Float, Vector3F32> {
 
     public static final int M00 = 0, M01 = 4, M02 =  8, M03 = 12;
     public static final int M10 = 1, M11 = 5, M12 =  9, M13 = 13;
     public static final int M20 = 2, M21 = 6, M22 = 10, M23 = 14;
     public static final int M30 = 3, M31 = 7, M32 = 11, M33 = 15;
 
-    /// A matrix with all its components set to zero.
-    public static Matrix4F32 zero() {
-        return new Matrix4F32(
-                0,0,0,0,
-                0,0,0,0,
-                0,0,0,0,
-                0,0,0,0
-        );
-    }
-
     public static Matrix4F32 identity() {
         return new Matrix4F32(
-                1,0,0,0,
-                0,1,0,0,
-                0,0,1,0,
-                0,0,0,1
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
         );
     }
 
@@ -252,12 +242,17 @@ public value record Matrix4F32(
 
     /// @return creates an identity matrix having the 4th column set to the translation vector.
     public static Matrix4F32 fromTranslation(Vector3F32 translation) {
-        return identity().withTranslation(translation);
+        return new Matrix4F32(
+                1, 0, 0, translation.x(),
+                0, 1, 0, translation.y(),
+                0, 0, 1, translation.z(),
+                0, 0, 0, 1
+        );
     }
 
     /// @return creates an identity matrix having the 4th column set to the translation vector and the scaling vector in the diagonal.
     public static Matrix4F32 fromTranslation(Vector3F32 translation, Vector3F32 scaling) {
-        final Matrix4F32 m = identity().withTranslation(translation);
+        final Matrix4F32 m = fromTranslation(translation);
         final float m00 = scaling.x();
         final float m11 = scaling.y();
         final float m22 = scaling.z();
@@ -325,23 +320,12 @@ public value record Matrix4F32(
         );
     }
 
-    /// Adds the translation to the matrix.
-    /// @return the translated matrix.
-    /// @apiNote The translation happens in the fourth column, the other columns are untouched.
-    public Matrix4F32 addTranslation(Vector3F32 translation) {
-        return new Matrix4F32(
-                m00, m01, m02, m03 + translation.x(),
-                m10, m11, m12, m13 + translation.y(),
-                m20, m21, m22, m23 + translation.z(),
-                m30, m31, m32, m33
-        );
-    }
-
     /// @return The array presentation of this matrix.
     /// @apiNote The returned array uses the [column-major](https://en.wikipedia.org/wiki/Row-_and_column-major_order) order.
     /// @implNote Arrays are identity objects, meaning they are heavy for the garbage collector.
-    public float[] asArray() {
-        return new float[] {
+    @Override
+    public Float[] asArray() {
+        return new Float[] {
                 m00, m10, m20, m30, // Column 0
                 m01, m11, m21, m31, // Column 1
                 m02, m12, m22, m32, // Column 2
@@ -363,7 +347,8 @@ public value record Matrix4F32(
 
     /// Copies this matrix onto a new {@link MemorySegment} allocated from the provided {@link Arena}.
     /// @apiNote The matrix is copied using the [column-major](https://en.wikipedia.org/wiki/Row-_and_column-major_order) order.
-    public MemorySegment toMemorySegment(Arena arena) {
+    @Override
+    public MemorySegment asMemorySegment(Arena arena) {
 
         final var layout = ValueLayout.JAVA_FLOAT;
         final var segment = arena.allocate(16 * layout.byteSize());
@@ -391,9 +376,30 @@ public value record Matrix4F32(
         return segment;
     }
 
+    @Override
+    public Matrix4F32 add(Matrix4F32 other) {
+        return new Matrix4F32(
+                m00 + other.m00, m01 + other.m01, m02 + other.m02, m03 + other.m03,
+                m10 + other.m10, m11 + other.m11, m12 + other.m12, m13 + other.m13,
+                m20 + other.m20, m21 + other.m21, m22 + other.m22, m23 + other.m23,
+                m30 + other.m30, m31 + other.m31, m32 + other.m32, m33 + other.m33
+        );
+    }
+
+    @Override
+    public Matrix4F32 sub(Matrix4F32 other) {
+        return new Matrix4F32(
+                m00 - other.m00, m01 - other.m01, m02 - other.m02, m03 - other.m03,
+                m10 - other.m10, m11 - other.m11, m12 - other.m12, m13 - other.m13,
+                m20 - other.m20, m21 - other.m21, m22 - other.m22, m23 - other.m23,
+                m30 - other.m30, m31 - other.m31, m32 - other.m32, m33 - other.m33
+        );
+    }
+
     /// Multiples `this` matrix with the `other` matrix.
     /// @return the multiplied matrix.
     /// @apiNote Order is important! `this * other != other * this`
+    @Override
     public Matrix4F32 mul(Matrix4F32 other) {
         final float n00 = m00 * other.m00 + m01 * other.m10 + m02 * other.m20 + m03 * other.m30;
         final float n01 = m00 * other.m01 + m01 * other.m11 + m02 * other.m21 + m03 * other.m31;
@@ -422,11 +428,13 @@ public value record Matrix4F32(
     /// Multiples the `other` matrix with `this` matrix.
     /// @return the multiplied matrix.
     /// @apiNote Order is important! `other * this != this * other`
+    @Override
     public Matrix4F32 preMul(Matrix4F32 matrix) {
         return matrix.mul(this);
     }
 
     /// @return the transposed version of this matrix.
+    @Override
     public Matrix4F32 transpose() {
         return new Matrix4F32(
                 m00, m10, m20, m30,
@@ -437,7 +445,8 @@ public value record Matrix4F32(
     }
 
     /// @return The determinant of this matrix.
-    public float determinant() {
+    @Override
+    public Float determinant() {
         return m30 * m21 * m12 * m03 - m20 * m31 * m12 * m03
              - m30 * m11 * m22 * m03 + m10 * m31 * m22 * m03
              + m20 * m11 * m32 * m03 - m10 * m21 * m32 * m03
@@ -453,12 +462,14 @@ public value record Matrix4F32(
     }
 
     /// @return true if the matrix is a singular matrix.
+    @Override
     public boolean isSingular() {
         return Math.abs(determinant()) < EPSILON;
     }
 
     /// Inverts the matrix.
     /// @throws ArithmeticException if the matrix cannot be inverted because it is singular.
+    @Override
     public Matrix4F32 invert() {
 
         final float det = determinant();
@@ -491,27 +502,10 @@ public value record Matrix4F32(
         );
     }
 
-    // TODO Do I need this? Can I just convert it to a matrix3 and do it there?
-
-    /** @return The determinant of the 3x3 upper left matrix */
-    public float det3x3 () {
-        return m00 * m11 * m22 + m01 * m12 * m20 + m02 * m10 * m21
-             - m00 * m12 * m21 - m01 * m10 * m22 - m02 * m11 * m20;
-    }
-
-    /// @return this matrix having the 4th column set to the translation vector.
-    public Matrix4F32 withTranslation(Vector3F32 translation) {
-        return new Matrix4F32(
-                m00, m01, m02, translation.x(),
-                m10, m11, m12, translation.y(),
-                m20, m21, m22, translation.z(),
-                m30, m31, m32, m33
-        );
-    }
-
     /// Linearly interpolates between this matrix and the other matrix mixing by alpha.
     /// @param alpha the alpha value in the range `[0,1]`.
-    public Matrix4F32 lerp(Matrix4F32 other, float alpha) {
+    @Override
+    public Matrix4F32 lerp(Matrix4F32 other, Float alpha) {
         final float invAlpha = 1f - alpha;
         final float n00 = m00 * invAlpha + other.m00 * alpha;
         final float n01 = m01 * invAlpha + other.m01 * alpha;
@@ -540,7 +534,8 @@ public value record Matrix4F32(
     /// Averages this matrix with another, using lerp for translation/scale and slerp for rotation.
     /// @param other The other matrix.
     /// @param weight Weight for this transform (other's weight is `1 - weight`)
-    public Matrix4F32 average(Matrix4F32 other, float weight) {
+    @Override
+    public Matrix4F32 average(Matrix4F32 other, Float weight) {
 
         final float otherWeight = 1 - weight;
         final Vector3F32 scaling = scale().lerp(other.scale(), otherWeight);
@@ -552,6 +547,7 @@ public value record Matrix4F32(
 
     /// Averages an array of matrices using the same weight.
     /// @return A new matrix representing the average transform of the input matrices.
+    @Override
     public Matrix4F32 average(Matrix4F32[] matrices) {
 
         final float weight = 1f / matrices.length;
@@ -573,7 +569,8 @@ public value record Matrix4F32(
 
     /// Averages an array of matrices using the provided weights.
     /// @return A new matrix representing the average transform of the input matrices.
-    public Matrix4F32 average(Matrix4F32[] matrices, float[] weights) {
+    @Override
+    public Matrix4F32 average(Matrix4F32[] matrices, Float[] weights) {
 
         if (matrices.length != weights.length) throw new IllegalArgumentException("The matrices and weights must have the same length.");
 
@@ -592,16 +589,19 @@ public value record Matrix4F32(
         return fromTRS(tran, rot, scale); // The rotations gets normalized internally.
     }
 
+    @Override
     public Vector3F32 translation() {
         return v3(m03, m13, m23);
     }
 
     /// @return The rotation of this matrix.
+    @Override
     public Quaternion rotation() {
         return Quaternion.fromMatrix4(this);
     }
 
     /// @return the vector which will receive the (non-negative) scale components on each axis.
+    @Override
     public Vector3F32 scale() {
         final float x = (float) Math.sqrt(m00 * m00 + m01 * m01 + m02 * m02);
         final float y = (float) Math.sqrt(m10 * m10 + m11 * m11 + m12 * m12);
@@ -610,12 +610,17 @@ public value record Matrix4F32(
     }
 
     /// @return a matrix with the translational part removed (set to 0) and transposed.
+    @Override
     public Matrix4F32 toNormalMatrix() {
-        return withTranslation(v3(0f, 0f, 0f))
-                .invert()
-                .transpose();
+        return new Matrix4F32(
+                m00, m01, m02, 0f,
+                m10, m11, m12, 0f,
+                m20, m21, m22, 0f,
+                m30, m31, m32, m33
+        ).invert().transpose();
     }
 
+    @Override
     public Matrix3F32 asMatrix3() {
         return Matrix3F32.fromMatrix4(this);
     }
@@ -624,6 +629,7 @@ public value record Matrix4F32(
 
     /** Multiplies the vector with the given matrix.
      * @param vector the vector. */
+    @Override
     public Vector3F32 transform(Vector3F32 vector) {
         return asMatrix3()
                 .transform(vector)
@@ -633,12 +639,9 @@ public value record Matrix4F32(
     /** Postmultiplies this matrix by a translation matrix. Postmultiplication is also used by OpenGL ES' 1.x
      * glTranslate/glRotate/glScale.
      * @return This matrix for the purpose of chaining methods together. */
+    @Override
     public Matrix4F32 translate(Vector3F32 translation) {
         return mul(fromTranslation(translation));
-    }
-
-    public Matrix4F32 preTranslate (Vector3F32 translation) {
-        return fromTranslation(translation).mul(this);
     }
 
     /** Postmultiplies this matrix with a (counter-clockwise) rotation matrix. Postmultiplication is also used by OpenGL ES' 1.x
@@ -646,6 +649,7 @@ public value record Matrix4F32(
      * @param axis The vector axis to rotate around.
      * @param angle The angle in radians.
      * @return This matrix for the purpose of chaining methods together. */
+    @Override
     public Matrix4F32 rotateAround(Vector3F32 axis, Radians angle) {
         return mul(fromAxisAngle(axis, angle));
     }
@@ -653,6 +657,7 @@ public value record Matrix4F32(
     /** Postmultiplies this matrix with a (counter-clockwise) rotation matrix. Postmultiplication is also used by OpenGL ES' 1.x
      * glTranslate/glRotate/glScale.
      * @return This matrix for the purpose of chaining methods together. */
+    @Override
     public Matrix4F32 rotate(Quaternion rotation) {
         return mul(fromRotation(rotation)); // TODO This can be expressed by multiplying a 4x4 matrix with a 3x3 one.
     }
@@ -661,6 +666,7 @@ public value record Matrix4F32(
      * @param v1 The base vector
      * @param v2 The target vector
      * @return This matrix for the purpose of chaining methods together */
+    @Override
     public Matrix4F32 rotateBetween(Vector3F32 v1, Vector3F32 v2) {
         return mul(fromRotationBetween(v1, v2));
     }
@@ -669,6 +675,7 @@ public value record Matrix4F32(
      * @param direction direction to rotate toward
      * @param up up vector
      * @return This matrix for chaining */
+    @Override
     public Matrix4F32 rotateToDirection(Vector3F32 direction, Vector3F32 up) {
         return mul(fromLookRotation(direction, up));
     }
@@ -676,46 +683,39 @@ public value record Matrix4F32(
     /** Postmultiplies this matrix with a scale matrix. Postmultiplication is also used by OpenGL ES' 1.x
      * glTranslate/glRotate/glScale.
      * @return This matrix for the purpose of chaining methods together. */
+    @Override
     public Matrix4F32 scale(Vector3F32 scale) {
         return mul(fromScale(scale));
     }
 
+    @Override
     public Vector3F32 project(Vector3F32 vector) {
         final float invW = 1f / (vector.x() * m30() + vector.y() * m31() + vector.z() * m32() + m33());
         return transform(vector).mul(invW);
     }
 
+    @Override
     public Vector3F32 rotate(Vector3F32 vector) {
         return asMatrix3().transform(vector);
     }
 
+    @Override
     public Vector3F32 unrotate(Vector3F32 vector) {
         return asMatrix3().unrotate(vector);
     }
 
+    @Override
     public Vector3F32 untransform(Vector3F32 vector) {
         return asMatrix3().unrotate(vector.sub(v3(m03, m13, m23)));
     }
 
     /** Copies the 4x3 upper-left sub-matrix into float array. The destination array is supposed to be a column major matrix.
      * @param out the destination matrix */
-    public void toMatrix4x3Array(float[] out) {
+    @Override
+    public void toMatrix4x3Array(Float[] out) {
         if (out.length < 12) throw new IllegalArgumentException("The matrix array provided is not a 4x3 matrix.");
         out[0] = m00; out[3] = m01; out[6] = m02; out[9] = m03;
         out[1] = m10; out[4] = m11; out[7] = m12; out[10] = m13;
         out[2] = m20; out[5] = m21; out[8] = m22; out[11] = m23;
-    }
-
-    /** @return True if this matrix has any rotation or scaling, false otherwise */
-    public boolean hasRotationOrScaling () {
-        return !(Math.abs(m00 - 1f) <= EPSILON
-                && Math.abs(m11 - 1f) <= EPSILON
-                && Math.abs(m22 - 1f) <= EPSILON
-                && Math.abs(m01) <= EPSILON
-                && Math.abs(m02) <= EPSILON
-                && Math.abs(m10) <= EPSILON
-                && Math.abs(m12) <= EPSILON
-                && Math.abs(m20) <= EPSILON
-                && Math.abs(m21) <= EPSILON);
     }
 }

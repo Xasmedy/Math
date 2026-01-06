@@ -193,6 +193,11 @@ public value record Matrix3F64(
     }
 
     @Override
+    public Matrix3F64 preMul(Matrix3F64 other) {
+        return other.mul(this);
+    }
+
+    @Override
     public Vector3F64 transform(Vector3F64 vector) {
         final double x = vector.x() * m00 + vector.y() * m01 + vector.z() * m02;
         final double y = vector.x() * m10 + vector.y() * m11 + vector.z() * m12;

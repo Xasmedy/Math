@@ -15,7 +15,6 @@ module xasmedy.math {
     exports io.github.xasmedy.math.point.p4;
 
     exports io.github.xasmedy.math.shape;
-    exports io.github.xasmedy.math.unit;
 
     exports io.github.xasmedy.math.vector;
     exports io.github.xasmedy.math.vector.v1;

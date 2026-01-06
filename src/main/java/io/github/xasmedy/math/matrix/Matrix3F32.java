@@ -192,6 +192,11 @@ public value record Matrix3F32(
 	}
 
     @Override
+    public Matrix3F32 preMul(Matrix3F32 other) {
+        return other.mul(this);
+    }
+
+    @Override
     public Vector3F32 transform(Vector3F32 vector) {
         final float x = vector.x() * m00 + vector.y() * m01 + vector.z() * m02;
         final float y = vector.x() * m10 + vector.y() * m11 + vector.z() * m12;
