@@ -1,7 +1,7 @@
 package io.github.xasmedy.math.rotation;
 
 import io.github.xasmedy.math.matrix.Matrix3F32;
-import io.github.xasmedy.math.matrix.Matrix4;
+import io.github.xasmedy.math.matrix.Matrix4F32;
 import io.github.xasmedy.math.vector.v3.Vector3F32;
 import io.github.xasmedy.math.vector.v4.Vector4F32;
 import static io.github.xasmedy.math.vector.Vectors.v3;
@@ -188,7 +188,7 @@ public value record Quaternion(float x, float y, float z, float w) {
     }
 
     /// @return A quaternion representing the rotation of the matrix.
-    public static Quaternion fromMatrix4(Matrix4 matrix) {
+    public static Quaternion fromMatrix4(Matrix4F32 matrix) {
         return fromMatrix3(matrix.asMatrix3());
     }
 

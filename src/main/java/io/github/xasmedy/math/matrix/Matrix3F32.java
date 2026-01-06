@@ -136,7 +136,7 @@ public value record Matrix3F32(
     /** Sets this 3x3 matrix to the top left 3x3 corner of the provided 4x4 matrix.
      * @param matrix The matrix whose top left corner will be copied. This matrix will not be modified.
      * @return This matrix for the purpose of chaining operations. */
-    public static Matrix3F32 fromMatrix4(Matrix4 matrix) {
+    public static Matrix3F32 fromMatrix4(Matrix4F32 matrix) {
         return new Matrix3F32(
                 matrix.m00(), matrix.m01(), matrix.m02(),
                 matrix.m10(), matrix.m11(), matrix.m12(),
