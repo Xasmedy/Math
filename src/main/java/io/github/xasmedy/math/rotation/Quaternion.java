@@ -1,15 +1,15 @@
 package io.github.xasmedy.math.rotation;
 
-import io.github.xasmedy.math.matrix.Matrix3F32;
-import io.github.xasmedy.math.matrix.Matrix4F32;
-import io.github.xasmedy.math.vector.v3.Vector3F32;
-import io.github.xasmedy.math.vector.v4.Vector4F32;
+import io.github.xasmedy.math.matrix.Matrix3F64;
+import io.github.xasmedy.math.matrix.Matrix4F64;
+import io.github.xasmedy.math.vector.v3.Vector3F64;
+import io.github.xasmedy.math.vector.v4.Vector4F64;
 import static io.github.xasmedy.math.vector.Vectors.v3;
 import static io.github.xasmedy.math.FloatingPointUtil.EPSILON;
 
-public value record Quaternion(float x, float y, float z, float w) {
+public value record Quaternion(double x, double y, double z, double w) {
 
-    public Quaternion(Vector4F32 v4) {
+    public Quaternion(Vector4F64 v4) {
         this(v4.x(), v4.y(), v4.z(), v4.w());
     }
 
@@ -23,16 +23,16 @@ public value record Quaternion(float x, float y, float z, float w) {
     /// @param angle the rotation angle in radians.
     /// @return a new quaternion representing the rotation.
     /// @apiNote The axis is normalized automatically.
-    public static Quaternion fromAxisAngle(Vector3F32 axis, Radians angle) {
+    public static Quaternion fromAxisAngle(Vector3F64 axis, Radians angle) {
         final var nor = axis.normalize();
         final double half = angle.value() * .5f;
         final double sin = Math.sin(half);
         final double cos = Math.cos(half);
         return new Quaternion(
-                (float) (nor.x() * sin),
-                (float) (nor.y() * sin),
-                (float) (nor.z() * sin),
-                (float) cos
+                (nor.x() * sin),
+                (nor.y() * sin),
+                (nor.z() * sin),
+                cos
         );
     }
 
@@ -46,26 +46,26 @@ public value record Quaternion(float x, float y, float z, float w) {
     public static Quaternion fromEulerAngles(Radians yaw, Radians pitch, Radians roll) {
 
         final double hr = roll.value() * 0.5f;
-        final float shr = (float) Math.sin(hr);
-        final float chr = (float) Math.cos(hr);
+        final double shr = Math.sin(hr);
+        final double chr = Math.cos(hr);
 
         final double hp = pitch.value() * 0.5f;
-        final float shp = (float) Math.sin(hp);
-        final float chp = (float) Math.cos(hp);
+        final double shp = Math.sin(hp);
+        final double chp = Math.cos(hp);
 
         final double hy = yaw.value() * 0.5f;
-        final float shy = (float) Math.sin(hy);
-        final float chy = (float) Math.cos(hy);
+        final double shy = Math.sin(hy);
+        final double chy = Math.cos(hy);
 
-        final float chyShp = chy * shp;
-        final float shyChp = shy * chp;
-        final float chyChp = chy * chp;
-        final float shyShp = shy * shp;
+        final double chyShp = chy * shp;
+        final double shyChp = shy * chp;
+        final double chyChp = chy * chp;
+        final double shyShp = shy * shp;
 
-        final float newX = (chyShp * chr) + (shyChp * shr); // cos(yaw/2) * sin(pitch/2) * cos(roll/2) + sin(yaw/2) * cos(pitch/2) * sin(roll/2)
-        final float newY = (shyChp * chr) - (chyShp * shr); // sin(yaw/2) * cos(pitch/2) * cos(roll/2) - cos(yaw/2) * sin(pitch/2) * sin(roll/2)
-        final float newZ = (chyChp * shr) - (shyShp * chr); // cos(yaw/2) * cos(pitch/2) * sin(roll/2) - sin(yaw/2) * sin(pitch/2) * cos(roll/2)
-        final float newW = (chyChp * chr) + (shyShp * shr); // cos(yaw/2) * cos(pitch/2) * cos(roll/2) + sin(yaw/2) * sin(pitch/2) * sin(roll/2)
+        final double newX = (chyShp * chr) + (shyChp * shr); // cos(yaw/2) * sin(pitch/2) * cos(roll/2) + sin(yaw/2) * cos(pitch/2) * sin(roll/2)
+        final double newY = (shyChp * chr) - (chyShp * shr); // sin(yaw/2) * cos(pitch/2) * cos(roll/2) - cos(yaw/2) * sin(pitch/2) * sin(roll/2)
+        final double newZ = (chyChp * shr) - (shyShp * chr); // cos(yaw/2) * cos(pitch/2) * sin(roll/2) - sin(yaw/2) * sin(pitch/2) * cos(roll/2)
+        final double newW = (chyChp * chr) + (shyShp * shr); // cos(yaw/2) * cos(pitch/2) * cos(roll/2) + sin(yaw/2) * sin(pitch/2) * sin(roll/2)
         return new Quaternion(newX, newY, newZ, newW);
     }
 
@@ -77,9 +77,9 @@ public value record Quaternion(float x, float y, float z, float w) {
     /// @apiNote If the vectors are already parallel, the identity quaternion is returned.
     ///          If the vectors are antiparallel, the rotation is 180° around any axis
     ///          perpendicular to the vectors.
-    public static Quaternion fromRotationBetween(Vector3F32 v1, Vector3F32 v2) {
+    public static Quaternion fromRotationBetween(Vector3F64 v1, Vector3F64 v2) {
 
-        final float dot = Math.clamp(v1.dot(v2), -1f, 1f);
+        final double dot = Math.clamp(v1.dot(v2), -1f, 1f);
         final var cross = v1.cross(v2);
 
         // I check if the vectors are not parallel.
@@ -91,9 +91,9 @@ public value record Quaternion(float x, float y, float z, float w) {
         // When the vectors are parallel.
         if (dot > 0f) return identity();
         // In case the vectors are antiparallel, I need to rotate 180 degrees.
-        final Vector3F32 perpendicular = Math.abs(v1.x()) < 0.9f ?
-                new Vector3F32(1f,0f,0f) :
-                new Vector3F32(0f,1f,0f);
+        final Vector3F64 perpendicular = Math.abs(v1.x()) < 0.9d ?
+                new Vector3F64(1d, 0d, 0d) :
+                new Vector3F64(0d, 1d, 0d);
         return fromAxisAngle(perpendicular.cross(v1), Radians.radians(Math.PI));
     }
 
@@ -104,7 +104,7 @@ public value record Quaternion(float x, float y, float z, float w) {
     /// @apiNote
     /// - Both arrays are only read and not modified.
     /// - Multiplication is performed left-to-right.
-    public static Quaternion weightedSlerp(Quaternion[] quat, float[] weights) {
+    public static Quaternion weightedSlerp(Quaternion[] quat, double[] weights) {
 
         if (quat.length == 0) throw new IllegalArgumentException("Provided empty quaternion array.");
         if (quat.length != weights.length) throw new IllegalArgumentException("The quaternion and weights arrays do not have the same length.");
@@ -129,7 +129,7 @@ public value record Quaternion(float x, float y, float z, float w) {
 
         if (quat.length == 0) throw new IllegalArgumentException("Provided empty quaternion array.");
 
-        final float weight = 1f / quat.length;
+        final double weight = 1f / quat.length;
         Quaternion result = quat[0].pow(weight);
 
         for (int i = 1; i < quat.length; i++) {
@@ -145,40 +145,40 @@ public value record Quaternion(float x, float y, float z, float w) {
     /// which ensures numerical stability and avoids division by very small numbers.
     /// @return a quaternion representing the same rotation as the given axes.
     /// @apiNote The axes are normalized internally.
-    public static Quaternion fromAxes(Vector3F32 xAxis, Vector3F32 yAxis, Vector3F32 zAxis) {
+    public static Quaternion fromAxes(Vector3F64 xAxis, Vector3F64 yAxis, Vector3F64 zAxis) {
 
         final var x = xAxis.normalize();
         final var y = yAxis.normalize();
         final var z = zAxis.normalize();
 
-        final float trace = x.x() + y.y() + z.z();
-        final float qw, qx, qy, qz;
+        final double trace = x.x() + y.y() + z.z();
+        final double qw, qx, qy, qz;
 
         // We make the division safe by ensuring that s is always bigger or equal than 1.
         if (trace >= 0f) {
-            final float s = (float) Math.sqrt(trace + 1f);
-            final float ss = .5f / s;
+            final double s = Math.sqrt(trace + 1f);
+            final double ss = .5f / s;
             qw = .5f * s; // |w| >= .5
             qx = (z.y() - y.z()) * ss;
             qy = (x.z() - z.x()) * ss;
             qz = (y.x() - x.y()) * ss;
         } else if ((x.x() > y.y()) && (x.x() > z.z())) {
-            final float s = (float) Math.sqrt(1f + x.x() - y.y() - z.z());
-            final float ss = .5f / s;
+            final double s = Math.sqrt(1f + x.x() - y.y() - z.z());
+            final double ss = .5f / s;
             qx = s * .5f; // |x| >= .5
             qy = (y.x() + x.y()) * ss;
             qz = (x.z() + z.x()) * ss;
             qw = (z.y() - y.z()) * ss;
         } else if (y.y() > z.z()) {
-            final float s = (float) Math.sqrt(1f + y.y() - x.x() - z.z());
-            final float ss = .5f / s;
+            final double s = Math.sqrt(1f + y.y() - x.x() - z.z());
+            final double ss = .5f / s;
             qy = s * .5f; // |y| >= .5
             qx = (y.x() + x.y()) * ss;
             qz = (z.y() + y.z()) * ss;
             qw = (x.z() - z.x()) * ss;
         } else {
-            final float s = (float) Math.sqrt(1f + z.z() - x.x() - y.y());
-            final float ss = .5f / s;
+            final double s = Math.sqrt(1f + z.z() - x.x() - y.y());
+            final double ss = .5f / s;
             qz = s * .5f; // |z| >= .5
             qx = (x.z() + z.x()) * ss;
             qy = (z.y() + y.z()) * ss;
@@ -188,28 +188,28 @@ public value record Quaternion(float x, float y, float z, float w) {
     }
 
     /// @return A quaternion representing the rotation of the matrix.
-    public static Quaternion fromMatrix4(Matrix4F32 matrix) {
+    public static Quaternion fromMatrix4(Matrix4F64 matrix) {
         return fromMatrix3(matrix.asMatrix3());
     }
 
     /**
      * Sets the Quaternion from the given rotation matrix, which must not contain scaling.
      */
-    public static Quaternion fromMatrix3(Matrix3F32 matrix) {
+    public static Quaternion fromMatrix3(Matrix3F64 matrix) {
         final var x = v3(matrix.m00(), matrix.m01(), matrix.m02());
         final var y = v3(matrix.m10(), matrix.m11(), matrix.m12());
         final var z = v3(matrix.m20(), matrix.m21(), matrix.m22());
         return fromAxes(x, y, z);
     }
 
-    public Vector4F32 v4() {
-        return new Vector4F32(x(), y(), z(), w());
+    public Vector4F64 v4() {
+        return new Vector4F64(x(), y(), z(), w());
     }
 
     /**
      * @return the Euclidean length of this quaternion.
      */
-    public float length() {
+    public double length() {
         return v4().length();
     }
 
@@ -219,7 +219,7 @@ public value record Quaternion(float x, float y, float z, float w) {
      * @return {@link GimbalPole#NORTH}, {@link GimbalPole#SOUTH}, or {@link GimbalPole#NONE}
      */
     public GimbalPole gimbalPole() {
-        final float t = y * x + z * w;
+        final double t = y * x + z * w;
         if (t > 0.499f) return GimbalPole.NORTH;
         if (t < -0.499f) return GimbalPole.SOUTH;
         return GimbalPole.NONE;
@@ -267,7 +267,7 @@ public value record Quaternion(float x, float y, float z, float w) {
     /**
      * @return the length of this quaternion without square root
      */
-    public float length2() {
+    public double length2() {
         return v4().length2();
     }
 
@@ -290,9 +290,9 @@ public value record Quaternion(float x, float y, float z, float w) {
     /// @param v3 the vector to rotate
     /// @return a new rotated vector.
     /// @apiNote The quaternion is normalized internally.
-    public Vector3F32 rotate(Vector3F32 v3) {
+    public Vector3F64 rotate(Vector3F64 v3) {
         final var norm = normalize();
-        final var other = new Quaternion(v3.asV4(0f));
+        final var other = new Quaternion(v3.asV4(0d));
         return norm.mul(other)
                 .mul(norm.conjugate())
                 .v4()
@@ -305,10 +305,10 @@ public value record Quaternion(float x, float y, float z, float w) {
     /// @return a new quaternion equal to `this * other`
     /// @apiNote Order is important! `this * other != other * this`
     public Quaternion mul(Quaternion other) {
-        final float newX = w() * other.x() + x() * other.w() + y() * other.z() - z() * other.y();
-        final float newY = w() * other.y() + y() * other.w() + z() * other.x() - x() * other.z();
-        final float newZ = w() * other.z() + z() * other.w() + x() * other.y() - y() * other.x();
-        final float newW = w() * other.w() - x() * other.x() - y() * other.y() - z() * other.z();
+        final double newX = w() * other.x() + x() * other.w() + y() * other.z() - z() * other.y();
+        final double newY = w() * other.y() + y() * other.w() + z() * other.x() - x() * other.z();
+        final double newZ = w() * other.z() + z() * other.w() + x() * other.y() - y() * other.x();
+        final double newW = w() * other.w() - x() * other.x() - y() * other.y() - z() * other.z();
         return new Quaternion(newX, newY, newZ, newW);
     }
 
@@ -338,7 +338,7 @@ public value record Quaternion(float x, float y, float z, float w) {
      * @param tolerance allowed deviation from exact identity
      * @return true if this quaternion is approximately identity
      */
-    public boolean isIdentity(float tolerance) {
+    public boolean isIdentity(double tolerance) {
         return Math.abs(x) < tolerance
                 && Math.abs(y) < tolerance
                 && Math.abs(z) < tolerance
@@ -351,16 +351,16 @@ public value record Quaternion(float x, float y, float z, float w) {
     /// @param epsilon threshold to switch between lerp and full slerp at small angles.
     /// @return the interpolated quaternion.
     /// @apiNote The quaternions are normalized internally.
-    public Quaternion slerp(Quaternion end, float alpha, float epsilon) {
+    public Quaternion slerp(Quaternion end, double alpha, double epsilon) {
 
         final Quaternion t = normalize();
         final Quaternion e = end.normalize();
-        final float dot = t.dot(e);
-        final float absDot = Math.abs(dot);
+        final double dot = t.dot(e);
+        final double absDot = Math.abs(dot);
 
         // Set the default values in case the angle is too small to calculate the slerp.
-        float scale0 = 1f - alpha;
-        float scale1 = alpha;
+        double scale0 = 1f - alpha;
+        double scale1 = alpha;
 
         // To avoid numerical instability at low angles, I skip the lerp if the angle is small enough.
         if ((1 - absDot) > epsilon) {
@@ -368,8 +368,8 @@ public value record Quaternion(float x, float y, float z, float w) {
             final double angle = Math.acos(absDot);
             final double invSinTheta = 1f / Math.sin(angle);
 
-            scale0 = (float) (Math.sin((1f - alpha) * angle) * invSinTheta);
-            scale1 = (float) (Math.sin((alpha * angle)) * invSinTheta);
+            scale0 = (Math.sin((1f - alpha) * angle) * invSinTheta);
+            scale1 = (Math.sin((alpha * angle)) * invSinTheta);
         }
 
         if (dot < 0f) scale1 = -scale1;
@@ -385,15 +385,15 @@ public value record Quaternion(float x, float y, float z, float w) {
     /// @param end the other quaternion
     /// @param alpha value in the range of [0,1]
     /// @return the interpolated quaternion.
-    public Quaternion slerp(Quaternion end, float alpha) {
+    public Quaternion slerp(Quaternion end, double alpha) {
         return slerp(end, alpha, 1e-4f);
     }
 
     /// Returns the power of `quaternion^alpha`.
     /// @param alpha The exponent.
-    public Quaternion pow(float alpha) {
+    public Quaternion pow(double alpha) {
 
-        final float norm = length();
+        final double norm = length();
         final double normExp = Math.pow(norm, alpha); // |q|^alpha
         final double theta = Math.acos(w / norm);
         final double sinTheta = Math.sin(theta);
@@ -404,10 +404,10 @@ public value record Quaternion(float x, float y, float z, float w) {
                 normExp * Math.sin(alpha * theta) / (norm * sinTheta);
 
         final var result = new Quaternion(
-                (float) (x * coefficient),
-                (float) (y * coefficient),
-                (float) (z * coefficient),
-                (float) (normExp * Math.cos(alpha * theta))
+                (x * coefficient),
+                (y * coefficient),
+                (z * coefficient),
+                (normExp * Math.cos(alpha * theta))
         );
         return result.normalize(); // Fixes any possible discrepancies.
     }
@@ -418,7 +418,7 @@ public value record Quaternion(float x, float y, float z, float w) {
      * @param other the other quaternion.
      * @return the dot product of this and the other quaternion.
      */
-    public float dot(Quaternion other) {
+    public double dot(Quaternion other) {
         return v4().dot(other.v4());
     }
 
@@ -428,32 +428,32 @@ public value record Quaternion(float x, float y, float z, float w) {
      * @param scalar the scalar.
      * @return this quaternion for chaining.
      */
-    public Quaternion mul(float scalar) {
+    public Quaternion mul(double scalar) {
         return new Quaternion(v4().mul(scalar));
     }
 
     /// Returns the axis-angle representation of this quaternion's rotation.
-    /// @return {@link AxisAngleF32} containing both the axis (as a unit vector) and the angle.
+    /// @return {@link AxisAngle} containing both the axis (as a unit vector) and the angle.
     /// @apiNote The quaternion is normalized internally.
-    public AxisAngleF32 axisAngle() {
+    public AxisAngle axisAngle() {
 
         final Quaternion quat = normalize();
-        final float sqrt = (float) Math.sqrt(1d - quat.w * quat.w);
+        final double sqrt = Math.sqrt(1d - quat.w * quat.w);
 
         // I avoid dividing by 0 if the sqrt is small enough.
-        final Vector3F32 newAxis = sqrt < EPSILON ?
+        final Vector3F64 newAxis = sqrt < EPSILON ?
                 v3(quat.x, quat.y, quat.z).normalize() : // I re-normalize because without w the length might no longer be 1.
                 v3(quat.x / sqrt, quat.y / sqrt, quat.z / sqrt);
 
         final Radians angle = angle();
-        return new AxisAngleF32(newAxis, angle);
+        return new AxisAngle(newAxis, angle);
     }
 
     /// @return the rotation angle of this quaternion in radians.
     /// @apiNote The quaternion is normalized internally.
     public Radians angle() {
-        final float wNorm = normalize().w();
-        final float angle = (float) (2d * Math.acos(Math.clamp(wNorm, -1f, 1f)));
+        final double wNorm = normalize().w();
+        final double angle = (2d * Math.acos(Math.clamp(wNorm, -1f, 1f)));
         return Radians.radians(angle);
     }
 
@@ -466,10 +466,10 @@ public value record Quaternion(float x, float y, float z, float w) {
     /// @param axis of which to get the swing and twist rotation.
     /// @return the `swing` and `twist` pair.
     /// @apiNote The axis is normalized internally.
-    public SwingTwist swingTwist(Vector3F32 axis) {
+    public SwingTwist swingTwist(Vector3F64 axis) {
 
         final var norm = axis.normalize();
-        final float dot = v4().asV3().dot(norm);
+        final double dot = v4().asV3().dot(norm);
 
         var twist = new Quaternion(norm.x() * dot, norm.y() * dot, norm.z() * dot, w).normalize();
         if (dot < 0) twist = twist.mul(-1f);
@@ -484,15 +484,15 @@ public value record Quaternion(float x, float y, float z, float w) {
      * @param axis the normalized axis for which to get the angle
      * @return the angle in radians of the rotation around the specified axis
      */
-    public Radians angleAround(Vector3F32 axis) {
+    public Radians angleAround(Vector3F64 axis) {
 
-        final float dot = v4().asV3().dot(axis);
+        final double dot = v4().asV3().dot(axis);
         final var qAxis = new Quaternion(axis.x() * dot, axis.y() * dot, axis.z() * dot, w);
-        final float l2 = qAxis.length2();
+        final double l2 = qAxis.length2();
 
         if (l2 < EPSILON * EPSILON) return Radians.radians(0.0);
 
-        final float fixedW = dot < 0 ? -w : w;
+        final double fixedW = dot < 0 ? -w : w;
         final double clamped = Math.clamp(fixedW / Math.sqrt(l2), -1.0, 1.0);
         final double radians = 2.0 * Math.acos(clamped);
 
@@ -511,8 +511,4 @@ public value record Quaternion(float x, float y, float z, float w) {
             this.sign = sign;
         }
     }
-
-    public value record AxisAngleF32(Vector3F32 axis, Radians angle) {}
-
-    public value record SwingTwist(Quaternion swing, Quaternion twist) {}
 }

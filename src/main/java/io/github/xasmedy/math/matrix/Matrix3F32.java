@@ -14,6 +14,7 @@ import static io.github.xasmedy.math.vector.Vectors.v3;
 /// A Matrix3x3, the fields layout and math is row-major for ease of use.\
 /// Methods like {@link Matrix#asArray()} and {@link Matrix#asMemorySegment(Arena)} return the column-major representation.
 @LooselyConsistentValue
+@SuppressWarnings("unused")
 public value record Matrix3F32(
         float m00, float m01, float m02,
         float m10, float m11, float m12,
@@ -71,18 +72,18 @@ public value record Matrix3F32(
 
         final var rot = rotation.normalize();
 
-        final float xs = rot.x() * 2f, ys = rot.y() * 2f, zs = rot.z() * 2f;
-        final float wx = rot.w() * xs, wy = rot.w() * ys, wz = rot.w() * zs;
-        final float xx = rot.x() * xs, xy = rot.x() * ys, xz = rot.x() * zs;
-        final float yy = rot.y() * ys, yz = rot.y() * zs, zz = rot.z() * zs;
+        final double xs = rot.x() * 2f, ys = rot.y() * 2f, zs = rot.z() * 2f;
+        final double wx = rot.w() * xs, wy = rot.w() * ys, wz = rot.w() * zs;
+        final double xx = rot.x() * xs, xy = rot.x() * ys, xz = rot.x() * zs;
+        final double yy = rot.y() * ys, yz = rot.y() * zs, zz = rot.z() * zs;
 
-        final float m00 = 1f - (yy + zz), m01 = xy - wz       , m02 = xz + wy;
-        final float m10 = xy + wz       , m11 = 1f - (xx + zz), m12 = yz - wx;
-        final float m20 = xz - wy       , m21 = yz + wx       , m22 = 1f - (xx + yy);
+        final double m00 = 1d - (yy + zz), m01 = xy - wz       , m02 = xz + wy;
+        final double m10 = xy + wz       , m11 = 1d - (xx + zz), m12 = yz - wx;
+        final double m20 = xz - wy       , m21 = yz + wx       , m22 = 1d - (xx + yy);
         return new Matrix3F32(
-                m00, m01, m02,
-                m10, m11, m12,
-                m20, m21, m22
+                (float) m00, (float) m01, (float) m02,
+                (float) m10, (float) m11, (float) m12,
+                (float) m20, (float) m21, (float) m22
         );
     }
 
@@ -382,5 +383,13 @@ public value record Matrix3F32(
         segment.setAtIndex(layout, M22, m22);
 
         return segment;
+    }
+
+    public Matrix3F64 asF64() {
+        return new Matrix3F64(
+                m00, m01, m02,
+                m10, m11, m12,
+                m20, m21, m22
+        );
     }
 }

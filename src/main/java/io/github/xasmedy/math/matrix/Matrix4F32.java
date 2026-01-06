@@ -27,10 +27,10 @@ public value record Matrix4F32(
 
     public static Matrix4F32 identity() {
         return new Matrix4F32(
-                1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1
+                1f, 0f, 0f, 0f,
+                0f, 1f, 0f, 0f,
+                0f, 0f, 1f, 0f,
+                0f, 0f, 0f, 1f
         );
     }
 
@@ -82,27 +82,27 @@ public value record Matrix4F32(
 
         final var rot = rotation.normalize();
 
-        final float xs = rot.x() * 2f, ys = rot.y() * 2f, zs = rot.z() * 2f;
-        final float wx = rot.w() * xs, wy = rot.w() * ys, wz = rot.w() * zs;
-        final float xx = rot.x() * xs, xy = rot.x() * ys, xz = rot.x() * zs;
-        final float yy = rot.y() * ys, yz = rot.y() * zs, zz = rot.z() * zs;
+        final double xs = rot.x() * 2f, ys = rot.y() * 2f, zs = rot.z() * 2f;
+        final double wx = rot.w() * xs, wy = rot.w() * ys, wz = rot.w() * zs;
+        final double xx = rot.x() * xs, xy = rot.x() * ys, xz = rot.x() * zs;
+        final double yy = rot.y() * ys, yz = rot.y() * zs, zz = rot.z() * zs;
 
-        final float m00 = 1f - (yy + zz), m01 = xy - wz       , m02 = xz + wy       , m03 = translation.x();
-        final float m10 = xy + wz       , m11 = 1f - (xx + zz), m12 = yz - wx       , m13 = translation.y();
-        final float m20 = xz - wy       , m21 = yz + wx       , m22 = 1f - (xx + yy), m23 = translation.z();
-        final float m30 = 0             , m31 = 0             , m32 = 0             , m33 = 1;
+        final double m00 = 1f - (yy + zz), m01 = xy - wz       , m02 = xz + wy       , m03 = translation.x();
+        final double m10 = xy + wz       , m11 = 1f - (xx + zz), m12 = yz - wx       , m13 = translation.y();
+        final double m20 = xz - wy       , m21 = yz + wx       , m22 = 1f - (xx + yy), m23 = translation.z();
+        final double m30 = 0f            , m31 = 0f            , m32 = 0f            , m33 = 1f;
         return new Matrix4F32(
-                m00, m01, m02, m03,
-                m10, m11, m12, m13,
-                m20, m21, m22, m23,
-                m30, m31, m32, m33
+                (float) m00, (float) m01, (float) m02, (float) m03,
+                (float) m10, (float) m11, (float) m12, (float) m13,
+                (float) m20, (float) m21, (float) m22, (float) m23,
+                (float) m30, (float) m31, (float) m32, (float) m33
         );
     }
 
     /// @return a new rotation matrix around the given axis.
     public static Matrix4F32 fromAxisAngle(Vector3F32 axis, Radians angle) {
         if (angle.value() == 0) return identity();
-        final var quat = Quaternion.fromAxisAngle(axis, angle);
+        final var quat = Quaternion.fromAxisAngle(axis.asF64(), angle);
         return fromRotation(quat);
     }
 
@@ -113,7 +113,7 @@ public value record Matrix4F32(
 
     /// @return a new rotation matrix that aligns `v1` direction with `v2` direction.
     public static Matrix4F32 fromRotationBetween(Vector3F32 v1, Vector3F32 v2) {
-        final var quat = Quaternion.fromRotationBetween(v1, v2);
+        final var quat = Quaternion.fromRotationBetween(v1.asF64(), v2.asF64());
         return fromRotation(quat);
     }
 
@@ -597,7 +597,7 @@ public value record Matrix4F32(
     /// @return The rotation of this matrix.
     @Override
     public Quaternion rotation() {
-        return Quaternion.fromMatrix4(this);
+        return Quaternion.fromMatrix4(asF64());
     }
 
     /// @return the vector which will receive the (non-negative) scale components on each axis.
@@ -717,5 +717,14 @@ public value record Matrix4F32(
         out[0] = m00; out[3] = m01; out[6] = m02; out[9] = m03;
         out[1] = m10; out[4] = m11; out[7] = m12; out[10] = m13;
         out[2] = m20; out[5] = m21; out[8] = m22; out[11] = m23;
+    }
+
+    public Matrix4F64 asF64() {
+        return new Matrix4F64(
+                m00, m01, m02, m03,
+                m10, m11, m12, m13,
+                m20, m21, m22, m23,
+                m30, m31, m32, m33
+        );
     }
 }

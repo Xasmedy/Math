@@ -298,7 +298,7 @@ public value record Matrix4F64(
     public static Matrix4F64 fromLookAt(Vector3F64 position, Vector3F64 target, Vector3F64 up) {
         final var direction = target.sub(position);
         final Matrix4F64 rotation = fromLookRotation(direction, up);
-        final Matrix4F64 translation = fromTranslation(position.mul(-1f));
+        final Matrix4F64 translation = fromTranslation(position.mul(-1d));
         return rotation.mul(translation);
     }
 
@@ -717,5 +717,14 @@ public value record Matrix4F64(
         out[0] = m00; out[3] = m01; out[6] = m02; out[9] = m03;
         out[1] = m10; out[4] = m11; out[7] = m12; out[10] = m13;
         out[2] = m20; out[5] = m21; out[8] = m22; out[11] = m23;
+    }
+
+    public Matrix4F32 asF32() {
+        return new Matrix4F32(
+                (float) m00, (float) m01, (float) m02, (float) m03,
+                (float) m10, (float) m11, (float) m12, (float) m13,
+                (float) m20, (float) m21, (float) m22, (float) m23,
+                (float) m30, (float) m31, (float) m32, (float) m33
+        );
     }
 }
