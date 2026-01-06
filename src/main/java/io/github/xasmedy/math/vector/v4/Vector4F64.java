@@ -24,6 +24,10 @@ public value record Vector4F64(@NullRestricted Double x,
         );
     }
 
+    public Vector4F32 asF32() {
+        return new Vector4F32((float) (double) x(), (float) (double) y(), (float) (double) z(), (float) (double) w());
+    }
+
     @Override
     public Vector4F64 ceil() {
         final double x = Math.ceil(x());

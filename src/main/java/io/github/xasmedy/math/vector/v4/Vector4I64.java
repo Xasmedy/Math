@@ -19,6 +19,10 @@ public value record Vector4I64(@NullRestricted Long x,
         return new Vector4F64((double) x(), (double) y(), (double) z(), (double) w());
     }
 
+    public Vector4I32 asI32() {
+        return new Vector4I32((int) (long) x(), (int) (long) y(), (int) (long) z(), (int) (long) w());
+    }
+
     @Override
     public Vector3I64 asV3() {
         return new Vector3I64(x(), y(), z());

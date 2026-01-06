@@ -22,10 +22,8 @@ public value record Vector3F32(@NullRestricted Float x,
         return v3((int) (float) x(), (int) (float) y(), (int) (float) z());
     }
 
-    // TODO Add this to all vectors.
-
     public Vector3F64 asF64() {
-        return v3((double) x(), (double) y(), (double) z());
+        return new Vector3F64((double) x(), (double) y(), (double) z());
     }
 
     @Override

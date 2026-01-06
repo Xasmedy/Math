@@ -13,6 +13,15 @@ public value record Vector2F32(@NullRestricted Float x,
 ) implements Vector2<Vector2F32, Float>, Vector2.Real<Vector2F32, Float>, Point2.F32 {
 
     @Override
+    public Vector2I32 asInt() {
+        return v2((int) (float) x(), (int) (float) y());
+    }
+
+    public Vector2F64 asF64() {
+        return new Vector2F64((double) x(), (double) y());
+    }
+
+    @Override
     public Vector1F32 asV1() {
         return new Vector1F32(x());
     }
@@ -150,11 +159,6 @@ public value record Vector2F32(@NullRestricted Float x,
     @Override
     public boolean hasOppositeDirection(Vector2F32 vector) {
         return dot(vector) < 0;
-    }
-
-    @Override
-    public Vector2I32 asInt() {
-        return v2((int) (float) x(), (int) (float) y());
     }
 
     @Override

@@ -4,9 +4,7 @@ import io.github.xasmedy.math.point.p4.Point4;
 import io.github.xasmedy.math.vector.v3.Vector3F32;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
 import jdk.internal.vm.annotation.NullRestricted;
-
 import java.util.function.Function;
-
 import static io.github.xasmedy.math.vector.Vectors.v4;
 
 @LooselyConsistentValue
@@ -24,6 +22,10 @@ public value record Vector4F32(@NullRestricted Float x,
                 (int) (float) z(),
                 (int) (float) w()
         );
+    }
+
+    public Vector4F64 asF64() {
+        return new Vector4F64((double) x(), (double) y(), (double) z(), (double) w());
     }
 
     @Override

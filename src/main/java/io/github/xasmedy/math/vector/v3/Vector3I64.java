@@ -6,7 +6,6 @@ import io.github.xasmedy.math.vector.v2.Vector2I64;
 import io.github.xasmedy.math.vector.v4.Vector4I64;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
 import jdk.internal.vm.annotation.NullRestricted;
-
 import static io.github.xasmedy.math.vector.Vectors.v3;
 
 @LooselyConsistentValue
@@ -18,6 +17,10 @@ public value record Vector3I64(@NullRestricted Long x,
     @Override
     public Vector3F64 asReal() {
         return new Vector3F64((double) x(), (double) y(), (double) z());
+    }
+
+    public Vector3I32 asI32() {
+        return new Vector3I32((int) (long) x(), (int) (long) y(), (int) (long) z());
     }
 
     @Override

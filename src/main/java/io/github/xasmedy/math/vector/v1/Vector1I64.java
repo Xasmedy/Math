@@ -3,7 +3,6 @@ package io.github.xasmedy.math.vector.v1;
 import io.github.xasmedy.math.point.p1.Point1;
 import io.github.xasmedy.math.vector.v2.Vector2I64;
 import jdk.internal.vm.annotation.NullRestricted;
-
 import static io.github.xasmedy.math.vector.Vectors.v1;
 
 public value record Vector1I64(@NullRestricted Long x
@@ -12,6 +11,10 @@ public value record Vector1I64(@NullRestricted Long x
     @Override
     public Vector1F64 asReal() {
         return new Vector1F64((double) x());
+    }
+
+    public Vector1I32 asI32() {
+        return new Vector1I32((int) (long) x());
     }
 
     @Override

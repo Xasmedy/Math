@@ -5,7 +5,6 @@ import io.github.xasmedy.math.rotation.Radians;
 import io.github.xasmedy.math.vector.v1.Vector1I32;
 import io.github.xasmedy.math.vector.v3.Vector3I32;
 import jdk.internal.vm.annotation.NullRestricted;
-
 import static io.github.xasmedy.math.vector.Vectors.v2;
 
 public value record Vector2I32(@NullRestricted Integer x,
@@ -15,6 +14,10 @@ public value record Vector2I32(@NullRestricted Integer x,
     @Override
     public Vector2F32 asReal() {
         return new Vector2F32((float) x(), (float) y());
+    }
+
+    public Vector2I64 asI64() {
+        return new Vector2I64((long) x(), (long) y());
     }
 
     @Override

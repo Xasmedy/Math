@@ -6,12 +6,20 @@ import io.github.xasmedy.math.vector.Vector;
 import io.github.xasmedy.math.vector.v1.Vector1I64;
 import io.github.xasmedy.math.vector.v3.Vector3I64;
 import jdk.internal.vm.annotation.NullRestricted;
-
 import static io.github.xasmedy.math.vector.Vectors.v2;
 
 public value record Vector2I64(@NullRestricted Long x,
                                @NullRestricted Long y
 ) implements Vector2<Vector2I64, Long>, Vector.Int<Vector2I64, Long>, Point2.I64 {
+
+    @Override
+    public Vector2F64 asReal() {
+        return new Vector2F64((double) x(), (double) y());
+    }
+
+    public Vector2I32 asI32() {
+        return new Vector2I32((int) (long) x(), (int) (long) y());
+    }
 
     @Override
     public Vector1I64 asV1() {
@@ -151,10 +159,5 @@ public value record Vector2I64(@NullRestricted Long x,
     @Override
     public boolean hasOppositeDirection(Vector2I64 vector) {
         return dot(vector) < 0;
-    }
-
-    @Override
-    public Vector2F64 asReal() {
-        return new Vector2F64((double) x(), (double) y());
     }
 }

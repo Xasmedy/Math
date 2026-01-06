@@ -16,6 +16,10 @@ public value record Vector1F64(@NullRestricted Double x
         return v1((long) (double) x());
     }
 
+    public Vector1F32 asF32() {
+        return new Vector1F32((float) (double) x());
+    }
+
     @Override
     public Vector1F64 ceil() {
         return v1(Math.ceil(x()));

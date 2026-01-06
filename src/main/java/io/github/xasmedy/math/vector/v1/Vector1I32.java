@@ -16,6 +16,10 @@ public value record Vector1I32(@NullRestricted Integer x
         return v1((float) x());
     }
 
+    public Vector1I64 asI64() {
+        return new Vector1I64((long) x());
+    }
+
     @Override
     public Vector2I32 asV2(Integer y) {
         return new Vector2I32(x(), y);

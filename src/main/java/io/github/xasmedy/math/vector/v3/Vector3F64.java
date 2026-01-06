@@ -20,6 +20,10 @@ public value record Vector3F64(@NullRestricted Double x,
         return v3((long) (double) x(), (long) (double) y(), (long) (double) z());
     }
 
+    public Vector3F32 asF32() {
+        return new Vector3F32((float) (double) x(), (float) (double) y(), (float) (double) z());
+    }
+
     @Override
     public Vector3F64 ceil() {
         final double x = Math.ceil(x());
