@@ -225,6 +225,11 @@ public value record Matrix3F32(
     }
 
     @Override
+    public Matrix3F32 toNormalMatrix() {
+        return invert().transpose();
+    }
+
+    @Override
     public Matrix3F32 invert() {
 
 		final float det = determinant();

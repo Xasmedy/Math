@@ -43,6 +43,9 @@ public interface Matrix<T extends Matrix<T, N>, N> {
     /// @return true if the matrix is a singular matrix.
     boolean isSingular();
 
+    /// @return a matrix with the translational part removed (set to 0) and transposed.
+    T toNormalMatrix();
+
     /// @return The array presentation of this matrix.
     /// @apiNote The returned array is stored having the [column-major](https://en.wikipedia.org/wiki/Row-_and_column-major_order) order.
     /// @implNote Arrays are identity objects, meaning they are heavy for the garbage collector.

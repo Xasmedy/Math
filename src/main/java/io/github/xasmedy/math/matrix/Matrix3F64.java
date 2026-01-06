@@ -226,6 +226,11 @@ public value record Matrix3F64(
     }
 
     @Override
+    public Matrix3F64 toNormalMatrix() {
+        return invert().transpose();
+    }
+
+    @Override
     public Matrix3F64 invert() {
 
         final double det = determinant();
