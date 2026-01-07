@@ -45,25 +45,27 @@ public interface Matrix4<T extends Matrix4<T, N, V>, N, V extends Vector3<V, N>>
     /// @return A new matrix representing the average transform of the input matrices.
     T average(T[] matrices, N[] weights);
 
+    /// @return The translation part of this matrix.
     V translation();
 
-    /// @return The rotation of this matrix.
+    /// @return The rotation part of this matrix.
     Quaternion rotation();
 
     /// @return the vector which will receive the (non-negative) scale components on each axis.
     V scale();
 
+    /// @return the 3x3 part of this matrix as a matrix3.
     Matrix3<?, N, ?, V> asMatrix3();
 
     // TODO Consider SIMD versions of mulVec(), project(), and rotateVec()?
 
-    /** Multiplies the vector with the given matrix.
-     * @param vector the vector. */
+    /// @return the post-multiplied vector with this matrix.
     V transform(V vector);
 
     /** Postmultiplies this matrix by a translation matrix. Postmultiplication is also used by OpenGL ES' 1.x
      * glTranslate/glRotate/glScale.
      * @return This matrix for the purpose of chaining methods together. */
+
     T translate(V translation);
 
     /** Postmultiplies this matrix with a (counter-clockwise) rotation matrix. Postmultiplication is also used by OpenGL ES' 1.x

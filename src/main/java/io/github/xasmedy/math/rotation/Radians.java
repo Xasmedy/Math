@@ -2,6 +2,7 @@ package io.github.xasmedy.math.rotation;
 
 import jdk.internal.vm.annotation.LooselyConsistentValue;
 
+/// Radians class that represents the Standard Unit for rotations.
 @LooselyConsistentValue
 public value record Radians(double value) {
 

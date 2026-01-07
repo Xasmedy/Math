@@ -637,8 +637,6 @@ public value record Matrix4F32(
         return Matrix3F32.fromMatrix4(this);
     }
 
-    /** Multiplies the vector with the given matrix.
-     * @param vector the vector. */
     @Override
     public Vector3F32 transform(Vector3F32 vector) {
         return asMatrix3()
