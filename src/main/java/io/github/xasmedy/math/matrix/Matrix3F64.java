@@ -26,15 +26,31 @@ public value record Matrix3F64(
         );
     }
 
-    /// Creates a matrix4 from the provided matrix array.
-    /// @param matrix the matrix to copy from.
-    /// @return the copied matrix.
-    /// @apiNote The matrix array must be at least 9 in length, if longer, the first 9 elements are used.
-    public static Matrix3F64 fromArray(double[] matrix) {
+    /// Creates a new matrix from the given {@link MemorySegment} starting at the specified logical index.\
+    /// The memory segment must be able to hold *at least* `(index + 1) * `{@link #byteSize()}.
+    /// @param segment the memory segment to copy from.
+    /// @param index the logical index in units of {@link #byteSize()} where copying begins.
+    /// @apiNote The memory segment must be stored in [column-major](https://en.wikipedia.org/wiki/Row-_and_column-major_order) order.
+    public static Matrix3F64 fromMemorySegment(MemorySegment segment, long index) {
+
+        final var layout = ValueLayout.JAVA_DOUBLE;
+        final long baseIndex = index * SIZE;
+
+        final double m00 = segment.getAtIndex(layout, baseIndex + M00);
+        final double m10 = segment.getAtIndex(layout, baseIndex + M10);
+        final double m20 = segment.getAtIndex(layout, baseIndex + M20);
+
+        final double m01 = segment.getAtIndex(layout, baseIndex + M01);
+        final double m11 = segment.getAtIndex(layout, baseIndex + M11);
+        final double m21 = segment.getAtIndex(layout, baseIndex + M21);
+
+        final double m02 = segment.getAtIndex(layout, baseIndex + M02);
+        final double m12 = segment.getAtIndex(layout, baseIndex + M12);
+        final double m22 = segment.getAtIndex(layout, baseIndex + M22);
         return new Matrix3F64(
-                matrix[M00], matrix[M01], matrix[M02],
-                matrix[M10], matrix[M11], matrix[M12],
-                matrix[M20], matrix[M21], matrix[M22]
+                m00, m01, m02,
+                m10, m11, m12,
+                m20, m21, m22
         );
     }
 
@@ -137,6 +153,11 @@ public value record Matrix3F64(
                 y,  1d, 0d,
                 0d, 0d, 1d
         );
+    }
+
+    @Override
+    public long byteSize() {
+        return (long) SIZE * Double.SIZE;
     }
 
     @Override
@@ -349,32 +370,27 @@ public value record Matrix3F64(
     }
 
     @Override
-    public Double[] asArray() {
-        return new Double[] {
-                m00, m10, m20,
-                m01, m11, m21,
-                m02, m12, m22
-        };
+    public void toMemorySegment(MemorySegment segment, long index) {
+
+        final var layout = ValueLayout.JAVA_DOUBLE;
+        final long baseIndex = index * SIZE;
+        segment.setAtIndex(layout, baseIndex + M00, m00);
+        segment.setAtIndex(layout, baseIndex + M01, m01);
+        segment.setAtIndex(layout, baseIndex + M02, m02);
+
+        segment.setAtIndex(layout, baseIndex + M10, m10);
+        segment.setAtIndex(layout, baseIndex + M11, m11);
+        segment.setAtIndex(layout, baseIndex + M12, m12);
+
+        segment.setAtIndex(layout, baseIndex + M20, m20);
+        segment.setAtIndex(layout, baseIndex + M21, m21);
+        segment.setAtIndex(layout, baseIndex + M22, m22);
     }
 
     @Override
     public MemorySegment asMemorySegment(Arena arena) {
-
-        final var layout = ValueLayout.JAVA_DOUBLE;
-        final var segment = arena.allocate(size() * layout.byteSize());
-
-        segment.setAtIndex(layout, M00, m00);
-        segment.setAtIndex(layout, M01, m01);
-        segment.setAtIndex(layout, M02, m02);
-
-        segment.setAtIndex(layout, M10, m10);
-        segment.setAtIndex(layout, M11, m11);
-        segment.setAtIndex(layout, M12, m12);
-
-        segment.setAtIndex(layout, M20, m20);
-        segment.setAtIndex(layout, M21, m21);
-        segment.setAtIndex(layout, M22, m22);
-
+        final var segment = arena.allocate(byteSize());
+        toMemorySegment(segment, 0);
         return segment;
     }
 

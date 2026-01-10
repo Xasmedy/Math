@@ -17,13 +17,14 @@ import io.github.xasmedy.math.vector.v3.Vector3;
 /// | 0 | 0 |  1 |
 public interface Matrix3<M extends Matrix3<M, N, V2, V3>, N, V2 extends Vector2<V2, N>, V3 extends Vector3<V3, N>> extends Matrix<M, N> {
 
+    int SIZE = 9;
     int M00 = 0, M01 = 3, M02 = 6;
     int M10 = 1, M11 = 4, M12 = 7;
     int M20 = 2, M21 = 5, M22 = 8;
 
     @Override
     default int size() {
-        return 9;
+        return SIZE;
     }
 
     @Override

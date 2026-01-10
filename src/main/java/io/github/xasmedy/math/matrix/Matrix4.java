@@ -9,6 +9,7 @@ import io.github.xasmedy.math.vector.v3.Vector3;
 @SuppressWarnings("unused")
 public interface Matrix4<M extends Matrix4<M, N, V>, N, V extends Vector3<V, N>> extends Matrix<M, N> {
 
+    int SIZE = 16;
     int M00 = 0, M01 = 4, M02 =  8, M03 = 12;
     int M10 = 1, M11 = 5, M12 =  9, M13 = 13;
     int M20 = 2, M21 = 6, M22 = 10, M23 = 14;
@@ -16,7 +17,7 @@ public interface Matrix4<M extends Matrix4<M, N, V>, N, V extends Vector3<V, N>>
 
     @Override
     default int size() {
-        return 16;
+        return SIZE;
     }
 
     @Override

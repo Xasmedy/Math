@@ -35,44 +35,41 @@ public value record Matrix4F32(
         );
     }
 
-    /// Creates a matrix4 array from the provided matrices array.
-    /// @param matrices4 a flat array of matrices.
-    /// @apiNote The matrices array length must be a multiple of 16.
-    public static Matrix4F32[] fromMatricesArray(float[] matrices4) {
+    /// Creates a new matrix from the given {@link MemorySegment} starting at the specified logical index.\
+    /// The memory segment must be able to hold *at least* `(index + 1) * `{@link #byteSize()}.
+    /// @param segment the memory segment to copy from.
+    /// @param index the logical index in units of {@link #byteSize()} where copying begins.
+    /// @apiNote The memory segment must be stored in [column-major](https://en.wikipedia.org/wiki/Row-_and_column-major_order) order.
+    public static Matrix4F32 fromMemorySegment(MemorySegment segment, long index) {
 
-        if (matrices4.length % 16 != 0) throw new IllegalArgumentException(String.format(
-                "The matrices array provided is not big enough to be a 4x4 matrix. [Current: %d]",
-                matrices4.length)
-        );
+        final var layout = ValueLayout.JAVA_FLOAT;
+        final long baseIndex = index * SIZE;
 
-        final Matrix4F32[] matrices = new Matrix4F32[matrices4.length / 16];
-        for (int i = 0; i < matrices.length; i++) {
-            final int p = i * 16;
-            matrices[i] = new Matrix4F32(
-                    matrices4[p + M00], matrices4[p + M01], matrices4[p + M02], matrices4[p + M03],
-                    matrices4[p + M10], matrices4[p + M11], matrices4[p + M12], matrices4[p + M13],
-                    matrices4[p + M20], matrices4[p + M21], matrices4[p + M22], matrices4[p + M23],
-                    matrices4[p + M30], matrices4[p + M31], matrices4[p + M32], matrices4[p + M33]
-            );
-        }
-        return matrices;
-    }
+        final float m00 = segment.getAtIndex(layout, baseIndex + M00);
+        final float m10 = segment.getAtIndex(layout, baseIndex + M10);
+        final float m20 = segment.getAtIndex(layout, baseIndex + M20);
+        final float m30 = segment.getAtIndex(layout, baseIndex + M30);
 
-    /// Creates a matrix4 from the provided matrix array.
-    /// @param matrix4 the matrix to copy from.
-    /// @return the copied matrix.
-    /// @apiNote The matrix array must be at least 16 in length, if longer, the first 16 elements are used.
-    public static Matrix4F32 fromArray(float[] matrix4) {
+        final float m01 = segment.getAtIndex(layout, baseIndex + M01);
+        final float m11 = segment.getAtIndex(layout, baseIndex + M11);
+        final float m21 = segment.getAtIndex(layout, baseIndex + M21);
+        final float m31 = segment.getAtIndex(layout, baseIndex + M31);
 
-        if (matrix4.length < 16) throw new IllegalArgumentException(String.format(
-                "The matrix array provided is not big enough to be a 4x4 matrix. [Current: %d]",
-                matrix4.length)
-        );
+        final float m02 = segment.getAtIndex(layout, baseIndex + M02);
+        final float m12 = segment.getAtIndex(layout, baseIndex + M12);
+        final float m22 = segment.getAtIndex(layout, baseIndex + M22);
+        final float m32 = segment.getAtIndex(layout, baseIndex + M32);
+
+        final float m03 = segment.getAtIndex(layout, baseIndex + M03);
+        final float m13 = segment.getAtIndex(layout, baseIndex + M13);
+        final float m23 = segment.getAtIndex(layout, baseIndex + M23);
+        final float m33 = segment.getAtIndex(layout, baseIndex + M33);
+
         return new Matrix4F32(
-                matrix4[M00], matrix4[M01], matrix4[M02], matrix4[M03],
-                matrix4[M10], matrix4[M11], matrix4[M12], matrix4[M13],
-                matrix4[M20], matrix4[M21], matrix4[M22], matrix4[M23],
-                matrix4[M30], matrix4[M31], matrix4[M32], matrix4[M33]
+                m00, m01, m02, m03,
+                m10, m11, m12, m13,
+                m20, m21, m22, m23,
+                m30, m31, m32, m33
         );
     }
 
@@ -321,54 +318,8 @@ public value record Matrix4F32(
     }
 
     @Override
-    public Float[] asArray() {
-        return new Float[] {
-                m00, m10, m20, m30, // Column 0
-                m01, m11, m21, m31, // Column 1
-                m02, m12, m22, m32, // Column 2
-                m03, m13, m23, m33  // Column 3
-        };
-    }
-
-    /// Copies this matrix onto the provided array.
-    /// @param out The array to copy the values onto.
-    /// @apiNote The matrix is copied using the [column-major](https://en.wikipedia.org/wiki/Row-_and_column-major_order) order.
-    /// The array must be at least 16 in length, if longer, the first 16 elements are used.
-    public void toArray(float[] out) {
-        if (out.length < 16) throw new IllegalArgumentException("The matrix array provided is not a 4x4 matrix.");
-        out[M00] = m00; out[M10] = m10; out[M20] = m20; out[M30] = m30;
-        out[M01] = m01; out[M11] = m11; out[M21] = m21; out[M31] = m31;
-        out[M02] = m02; out[M12] = m12; out[M22] = m22; out[M32] = m32;
-        out[M03] = m03; out[M13] = m13; out[M23] = m23; out[M33] = m33;
-    }
-
-    @Override
-    public MemorySegment asMemorySegment(Arena arena) {
-
-        final var layout = ValueLayout.JAVA_FLOAT;
-        final var segment = arena.allocate(16 * layout.byteSize());
-
-        segment.setAtIndex(layout, M00, m00);
-        segment.setAtIndex(layout, M01, m01);
-        segment.setAtIndex(layout, M02, m02);
-        segment.setAtIndex(layout, M03, m03);
-
-        segment.setAtIndex(layout, M10, m10);
-        segment.setAtIndex(layout, M11, m11);
-        segment.setAtIndex(layout, M12, m12);
-        segment.setAtIndex(layout, M13, m13);
-
-        segment.setAtIndex(layout, M20, m20);
-        segment.setAtIndex(layout, M21, m21);
-        segment.setAtIndex(layout, M22, m22);
-        segment.setAtIndex(layout, M23, m23);
-
-        segment.setAtIndex(layout, M30, m30);
-        segment.setAtIndex(layout, M31, m31);
-        segment.setAtIndex(layout, M32, m32);
-        segment.setAtIndex(layout, M33, m33);
-
-        return segment;
+    public long byteSize() {
+        return (long) SIZE * Float.SIZE;
     }
 
     @Override
@@ -600,6 +551,39 @@ public value record Matrix4F32(
                 m20, m21, m22, 0f,
                 m30, m31, m32, m33
         ).invert().transpose();
+    }
+
+    @Override
+    public void toMemorySegment(MemorySegment segment, long index) {
+
+        final var layout = ValueLayout.JAVA_FLOAT;
+        final long baseIndex = index * SIZE;
+        segment.setAtIndex(layout, baseIndex + M00, m00);
+        segment.setAtIndex(layout, baseIndex + M01, m01);
+        segment.setAtIndex(layout, baseIndex + M02, m02);
+        segment.setAtIndex(layout, baseIndex + M03, m03);
+
+        segment.setAtIndex(layout, baseIndex + M10, m10);
+        segment.setAtIndex(layout, baseIndex + M11, m11);
+        segment.setAtIndex(layout, baseIndex + M12, m12);
+        segment.setAtIndex(layout, baseIndex + M13, m13);
+
+        segment.setAtIndex(layout, baseIndex + M20, m20);
+        segment.setAtIndex(layout, baseIndex + M21, m21);
+        segment.setAtIndex(layout, baseIndex + M22, m22);
+        segment.setAtIndex(layout, baseIndex + M23, m23);
+
+        segment.setAtIndex(layout, baseIndex + M30, m30);
+        segment.setAtIndex(layout, baseIndex + M31, m31);
+        segment.setAtIndex(layout, baseIndex + M32, m32);
+        segment.setAtIndex(layout, baseIndex + M33, m33);
+    }
+
+    @Override
+    public MemorySegment asMemorySegment(Arena arena) {
+        final var segment = arena.allocate(byteSize());
+        toMemorySegment(segment, 0);
+        return segment;
     }
 
     @Override
