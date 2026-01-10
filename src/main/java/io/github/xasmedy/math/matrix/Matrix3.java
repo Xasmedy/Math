@@ -5,9 +5,10 @@ import io.github.xasmedy.math.rotation.Radians;
 import io.github.xasmedy.math.vector.v2.Vector2;
 import io.github.xasmedy.math.vector.v3.Vector3;
 
-/// Immutable Matrix3x3 stored in column-major order.
+/// Immutable Matrix3x3 always using post-multiplication.
+/// Internal indexing is row-major, while external raw output is column-major.
 ///
-/// Methods starting with `affine` provide optimization for Affine-Matrix3, an affine matrix3 has constant values `[0, 0, 1]` in the last row:
+/// Methods starting with `affine` provide optimization for matrices that have has last row the constant values `[0, 0, 1]`:
 ///
 /// |   |   |    |
 /// |:-:|:-:|:--:|
@@ -35,57 +36,53 @@ public interface Matrix3<M extends Matrix3<M, N, V2, V3>, N, V2 extends Vector2<
         return 3;
     }
 
+    /// Transforms a 3D position vector using this matrix.
+    /// @return the transformed vector.
     V3 transform(V3 vector);
 
+    /// Transforms a 2D position vector using the affine part of this matrix.
+    /// @return the transformed vector.
     V2 transform(V2 vector);
 
-    /// Applies a 3D rotation.
+    /// Applies a 3D rotation to this matrix using a quaternion.
     M rotate(Quaternion quaternion);
 
-    /// Removes rotation from this matrix.
-    /// @apiNote The matrix is assumed to be a rotation matrix.
+    /// Applies the inverse rotation of this matrix to a 3D vector.
     V3 unrotate(V3 vector);
 
-    /// Optimized post-multiplication for affine matrices.
+    /// Optimized multiplication for affine matrices.
     /// @apiNote Both this and the {@code other} matrix are assumed to be affine.
     M affineMul(M other);
 
-    /** Calculates the determinant of the matrix.
-     * @return The determinant of this matrix. */
+    /// @return the determinant of an affine matrix.
     N affineDeterminant();
 
-    /** Inverts this matrix given that the determinant is != 0.
-     * @return This matrix for the purpose of chaining operations.
-     * @throws ArithmeticException if the matrix is singular (not invertible) */
+    /// Inverts this matrix given that the determinant is != 0.
+    /// @return This matrix for the purpose of chaining operations.
+    /// @throws ArithmeticException if the matrix cannot be inverted because it is singular.
     M affineInvert();
 
+    /// @return true if the affine matrix is a singular matrix.
     boolean isAffineSingular();
 
-    /** Postmultiplies this matrix by a translation matrix. Postmultiplication is also used by OpenGL ES' 1.x
-     * glTranslate/glRotate/glScale.
-     * @param translation The translation vector.
-     * @return This matrix for the purpose of chaining. */
+    /// @return a new affine matrix with the translation applied.
     M affineTranslate(V2 translation);
 
-    /** Postmultiplies this matrix with a (counter-clockwise) rotation matrix. Postmultiplication is also used by OpenGL ES' 1.x
-     * glTranslate/glRotate/glScale.
-     * @param angle The angle in radians
-     * @return This matrix for the purpose of chaining. */
+    /// @return a new affine matrix with the given rotation applied.
     M affineRotate(Radians angle);
 
-    /** Postmultiplies this matrix by a shear matrix.
-     * @return This matrix for the purpose of chaining. */
+    /// @return a new affine matrix with the given shearing applied.
     M affineShear(V2 shear);
 
-    /** Postmultiplies this matrix with a scale matrix. Postmultiplication is also used by OpenGL ES' 1.x
-     * glTranslate/glRotate/glScale.
-     * @param scale The vector to scale the matrix by.
-     * @return This matrix for the purpose of chaining. */
+    /// @return a new affine matrix with the given scaling applied.
     M affineScale(V2 scale);
 
+    /// @return the scaling component from this affine matrix.
     V2 affineScale();
 
-    Radians affineRotation();
+    /// @return the rotation component from this affine matrix as an angle.
+    Radians rotation();
 
+    /// @return the translation component from this affine matrix.
     V2 translation();
 }

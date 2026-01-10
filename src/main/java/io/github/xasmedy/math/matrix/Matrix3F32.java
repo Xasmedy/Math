@@ -10,8 +10,7 @@ import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
 import static io.github.xasmedy.math.FloatingUtil.EPSILON;
 
-/// A Matrix3x3, the fields layout and math is row-major for ease of use.\
-/// Methods like {@link Matrix#asArray()} and {@link Matrix#asMemorySegment(Arena)} return the column-major representation.
+/// @see Matrix3
 @LooselyConsistentValue
 @SuppressWarnings("unused")
 public value record Matrix3F32(
@@ -20,8 +19,6 @@ public value record Matrix3F32(
         float m20, float m21, float m22
 ) implements Matrix3<Matrix3F32, Float, Vector2F32, Vector3F32> {
 
-    /** Sets this matrix to the identity matrix
-     * @return This matrix for the purpose of chaining operations. */
     public static Matrix3F32 identity() {
         return new Matrix3F32(
                 1f, 0f, 0f,
@@ -30,10 +27,10 @@ public value record Matrix3F32(
         );
     }
 
-	/** Constructs a matrix from the given float array. The array must have at least 9 elements; the first 9 will be copied.
-	 * @param matrix The float array to copy. Remember that this matrix is in
-	 *           <a href="http://en.wikipedia.org/wiki/Row-major_order#Column-major_order">column major</a> order. (The float array
-	 *           is not modified.) */
+    /// Creates a matrix4 from the provided matrix array.
+    /// @param matrix the matrix to copy from.
+    /// @return the copied matrix.
+    /// @apiNote The matrix array must be at least 9 in length, if longer, the first 9 elements are used.
 	public static Matrix3F32 fromArray(float[] matrix) {
         return new Matrix3F32(
                 matrix[M00], matrix[M01], matrix[M02],
@@ -42,8 +39,7 @@ public value record Matrix3F32(
         );
 	}
 
-    /** Sets this matrix to a translation matrix.
-     * @return This matrix for the purpose of chaining operations. */
+    /// @return creates an identity matrix having the 3rd column set to the translation vector.
     public static Matrix3F32 fromTranslation(Vector2F32 translation) {
         final float x = translation.x();
         final float y = translation.y();
@@ -54,9 +50,7 @@ public value record Matrix3F32(
         );
     }
 
-    /** Sets this matrix to a rotation matrix that will rotate any vector in counter-clockwise direction around the z-axis.
-     * @param angle the angle in radians.
-     * @return This matrix for the purpose of chaining operations. */
+    /// @return a pure rotation matrix from the provided angle.
     public static Matrix3F32 fromAffineRotation(Radians angle) {
         final float cos = (float) Math.cos(angle.value());
         final float sin = (float) Math.sin(angle.value());
@@ -67,6 +61,7 @@ public value record Matrix3F32(
         );
     }
 
+    /// @return a pure rotation matrix from the provided quaternion.
     public static Matrix3F32 fromRotation(Quaternion rotation) {
 
         final var rot = rotation.normalize();
@@ -86,9 +81,7 @@ public value record Matrix3F32(
         );
     }
 
-    /** Sets this matrix to a scaling matrix.
-     * @param scale The scale vector.
-     * @return This matrix for the purpose of chaining operations. */
+    /// @return a new pure scaling matrix.
     public static Matrix3F32 fromScale(Vector2F32 scale) {
         final float x = scale.x();
         final float y = scale.y();
@@ -99,9 +92,7 @@ public value record Matrix3F32(
         );
     }
 
-    /** Sets this matrix to a concatenation of translation and scale. It is a more efficient form for:
-     * <code>idt().translate(x, y).scale(scaleX, scaleY)</code>
-     * @return This matrix for the purpose of chaining operations. */
+    /// @return a new transformation matrix from scale and translation.
     public static Matrix3F32 fromST(Vector2F32 translation, Vector2F32 scale) {
         return new Matrix3F32(
                 scale.x(), 0f, translation.x(),
@@ -110,10 +101,9 @@ public value record Matrix3F32(
         );
     }
 
-    /** Sets this matrix to a concatenation of translation, rotation and scale. It is a more efficient form for:
-     * <code>idt().translate(x, y).rotateRad(radians).scale(scaleX, scaleY)</code>
-     * @param rotation The angle in radians.
-     * @return This matrix for the purpose of chaining operations. */
+    /// Creates a transformation matrix from affine translation, affine  rotation, and affine scale.
+    /// @return The transformation matrix.
+    /// @apiNote The rotation quaternion is normalized internally.
     public static Matrix3F32 fromAffineTRS(Vector2F32 translation, Radians rotation, Vector2F32 scale) {
         final var rot = fromAffineRotation(rotation);
         final var scl = fromScale(scale);
@@ -121,10 +111,9 @@ public value record Matrix3F32(
         return fromTranslation(translation).affineMul(rotScl);
     }
 
-    /** Sets this matrix to a concatenation of translation, rotation and scale. It is a more efficient form for:
-     * <code>idt().translate(x, y).rotateRad(radians).scale(scaleX, scaleY)</code>
-     * @param rotation The angle in radians.
-     * @return This matrix for the purpose of chaining operations. */
+    /// Creates a transformation matrix from translation, rotation, and scale.
+    /// @return The transformation matrix.
+    /// @apiNote The rotation quaternion is normalized internally.
     public static Matrix3F32 fromTRS(Vector2F32 translation, Quaternion rotation, Vector2F32 scale) {
         final var rot = fromRotation(rotation);
         final var scl = fromScale(scale);
@@ -132,9 +121,7 @@ public value record Matrix3F32(
         return fromTranslation(translation).mul(rotScl);
     }
 
-    /** Sets this 3x3 matrix to the top left 3x3 corner of the provided 4x4 matrix.
-     * @param matrix The matrix whose top left corner will be copied. This matrix will not be modified.
-     * @return This matrix for the purpose of chaining operations. */
+    /// Creates a new matrix using the top-left 3x3 of the matrix4.
     public static Matrix3F32 fromMatrix4(Matrix4F32 matrix) {
         return new Matrix3F32(
                 matrix.m00(), matrix.m01(), matrix.m02(),
@@ -143,8 +130,7 @@ public value record Matrix3F32(
         );
     }
 
-    /** Sets this matrix to a shearing matrix.
-     * @return This matrix for the purpose of chaining operations. */
+    /// @return a new pure shearing matrix.
     public static Matrix3F32 fromShear(Vector2F32 shear) {
         final float x = shear.x(), y = shear.y();
         return new Matrix3F32(
@@ -359,7 +345,7 @@ public value record Matrix3F32(
 	}
 
     @Override
-	public Radians affineRotation() {
+	public Radians rotation() {
 		return Radians.radians(Math.atan2(m10, m00));
 	}
 
