@@ -5,7 +5,7 @@ import io.github.xasmedy.math.rotation.Radians;
 import io.github.xasmedy.math.vector.v2.Vector2;
 import io.github.xasmedy.math.vector.v3.Vector3;
 
-/// Matrix3x3 stored in column-major order.
+/// Immutable Matrix3x3 stored in column-major order.
 ///
 /// Methods starting with `affine` provide optimization for Affine-Matrix3, an affine matrix3 has constant values `[0, 0, 1]` in the last row:
 ///

@@ -4,7 +4,8 @@ import io.github.xasmedy.math.rotation.Quaternion;
 import io.github.xasmedy.math.rotation.Radians;
 import io.github.xasmedy.math.vector.v3.Vector3;
 
-/// Matrix4x4 stored in column-major order.
+/// Immutable Matrix4x4 always using post-multiplication.
+/// Internal indexing is row-major, while external raw output is column-major.
 @SuppressWarnings("unused")
 public interface Matrix4<T extends Matrix4<T, N, V>, N, V extends Vector3<V, N>> extends Matrix<T, N> {
 
@@ -38,20 +39,20 @@ public interface Matrix4<T extends Matrix4<T, N, V>, N, V extends Vector3<V, N>>
     T average(T other, N weight);
 
     /// Averages an array of matrices using the same weight.
-    /// @return A new matrix representing the average transform of the input matrices.
+    /// @return a new matrix representing the average transform of the input matrices.
     T average(T[] matrices);
 
     /// Averages an array of matrices using the provided weights.
-    /// @return A new matrix representing the average transform of the input matrices.
+    /// @return a new matrix representing the average transform of the input matrices.
     T average(T[] matrices, N[] weights);
 
-    /// @return The translation part of this matrix.
+    /// @return the translation part of this matrix.
     V translation();
 
-    /// @return The rotation part of this matrix.
+    /// @return the rotation part of this matrix.
     Quaternion rotation();
 
-    /// @return the vector which will receive the (non-negative) scale components on each axis.
+    /// @return the scale components along each axis.
     V scale();
 
     /// @return the 3x3 part of this matrix as a matrix3.
@@ -59,53 +60,44 @@ public interface Matrix4<T extends Matrix4<T, N, V>, N, V extends Vector3<V, N>>
 
     // TODO Consider SIMD versions of mulVec(), project(), and rotateVec()?
 
-    /// @return the post-multiplied vector with this matrix.
+    /// Transforms a 3D position vector using the affine part of this matrix.
+    /// @return the transformed vector.
     V transform(V vector);
 
-    /** Postmultiplies this matrix by a translation matrix. Postmultiplication is also used by OpenGL ES' 1.x
-     * glTranslate/glRotate/glScale.
-     * @return This matrix for the purpose of chaining methods together. */
-
+    /// @return a new matrix with the translation applied.
     T translate(V translation);
 
-    /** Postmultiplies this matrix with a (counter-clockwise) rotation matrix. Postmultiplication is also used by OpenGL ES' 1.x
-     * glTranslate/glRotate/glScale.
-     * @param axis The vector axis to rotate around.
-     * @param angle The angle in radians.
-     * @return This matrix for the purpose of chaining methods together. */
+    /// @return a new matrix with the rotation around the given axis applied.
     T rotateAround(V axis, Radians angle);
 
-    /** Postmultiplies this matrix with a (counter-clockwise) rotation matrix. Postmultiplication is also used by OpenGL ES' 1.x
-     * glTranslate/glRotate/glScale.
-     * @return This matrix for the purpose of chaining methods together. */
+    /// @return a new matrix with the given rotation applied.
     T rotate(Quaternion rotation);
 
-    /** Postmultiplies this matrix by the rotation between two vectors.
-     * @param v1 The base vector
-     * @param v2 The target vector
-     * @return This matrix for the purpose of chaining methods together */
+    /// @return a new matrix that rotates the direction of `v1` to align with `v2`.
     T rotateBetween(V v1, V v2);
 
-    /** Post-multiplies this matrix by a rotation toward a direction.
-     * @param direction direction to rotate toward
-     * @param up up vector
-     * @return This matrix for chaining */
+    /// @return a new matrix that rotates to align the forward direction with `direction` and up vector with `up`.
     T rotateToDirection(V direction, V up);
 
-    /** Postmultiplies this matrix with a scale matrix. Postmultiplication is also used by OpenGL ES' 1.x
-     * glTranslate/glRotate/glScale.
-     * @return This matrix for the purpose of chaining methods together. */
+    /// @return a new matrix with the given scale applied.
     T scale(V scale);
 
+    /// Projects a 3D position vector using this matrix and performs a perspective divide.
+    /// @apiNote Includes rotation, translation, scale, and perspective; output is divided by W.
     V project(V vector);
 
+    /// Rotates a 3D direction vector using the 3×3 part of this matrix.
+    /// @apiNote Translation and perspective components are ignored.
     V rotate(V vector);
 
+    /// Applies the inverse rotation of this matrix to a 3D vector, undoing {@link #rotate(Vector3)}.
+    /// @apiNote Translation and perspective components are ignored. Non-uniform scale in the 3×3 submatrix may affect results.
     V unrotate(V vector);
 
+    /// Applies the inverse affine transformation of this matrix to a 3D vector.
     V untransform(V vector);
 
-    /** Copies the 4x3 upper-left sub-matrix into float array. The destination array is supposed to be a column major matrix.
-     * @param out the destination matrix */
+    /// Copies the 4x3 upper-left matrix into the array.
+    /// @apiNote The layout is column-major order.
     void toMatrix4x3Array(N[] out);
 }

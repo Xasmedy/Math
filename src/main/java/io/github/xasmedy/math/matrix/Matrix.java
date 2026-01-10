@@ -5,16 +5,21 @@ import java.lang.foreign.MemorySegment;
 
 public interface Matrix<T extends Matrix<T, N>, N> {
 
+    /// @return [Matrix#rows()] multiplied by [Matrix#columns()].
     int size();
 
     int rows();
 
     int columns();
 
+    /// @return this matrix with each element added by the other matrix.
     T add(T other);
 
+    /// @return this matrix with each element subtracted by the other matrix.
     T sub(T other);
 
+    /// Scalar Matrix Multiplication.
+    /// @return this matrix with each element multiplied by the scalar.
     T mul(N scalar);
 
     /// Post-Multiples `this` matrix with the `other` matrix.\
