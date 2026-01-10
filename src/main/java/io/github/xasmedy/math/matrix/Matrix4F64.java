@@ -9,7 +9,6 @@ import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
 import static io.github.xasmedy.math.FloatingUtil.EPSILON;
-import static io.github.xasmedy.math.vector.Vectors.v3;
 
 /// @see Matrix4
 @SuppressWarnings("unused")
@@ -110,7 +109,7 @@ public value record Matrix4F64(
 
     /// @return a pure rotation matrix from the quaternion.
     public static Matrix4F64 fromRotation(Quaternion quaternion) {
-        return fromTR(v3(0d, 0d, 0d), quaternion);
+        return fromTR(new Vector3F64(0d, 0d, 0d), quaternion);
     }
 
     /// @return a new rotation matrix that aligns `v1` direction with `v2` direction.
@@ -578,7 +577,7 @@ public value record Matrix4F64(
 
     @Override
     public Vector3F64 translation() {
-        return v3(m03, m13, m23);
+        return new Vector3F64(m03, m13, m23);
     }
 
     @Override
@@ -613,7 +612,7 @@ public value record Matrix4F64(
     public Vector3F64 transform(Vector3F64 vector) {
         return asMatrix3()
                 .transform(vector)
-                .add(v3(m03, m13, m23));
+                .add(new Vector3F64(m03, m13, m23));
     }
 
     @Override
@@ -664,7 +663,7 @@ public value record Matrix4F64(
 
     @Override
     public Vector3F64 untransform(Vector3F64 vector) {
-        return asMatrix3().unrotate(vector.sub(v3(m03, m13, m23)));
+        return asMatrix3().unrotate(vector.sub(new Vector3F64(m03, m13, m23)));
     }
 
     @Override

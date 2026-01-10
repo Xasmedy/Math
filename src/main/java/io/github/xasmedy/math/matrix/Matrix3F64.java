@@ -9,7 +9,6 @@ import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
 import static io.github.xasmedy.math.FloatingUtil.EPSILON;
-import static io.github.xasmedy.math.vector.Vectors.v3;
 
 /// A Matrix3x3, the fields layout and math is row-major for ease of use.\
 /// Methods like {@link Matrix#asArray()} and {@link Matrix#asMemorySegment(Arena)} return the column-major representation.
@@ -209,7 +208,7 @@ public value record Matrix3F64(
         final double x = vector.x() * m00 + vector.y() * m01 + vector.z() * m02;
         final double y = vector.x() * m10 + vector.y() * m11 + vector.z() * m12;
         final double z = vector.x() * m20 + vector.y() * m21 + vector.z() * m22;
-        return v3(x, y, z);
+        return new Vector3F64(x, y, z);
     }
 
     @Override

@@ -5,7 +5,6 @@ import io.github.xasmedy.math.matrix.Matrix4F64;
 import io.github.xasmedy.math.vector.v3.Vector3F64;
 import io.github.xasmedy.math.vector.v4.Vector4F64;
 import jdk.internal.vm.annotation.LooselyConsistentValue;
-import static io.github.xasmedy.math.vector.Vectors.v3;
 import static io.github.xasmedy.math.FloatingUtil.EPSILON;
 
 @LooselyConsistentValue
@@ -198,9 +197,9 @@ public value record Quaternion(double x, double y, double z, double w) {
      * Sets the Quaternion from the given rotation matrix, which must not contain scaling.
      */
     public static Quaternion fromMatrix3(Matrix3F64 matrix) {
-        final var x = v3(matrix.m00(), matrix.m01(), matrix.m02());
-        final var y = v3(matrix.m10(), matrix.m11(), matrix.m12());
-        final var z = v3(matrix.m20(), matrix.m21(), matrix.m22());
+        final var x = new Vector3F64(matrix.m00(), matrix.m01(), matrix.m02());
+        final var y = new Vector3F64(matrix.m10(), matrix.m11(), matrix.m12());
+        final var z = new Vector3F64(matrix.m20(), matrix.m21(), matrix.m22());
         return fromAxes(x, y, z);
     }
 
@@ -444,8 +443,8 @@ public value record Quaternion(double x, double y, double z, double w) {
 
         // I avoid dividing by 0 if the sqrt is small enough.
         final Vector3F64 newAxis = sqrt < EPSILON ?
-                v3(quat.x, quat.y, quat.z).normalize() : // I re-normalize because without w the length might no longer be 1.
-                v3(quat.x / sqrt, quat.y / sqrt, quat.z / sqrt);
+                new Vector3F64(quat.x, quat.y, quat.z).normalize() : // I re-normalize because without w the length might no longer be 1.
+                new Vector3F64(quat.x / sqrt, quat.y / sqrt, quat.z / sqrt);
 
         final Radians angle = angle();
         return new AxisAngle(newAxis, angle);
