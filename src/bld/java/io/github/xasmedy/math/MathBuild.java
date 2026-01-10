@@ -19,6 +19,8 @@ package io.github.xasmedy.math;
 import rife.bld.NamedFile;
 import rife.bld.Project;
 import rife.bld.operations.CompileOperation;
+import rife.bld.operations.JarOperation;
+import rife.bld.operations.JavadocOperation;
 import rife.bld.operations.RunOperation;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,6 +28,7 @@ import java.nio.file.Path;
 import java.time.Clock;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.jar.Attributes;
@@ -59,7 +62,8 @@ public final class MathBuild extends Project {
                 .include(module("org.junit.platform", "junit-platform-console-standalone", junitVersion))
                 .include(module("org.junit.platform", "junit-platform-launcher", junitVersion));
 
-        jarExtra();
+        addAttributesToJar(jarOperation());
+        addAttributesToJar(jarSourcesOperation());
     }
 
     void main(String[] args) {
@@ -72,9 +76,7 @@ public final class MathBuild extends Project {
     }
 
     /// Adds LICENSE and a few attributes.
-    private void jarExtra() {
-
-        final var op = jarOperation();
+    private void addAttributesToJar(JarOperation op) {
 
         // I add the LICENSE inside META-INF when creating a new jar file.
         final var license = Path.of("LICENSE").toFile();
@@ -97,15 +99,29 @@ public final class MathBuild extends Project {
         return operation;
     }
 
+    private void addCompilationOptions(ArrayList<String> options) {
+        options.add("--source=26");
+        options.add("--enable-preview");
+        options.add("--add-exports=java.base/jdk.internal.value=xasmedy.math");
+        options.add("--add-exports=java.base/jdk.internal.vm.annotation=xasmedy.math");
+    }
+
     @Override
     public CompileOperation compileOperation() {
         final var operation = super.compileOperation();
         final var options = operation.compileOptions();
-        options.add("--source=26");
         options.add("--target=26");
-        options.add("--enable-preview");
-        options.add("--add-exports=java.base/jdk.internal.value=xasmedy.math");
-        options.add("--add-exports=java.base/jdk.internal.vm.annotation=xasmedy.math");
+        addCompilationOptions(options);
+        return operation;
+    }
+
+    @Override
+    public JavadocOperation javadocOperation() {
+        final var operation = super.javadocOperation();
+        final var options = operation.javadocOptions();
+        addCompilationOptions(options);
+        options.tag("apiNote", "a", "API Note:");
+        options.tag("implNote", "a", "Implementation Note:");
         return operation;
     }
 }
