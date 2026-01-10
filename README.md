@@ -1,6 +1,6 @@
 # Xasmedy Math Library
 Welcome!\
-This is a math library made with one of the latest you can get Java, to be more specific, the Valhalla Early Access 2 based on Java 26.\
+This is a math library made with one of the latest you can get Java, to be more specific, the [Valhalla Early Access 2](https://jdk.java.net/valhalla/) based on Java 26.\
 If you are thinking "Valhalla?!" Yes, I understand, weirdly enough for many, Valhalla is coming soon!
 
 # Features
