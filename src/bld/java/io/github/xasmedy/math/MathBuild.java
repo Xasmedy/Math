@@ -16,12 +16,16 @@
 
 package io.github.xasmedy.math;
 
+import rife.bld.NamedFile;
 import rife.bld.Project;
 import rife.bld.operations.CompileOperation;
 import rife.bld.operations.RunOperation;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
+import java.util.jar.Attributes;
 import static rife.bld.dependencies.Repository.MAVEN_CENTRAL;
 import static rife.bld.dependencies.Repository.RIFE2_RELEASES;
 import static rife.bld.dependencies.Scope.compile;
@@ -51,10 +55,28 @@ public final class MathBuild extends Project {
                 .include(module("org.junit.jupiter", "junit-jupiter", junitVersion))
                 .include(module("org.junit.platform", "junit-platform-console-standalone", junitVersion))
                 .include(module("org.junit.platform", "junit-platform-launcher", junitVersion));
+
+        jarExtra();
     }
 
     void main(String[] args) {
         start(args);
+    }
+
+    /// Adds LICENSE and a few attributes.
+    private void jarExtra() {
+
+        final var op = jarOperation();
+
+        // I add the LICENSE inside META-INF when creating a new jar file.
+        final var license = Path.of("LICENSE").toFile();
+        op.sourceFiles(new NamedFile("META-INF/LICENSE", license));
+
+        final Map<Attributes.Name, Object> attributes = Map.of(
+                new Attributes.Name("Built-By"), "Xasmedy",
+                new Attributes.Name("Version"), version().toString()
+        );
+        op.manifestAttributes(attributes);
     }
 
     @Override
