@@ -23,6 +23,9 @@ import rife.bld.operations.RunOperation;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Clock;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.jar.Attributes;
@@ -63,6 +66,11 @@ public final class MathBuild extends Project {
         start(args);
     }
 
+    private static String nowUTC() {
+        final var format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return ZonedDateTime.now(Clock.systemUTC()).format(format);
+    }
+
     /// Adds LICENSE and a few attributes.
     private void jarExtra() {
 
@@ -74,6 +82,7 @@ public final class MathBuild extends Project {
 
         final Map<Attributes.Name, Object> attributes = Map.of(
                 new Attributes.Name("Built-By"), "Xasmedy",
+                new Attributes.Name("Built-Date"), nowUTC(),
                 new Attributes.Name("Version"), version().toString()
         );
         op.manifestAttributes(attributes);
