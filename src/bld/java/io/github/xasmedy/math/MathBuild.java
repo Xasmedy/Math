@@ -22,6 +22,10 @@ import rife.bld.operations.CompileOperation;
 import rife.bld.operations.JarOperation;
 import rife.bld.operations.JavadocOperation;
 import rife.bld.operations.RunOperation;
+import rife.bld.publish.PublishDeveloper;
+import rife.bld.publish.PublishInfo;
+import rife.bld.publish.PublishLicense;
+import rife.bld.publish.PublishScm;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,8 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.jar.Attributes;
-import static rife.bld.dependencies.Repository.MAVEN_CENTRAL;
-import static rife.bld.dependencies.Repository.RIFE2_RELEASES;
+import static java.lang.String.format;
+import static rife.bld.dependencies.Repository.*;
 import static rife.bld.dependencies.Scope.compile;
 import static rife.bld.dependencies.Scope.test;
 
@@ -46,11 +50,11 @@ public final class MathBuild extends Project {
         final var projectPath = workDirectory().toPath();
 
         pkg = "io.github.xasmedy.math";
-        name = "Math";
+        name = "math";
         module = "xasmedy.math";
         version = version(0,1,0);
-        javaTool = Files.readString(projectPath.resolve(JAVA_VERSION_NAME)) + "/bin/java";
 
+        javaTool = Files.readString(projectPath.resolve(JAVA_VERSION_NAME)) + "/bin/java";
         downloadSources = true;
         repositories = List.of(MAVEN_CENTRAL, RIFE2_RELEASES);
 
@@ -62,12 +66,57 @@ public final class MathBuild extends Project {
                 .include(module("org.junit.platform", "junit-platform-console-standalone", junitVersion))
                 .include(module("org.junit.platform", "junit-platform-launcher", junitVersion));
 
+        configureMavenPublishing();
         addAttributesToJar(jarOperation());
         addAttributesToJar(jarSourcesOperation());
     }
 
     void main(String[] args) {
         start(args);
+    }
+
+    private void configureMavenPublishing() {
+
+        final String groupId = "io.github.xasmedy";
+        final String artifactId = name();
+        final String dev = "xasmedy";
+        final String github = "https://github.com";
+        final String devUrl = format("%s/%s", github, dev);
+        final String project = format("%s/%s/%s", github, dev, artifactId);
+
+        final var license = new PublishLicense()
+                .name("The Apache License, Version 2.0")
+                .url("https://www.apache.org/licenses/LICENSE-2.0.txt");
+
+        final var developer = new PublishDeveloper()
+                .id(dev)
+                .name("Xasmedy")
+                .email("xasmedy@pm.me")
+                .url(devUrl);
+
+        final var scm = new PublishScm()
+                .connection(format("scm:git:%s.git", project))
+                .developerConnection(format("scm:git:git@github.com:%s/%s.git", dev, artifactId))
+                .url(project);
+
+        final var publishInfo = new PublishInfo()
+                .groupId(groupId)
+                .artifactId(artifactId)
+                .version(version())
+                .name("Math")
+                .description("Valhalla-based Math Library")
+                .url(project)
+                .developer(developer)
+                .license(license)
+                .scm(scm)
+                .signKey(property("sign.key"))
+                .signPassphrase(property("sign.passphrase"));
+
+        publishOperation()
+                .repositories(CENTRAL_RELEASES.withCredentials(
+                        property("sonatype.username"),
+                        property("sonatype.password")
+                )).info(publishInfo);
     }
 
     private static String nowUTC() {
