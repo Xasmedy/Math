@@ -1,3 +1,4 @@
+[![Maven](https://maven-badges.sml.io/sonatype-central/io.github.xasmedy/math/badge.svg?style=flat&subject=Maven&color=blue)](https://maven-badges.sml.io/sonatype-central/io.github.xasmedy/math/)
 # Xasmedy Math Library
 Welcome!\
 This is a math library made with one of the latest you can get Java, to be more specific, the [Valhalla Early Access 2](https://jdk.java.net/valhalla/) based on Java 26.\
@@ -17,8 +18,17 @@ Available:
 - Safe nullability API thanks to [Jspecify](https://jspecify.dev/)
 
 # How to Use
-I'll try to make a maven release when the library is in a better shape, fow now you need to build from scratch, or use one of the versions I provide.\
-You'll need to provide a few runtime flags, since I'm using internal Valhalla APIs to provide better performance:
+The library is on Maven Central and can be included with the following.
+
+#### Gradle
+```
+implementation("io.github.xasmedy:math:0.1.1")
+```
+#### Bld
+```
+module("io.github.xasmedy", "math", "0.1.1")
+```
+To run the application, you'll need to provide a few runtime flags, since I'm using internal Valhalla APIs to provide better performance:
 - `--enable-preview`
 - `--add-exports=java.base/jdk.internal.value=xasmedy.math`
 - `--add-exports=java.base/jdk.internal.vm.annotation=xasmedy.math`
