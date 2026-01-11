@@ -22,10 +22,7 @@ import rife.bld.operations.CompileOperation;
 import rife.bld.operations.JarOperation;
 import rife.bld.operations.JavadocOperation;
 import rife.bld.operations.RunOperation;
-import rife.bld.publish.PublishDeveloper;
-import rife.bld.publish.PublishInfo;
-import rife.bld.publish.PublishLicense;
-import rife.bld.publish.PublishScm;
+import rife.bld.publish.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,8 +35,7 @@ import java.util.Map;
 import java.util.jar.Attributes;
 import static java.lang.String.format;
 import static rife.bld.dependencies.Repository.*;
-import static rife.bld.dependencies.Scope.compile;
-import static rife.bld.dependencies.Scope.test;
+import static rife.bld.dependencies.Scope.*;
 
 public final class MathBuild extends Project {
 
@@ -52,7 +48,7 @@ public final class MathBuild extends Project {
         pkg = "io.github.xasmedy.math";
         name = "math";
         module = "xasmedy.math";
-        version = version(0,1,0);
+        version = version(0, 1, 1);
 
         javaTool = Files.readString(projectPath.resolve(JAVA_VERSION_NAME)) + "/bin/java";
         downloadSources = true;
@@ -117,6 +113,25 @@ public final class MathBuild extends Project {
                         property("sonatype.username"),
                         property("sonatype.password")
                 )).info(publishInfo);
+    }
+
+    private void patchPublishJSpecify() {
+        // I'm forced to do this since JSpecify does not provide the `modular-jar` on maven,
+        // making the download fail when users try to use the math library.
+        scope(compile).clear();
+        scope(compile).include(dependency("org.jspecify", "jspecify", version(1, 0, 0)));
+    }
+
+    @Override
+    public void publish() throws Exception {
+        patchPublishJSpecify();
+        super.publish();
+    }
+
+    @Override
+    public void publishLocal() throws Exception {
+        patchPublishJSpecify();
+        super.publishLocal();
     }
 
     private static String nowUTC() {
