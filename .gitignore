@@ -57,3 +57,4 @@ atlassian-ide-plugin.xml
 
 # Local properties file
 /java-version.txt
+/local.properties
