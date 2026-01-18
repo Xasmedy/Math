@@ -17,22 +17,22 @@
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked // Makes the whole codebase non-null by default.
-module xasmedy.math {
+module lidiuma.math {
     requires org.jspecify;
-    exports io.github.xasmedy.math.rotation;
-    exports io.github.xasmedy.math.matrix;
+    exports org.lidiuma.math.rotation;
+    exports org.lidiuma.math.matrix;
 
-    exports io.github.xasmedy.math.point;
-    exports io.github.xasmedy.math.point.p1;
-    exports io.github.xasmedy.math.point.p2;
-    exports io.github.xasmedy.math.point.p3;
-    exports io.github.xasmedy.math.point.p4;
+    exports org.lidiuma.math.point;
+    exports org.lidiuma.math.point.p1;
+    exports org.lidiuma.math.point.p2;
+    exports org.lidiuma.math.point.p3;
+    exports org.lidiuma.math.point.p4;
 
-    exports io.github.xasmedy.math.shape;
+    exports org.lidiuma.math.shape;
 
-    exports io.github.xasmedy.math.vector;
-    exports io.github.xasmedy.math.vector.v1;
-    exports io.github.xasmedy.math.vector.v2;
-    exports io.github.xasmedy.math.vector.v3;
-    exports io.github.xasmedy.math.vector.v4;
+    exports org.lidiuma.math.vector;
+    exports org.lidiuma.math.vector.v1;
+    exports org.lidiuma.math.vector.v2;
+    exports org.lidiuma.math.vector.v3;
+    exports org.lidiuma.math.vector.v4;
 }
